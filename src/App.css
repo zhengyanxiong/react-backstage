@@ -1,7 +1,9 @@
+@import '../node_modules/antd/dist/antd.css';
 .App {
   text-align: center;
 }
-
+/** 重置列表元素 **/
+ul, ol { list-style: none; }
 .App-logo {
   animation: App-logo-spin infinite 20s linear;
   height: 40vmin;
@@ -30,4 +32,77 @@
   to {
     transform: rotate(360deg);
   }
+}
+
+#components-layout-demo-custom-trigger .trigger {
+  font-size: 18px;
+  line-height: 64px;
+  padding: 0 24px;
+  cursor: pointer;
+  transition: color .3s;
+}
+
+#components-layout-demo-custom-trigger .trigger:hover {
+  color: #1890ff;
+}
+
+#components-layout-demo-custom-trigger .logo {
+  height: 32px;
+  background: rgba(255,255,255,.2);
+  margin: 16px;
+}
+
+#rightWrap {
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  padding: 20px 20px 0 20px;
+  position: absolute;
+  top: 0;
+  left: 185px;
+  right: 0;
+  bottom: 0;
+  overflow-y: auto;
+
+}
+
+.logo {
+  height: 32px;
+  background: rgba(255,255,255,.2);
+  margin: 16px;
+}
+
+/*HeaderBar*/
+#headerbar{
+  float: right;
+  padding-right: 29px;
+}
+.trigger{
+  font-size: 18px;
+  line-height: 64px;
+  cursor: pointer;
+}
+.trigger:hover{
+  color: #1890ff;
+}
+.header-ul{
+  display: flex;
+  width: 200px;
+}
+.header-ul li {
+  flex-grow: 1;
+  text-align: center;
+}
+.header-ul>li img{
+  width: 35px;
+  height: 35px;
+  border-radius: 100px;
+}
+.menu{
+  line-height: 2em;
+  padding: 0 6px;
+}
+.menu-group ul{
+  padding: 0 20px;
+  line-height: 2em;
 }

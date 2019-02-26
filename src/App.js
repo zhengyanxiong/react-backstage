@@ -7,13 +7,9 @@ import './App.css';
 class App extends Component {
     render() {
         return (
-            <div className="App">
-                <Router>
-                    <div className="App">
-                        <RenderRoutes routes={mainConfig}></RenderRoutes>
-                    </div>
-                </Router>
-            </div>
+            <Router>
+                <RenderRoutes routes={mainConfig}></RenderRoutes>
+            </Router>
         );
     }
 }
