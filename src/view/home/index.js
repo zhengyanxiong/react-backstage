@@ -1,65 +1,75 @@
-import React,{Component} from "react"
-import {
-    Layout, Menu, Breadcrumb, Icon,
-} from 'antd';
+import React, {Component} from "react"
+import {Layout, Menu, Icon} from 'antd';
+import {Link} from "react-router-dom"
 import '../../App.css';
 import HeaderBar from "../../components/HeaderBar"
+import MainContent from "../../components/MainContent"
 
-const { SubMenu } = Menu;
-const { Header, Content, Sider ,Footer} = Layout;
+const {SubMenu} = Menu;
+const {Header, Content, Sider, Footer} = Layout;
 
-class Index extends Component{
+class Index extends Component {
     state = {
         collapsed: false,
     };
 
     toggle = () => {
+        console.log("collapsed", this.state)
         this.setState({
             collapsed: !this.state.collapsed,
         });
     }
 
+    componentDidMount() {
+        this.props.history.push("/index/homePage")
+    }
+
     render() {
-        return(
+        let {routes} = this.props
+        return (
             <Layout>
                 <Sider
                     trigger={null}
                     collapsible
                     collapsed={this.state.collapsed}
+                    mode="inline"
                 >
-                    <div className="logo" />
+                    <div className="logo"/>
                     <Menu theme="dark" defaultSelectedKeys={['1']} mode="inline">
                         <Menu.Item key="1">
-                            <Icon type="pie-chart" />
-                            <span>Option 1</span>
+                            <Link to="/index/homePage">
+                                <Icon type="home"/>
+                                <span>首页</span>
+                            </Link>
                         </Menu.Item>
                         <Menu.Item key="2">
-                            <Icon type="desktop" />
-                            <span>Option 2</span>
+                            <Link to="/index/dataAnalysis">
+                                <Icon type="desktop"/>
+                                <span>数据分析</span>
+                            </Link>
                         </Menu.Item>
                         <SubMenu
                             key="sub1"
-                            title={<span><Icon type="user" /><span>User</span></span>}
+                            title={<span><Icon type="user"/><span>用户信息管理</span></span>}
                         >
-                            <Menu.Item key="3">Tom</Menu.Item>
-                            <Menu.Item key="4">Bill</Menu.Item>
-                            <Menu.Item key="5">Alex</Menu.Item>
+                            <Menu.Item key="3">用户信息</Menu.Item>
+                            <Menu.Item key="4">审核注册</Menu.Item>
                         </SubMenu>
                         <SubMenu
                             key="sub2"
-                            title={<span><Icon type="team" /><span>Team</span></span>}
+                            title={<span><Icon type="appstore"/><span>物品信息管理</span></span>}
                         >
-                            <Menu.Item key="6">Team 1</Menu.Item>
-                            <Menu.Item key="8">Team 2</Menu.Item>
+                            <Menu.Item key="6">发布</Menu.Item>
+                            <Menu.Item key="8"><Link to="/index/dataAnalysis">....</Link></Menu.Item>
                         </SubMenu>
                         <Menu.Item key="9">
-                            <Icon type="file" />
-                            <span>File</span>
+                            <Icon type="info-circle-o"/>
+                            <span>关于</span>
                         </Menu.Item>
                     </Menu>
                 </Sider>
                 <Layout>
-                    <Header style={{ background: '#fff', padding: 0 }}>
+                    <Header style={{background: '#fff', padding: 0}}>
                         <Icon
                             className="trigger"
                             type={this.state.collapsed ? 'menu-unfold' : 'menu-fold'}
@@ -67,19 +77,10 @@ class Index extends Component{
                         />
                         <HeaderBar/>
                     </Header>
-                    <Content style={{
-                        margin: '0 16px', minHeight: 496,
-                    }}
-                    >
-                        <Breadcrumb style={{ margin: '16px 0' }}>
-                            <Breadcrumb.Item>User</Breadcrumb.Item>
-                            <Breadcrumb.Item>Bill</Breadcrumb.Item>
-                        </Breadcrumb>
-                        <div style={{ padding: 24, background: '#fff', minHeight: 360 }}>
-                            Bill is a cat.
-                        </div>
+                    <Content>
+                        <MainContent routes={routes}/>
                     </Content>
-                    <Footer style={{ textAlign: 'center' }}>
+                    <Footer style={{textAlign: 'center'}}>
                         Ant Design ©2019 Created by campus-put team
                     </Footer>
                 </Layout>

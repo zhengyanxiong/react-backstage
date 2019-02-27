@@ -13,7 +13,7 @@ export const RouteWithSubRoutes = route => (
         path={route.path}
         exact={route.exact}
         render={props => {
-            console.log('routers.....'+route.routes)
+            console.log('routers.....',route.routes)
             return (
                 route && (route.Redirect ? (<Redirect to={route.Redirect}></Redirect>) :
                     (<route.component {...props} routes={route.routes}/>))

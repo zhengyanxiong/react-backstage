@@ -1,19 +1,21 @@
 import Login from '@/view/login/index'
 import Index from '@/view/home/index'
+import HomeComponent from '@/components/menu/HomeComponent'
+import DataAnalysisComponent from '@/components/menu/DataAnalysisComponent'
 
 
-//view页面路由表
+
+//路由表
 export const main = [
     {path: '/', exact: true, name: '首页', Redirect: '/index'},
     {
-        path: '/index', name: '首页', component: Index/*,
-        routes: [{path: '/index/myCard', name: '我的卡片', component: Fetch},
-            {path: '/index/myForm', name: '我的表单', component: Form},
-            {path: '/index/myTable', name: '我的表格', component: Table},
-            {path: '/index/myAnimate', name: '我的关注', component: Animate}]*/
+        path: '/index', name: '首页', component: Index,
+        routes: [
+            {path: '/index/homePage', name: '首页内容', component: HomeComponent},
+            {path: '/index/dataAnalysis', name: '数据分析', component: DataAnalysisComponent}
+        ]
     },
-    {path: '/login', name: '登录', component: Login},
-    //{path: '/index/myCard', name: '我的卡片', component: Fetch}
+    {path: '/login', name: '登录', component: Login}
 
 ]
 
