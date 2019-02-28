@@ -1,3 +1,4 @@
+import {isAuthenticated} from "./Cookie"
 function accMul(arg1, arg2) {
   let m = 0;
   const s1 = arg1.toString();
@@ -64,3 +65,13 @@ export function preloadingImages(arr) {
     img.src = item
   })
 }
+
+/**
+ * 判断用户未登录，跳转到登录界面
+ */
+export function isLogin(props) {
+  if(!isAuthenticated())
+    props.push("/login")
+
+}
+

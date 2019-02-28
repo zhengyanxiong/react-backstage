@@ -4,11 +4,19 @@ import {Link} from "react-router-dom"
 import '../../App.css';
 import HeaderBar from "../../components/HeaderBar"
 import MainContent from "../../components/MainContent"
+import {isAuthenticated} from "../../util/Cookie"
 
 const {SubMenu} = Menu;
 const {Header, Content, Sider, Footer} = Layout;
 
 class Index extends Component {
+    constructor(props){
+        super(props)
+        if(!isAuthenticated())
+            this.props.history.push("/login")
+        else
+            this.props.history.push("/index/homePage")
+    }
     state = {
         collapsed: false,
     };
@@ -20,8 +28,9 @@ class Index extends Component {
         });
     }
 
+
     componentDidMount() {
-        this.props.history.push("/index/homePage")
+        //this.props.history.push("/index/homePage")
     }
 
     render() {

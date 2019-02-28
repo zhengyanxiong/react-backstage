@@ -1,6 +1,7 @@
 import React, {Component} from "react"
 import {Form, Input, Row, Col, notification, message} from 'antd'
 import {randomNum, calculateWidth} from '../../util/utils'
+import {authenticateSuccess} from "../../util/Cookie"
 import PromptBox from "../../components/PromptBox"
 import BGParticle from '../../util/BGParticle'
 import Loading from "../../components/Loading"
@@ -64,7 +65,7 @@ class Index extends Component {
                 }
 */
                 //this.props.appStore.toggleLogin(true, {username: values.username})
-
+                authenticateSuccess(values.username)
                 const {from} = this.props.location.state || {from: {pathname: '/'}}
                 this.props.history.push(from)
             }
