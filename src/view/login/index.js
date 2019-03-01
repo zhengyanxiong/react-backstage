@@ -4,6 +4,7 @@ import {randomNum, calculateWidth} from '../../util/utils'
 import {authenticateSuccess} from "../../util/Cookie"
 import PromptBox from "../../components/PromptBox"
 import BGParticle from '../../util/BGParticle'
+import {_adminLogin} from "../../api/userAdmin"
 import Loading from "../../components/Loading"
 
 import './style.css'
@@ -16,12 +17,12 @@ class Index extends Component {
         code: ''         //验证码
     }
 
-    componentDidMount () {
+    componentDidMount() {
         this.particle = new BGParticle('backgroundBox')
         this.particle.init()
         this.createCode()
     }
-
+    
     loginSubmit = (e) => {
         e.preventDefault()
         this.setState({
@@ -30,7 +31,7 @@ class Index extends Component {
         this.props.form.validateFields((err, values) => {
             if (!err) {
                 // 检测验证码是否正确
-                if(this.state.code.toUpperCase() !== values.verification.toUpperCase()){
+                if (this.state.code.toUpperCase() !== values.verification.toUpperCase()) {
                     this.props.form.setFields({
                         verification: {
                             value: values.verification,
@@ -40,34 +41,23 @@ class Index extends Component {
                     return
                 }
 
-                /*const users = this.props.appStore.users
-                // 检测用户名是否存在
-                const result = users.find(item => item.username === values.username)
-                if (!result) {
-                    this.props.form.setFields({
-                        username: {
-                            value: values.username,
-                            errors: [new Error('用户名不存在')]
-                        }
-                    })
-                    return
-                } else {
-                    //检测密码是否错误
-                    if (result.password !== values.password) {
-                        this.props.form.setFields({
-                            password: {
-                                value: values.password,
-                                errors: [new Error('密码错误')]
-                            }
-                        })
-                        return
-                    }
+                let param = {
+                    "adminname": values.username,
+                    "adminpassword": values.password
                 }
-*/
-                //this.props.appStore.toggleLogin(true, {username: values.username})
-                authenticateSuccess(values.username)
-                const {from} = this.props.location.state || {from: {pathname: '/'}}
-                this.props.history.push(from)
+                console.log("data ",param)
+                const _this = this
+                _adminLogin(param).then((data) =>{
+                    message.success("登录成功！",2).then(()=>{
+                        authenticateSuccess(values.username)
+                        const {from} = this.props.location.state || {from: {pathname: '/'}}
+                        this.props.history.push(from)
+                    })
+                }).catch(function (data) {
+                    message.error(data.msg).then(()=>{
+                        _this.createCode()
+                    })
+                })
             }
         })
     }
@@ -120,7 +110,8 @@ class Index extends Component {
                         <h3 className='title'>管理员登录</h3>
                         <Form onSubmit={this.loginSubmit}>
                             <Form.Item help={getFieldError('username') &&
-                            <PromptBox info={getFieldError('username')} width={calculateWidth(getFieldError('username'))}/>}>
+                            <PromptBox info={getFieldError('username')}
+                                       width={calculateWidth(getFieldError('username'))}/>}>
                                 {getFieldDecorator('username', {
                                     rules: [{required: true, message: '请输入用户名'}]
                                 })(
@@ -129,11 +120,13 @@ class Index extends Component {
                                         onBlur={() => this.setState({focusItem: -1})}
                                         maxLength={16}
                                         placeholder='用户名'
-                                        addonBefore={<span className='iconfont icon-User' style={focusItem === 0 ? styles.focus : {}}/>}/>
+                                        addonBefore={<span className='iconfont icon-User'
+                                                           style={focusItem === 0 ? styles.focus : {}}/>}/>
                                 )}
                             </Form.Item>
                             <Form.Item help={getFieldError('password') &&
-                            <PromptBox info={getFieldError('password')} width={calculateWidth(getFieldError('password'))}/>}>
+                            <PromptBox info={getFieldError('password')}
+                                       width={calculateWidth(getFieldError('password'))}/>}>
                                 {getFieldDecorator('password', {
                                     rules: [{required: true, message: '请输入密码'}]
                                 })(
@@ -143,11 +136,13 @@ class Index extends Component {
                                         type='password'
                                         maxLength={16}
                                         placeholder='密码'
-                                        addonBefore={<span className='iconfont icon-suo1' style={focusItem === 1 ? styles.focus : {}}/>}/>
+                                        addonBefore={<span className='iconfont icon-suo1'
+                                                           style={focusItem === 1 ? styles.focus : {}}/>}/>
                                 )}
                             </Form.Item>
                             <Form.Item help={getFieldError('verification') &&
-                            <PromptBox info={getFieldError('verification')} width={calculateWidth(getFieldError('verification'))}/>}>
+                            <PromptBox info={getFieldError('verification')}
+                                       width={calculateWidth(getFieldError('verification'))}/>}>
                                 {getFieldDecorator('verification', {
                                     validateFirst: true,
                                     rules: [
@@ -173,7 +168,8 @@ class Index extends Component {
                                                                    style={focusItem === 2 ? styles.focus : {}}/>}/>
                                         </Col>
                                         <Col span={9}>
-                                            <canvas onClick={this.createCode} width="80" height='39' ref={el => this.canvas = el}/>
+                                            <canvas onClick={this.createCode} width="80" height='39'
+                                                    ref={el => this.canvas = el}/>
                                         </Col>
                                     </Row>
                                 )}
