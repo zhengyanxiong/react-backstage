@@ -57,21 +57,25 @@ class Index extends Component {
                                 <span>数据分析</span>
                             </Link>
                         </Menu.Item>
+                        <Menu.Item key="3">
+                            <Link to="/index/adminManagement"><Icon type="team"/>管理员信息管理</Link>
+                        </Menu.Item>
                         <SubMenu
                             key="sub1"
                             title={<span><Icon type="user"/><span>用户信息管理</span></span>}
                         >
-                            <Menu.Item key="3">用户信息</Menu.Item>
-                            <Menu.Item key="4">审核注册</Menu.Item>
+                            <Menu.Item key="4">用户信息</Menu.Item>
+                            <Menu.Item key="5">审核注册</Menu.Item>
                         </SubMenu>
                         <SubMenu
                             key="sub2"
                             title={<span><Icon type="appstore"/><span>物品信息管理</span></span>}
                         >
                             <Menu.Item key="6">发布</Menu.Item>
-                            <Menu.Item key="8"><Link to="/index/dataAnalysis">....</Link></Menu.Item>
+                            <Menu.Item key="7"><Link to="/index/dataAnalysis">....</Link></Menu.Item>
                         </SubMenu>
-                        <Menu.Item key="9">
+
+                        <Menu.Item key="8">
                             <Icon type="info-circle-o"/>
                             <span>关于</span>
                         </Menu.Item>
