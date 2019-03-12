@@ -1,4 +1,5 @@
 const LOGIN_COOKIE_NAME = 'user_token'
+const LOGIN_COOKIE_TYPE = 'user_type'
 
 /**
  * 判断用户是否登录
@@ -7,6 +8,13 @@ const LOGIN_COOKIE_NAME = 'user_token'
 export function isAuthenticated () {
     return _getCookie(LOGIN_COOKIE_NAME)
 }
+/**
+ * 判断管理员类型
+ * @returns {string}
+ */
+export function isSupAdmin () {
+    return _getCookie(LOGIN_COOKIE_TYPE)
+}
 
 /**
  * 用户登录成功，设置cookie的token值
@@ -14,6 +22,13 @@ export function isAuthenticated () {
  */
 export function authenticateSuccess (token) {
     _setCookie(LOGIN_COOKIE_NAME, token)
+}
+/**
+ * 用户登录成功，设置cookie的type值，管理员类型
+ * @param token
+ */
+export function authenticateSuccessType (type) {
+    _setCookie(LOGIN_COOKIE_TYPE, type)
 }
 
 /**

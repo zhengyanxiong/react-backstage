@@ -4,20 +4,24 @@ import {Link} from "react-router-dom"
 import '../../App.css';
 import HeaderBar from "../../components/HeaderBar"
 import MainContent from "../../components/MainContent"
-import {isAuthenticated} from "../../util/Cookie"
+import {isAuthenticated, isSupAdmin} from "../../util/Cookie"
 
 const {SubMenu} = Menu;
 const {Header, Content, Sider, Footer} = Layout;
 
 class Index extends Component {
-    constructor(props){
+    constructor(props) {
         super(props)
-        if(!isAuthenticated())
+        if (!isAuthenticated())
             this.props.history.push("/login")
-        else
+        else {
             this.props.history.push("/index/homePage")
+        }
+
     }
+
     state = {
+        adminType: true,
         collapsed: false,
     };
 
@@ -30,11 +34,14 @@ class Index extends Component {
 
 
     componentDidMount() {
-        //this.props.history.push("/index/homePage")
+        this.setState({
+            adminType: isSupAdmin()
+        })
     }
 
     render() {
         let {routes} = this.props
+        let _this = this.state;
         return (
             <Layout>
                 <Sider
@@ -51,30 +58,42 @@ class Index extends Component {
                                 <span>首页</span>
                             </Link>
                         </Menu.Item>
+                        <SubMenu
+                            key="sub1"
+                            title={<span><Icon type="team"/><span>用户信息管理</span></span>}
+                        >
+                            <Menu.Item key="4">
+                                <Link to="/index/userManagement">
+                                    <span>用户信息</span>
+                                </Link>
+                            </Menu.Item>
+                            <Menu.Item key="5">
+                                <Link to="/index/checkUserManagement">
+                                    <span>审核注册</span>
+                                </Link>
+                            </Menu.Item>
+                        </SubMenu>
+                        <Menu.Item key="6">
+                            <Link to="/index/goodsManagement">
+                                <Icon type="dropbox"/>
+                                <span>闲置管理</span>
+                            </Link>
+                        </Menu.Item>
+                        <Menu.Item key="7">
+                            <Link to="/index/activeManagement">
+                                <Icon type="fire"/>
+                                <span>活动管理</span>
+                            </Link>
+                        </Menu.Item>
+                        {_this.adminType === "false" ? <Menu.Item key="3">
+                            <Link to="/index/adminManagement"><Icon type="team"/><span>管理员管理</span></Link>
+                        </Menu.Item> : ""}
                         <Menu.Item key="2">
                             <Link to="/index/dataAnalysis">
-                                <Icon type="desktop"/>
+                                <Icon type="dot-chart"/>
                                 <span>数据分析</span>
                             </Link>
                         </Menu.Item>
-                        <Menu.Item key="3">
-                            <Link to="/index/adminManagement"><Icon type="team"/><span>管理员管理</span></Link>
-                        </Menu.Item>
-                        <SubMenu
-                            key="sub1"
-                            title={<span><Icon type="user"/><span>用户信息管理</span></span>}
-                        >
-                            <Menu.Item key="4">用户信息</Menu.Item>
-                            <Menu.Item key="5">审核注册</Menu.Item>
-                        </SubMenu>
-                        <SubMenu
-                            key="sub2"
-                            title={<span><Icon type="appstore"/><span>物品信息管理</span></span>}
-                        >
-                            <Menu.Item key="6">发布</Menu.Item>
-                            <Menu.Item key="7"><Link to="/index/dataAnalysis">....</Link></Menu.Item>
-                        </SubMenu>
-
                         <Menu.Item key="8">
                             <Icon type="info-circle-o"/>
                             <span>关于</span>

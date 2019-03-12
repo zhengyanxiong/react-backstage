@@ -1,7 +1,7 @@
 import React, {Component} from "react"
 import {Form, Input, Row, Col, notification, message} from 'antd'
 import {randomNum, calculateWidth} from '../../util/utils'
-import {authenticateSuccess} from "../../util/Cookie"
+import {authenticateSuccess, authenticateSuccessType} from "../../util/Cookie"
 import PromptBox from "../../components/PromptBox"
 import BGParticle from '../../util/BGParticle'
 import {_adminLogin} from "../../api/userAdmin"
@@ -47,13 +47,14 @@ constructor(props){
 
                 let param = {
                     "adminName": values.username,
-                    "adminPassword": values.password
+                    "adminPassword": values.password,
                 }
                 console.log("data ",param)
                 const _this = this
                 _adminLogin(param).then((data) =>{
                     message.success("登录成功！",2).then(()=>{
-                        authenticateSuccess(values.username)
+                        authenticateSuccess(values.username);
+                        authenticateSuccessType(data.adminType);
                         const {from} = this.props.location.state || {from: {pathname: '/'}}
                         this.props.history.push(from)
                     })

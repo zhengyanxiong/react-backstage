@@ -76,7 +76,7 @@ const AdminDetail = Form.create()(
                                    hasFeedback
                                    {...formItemLayout}>
                             {getFieldDecorator('updatedTime')(
-                                <label>{this.props.adminDetail.createdTime}</label>
+                                <label>{this.props.adminDetail.updatedTime}</label>
                             )}
                         </Form.Item>
                     </Form>

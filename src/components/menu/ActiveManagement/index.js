@@ -88,8 +88,8 @@ class Index extends React.Component {
                 adminName: res.adminName,
                 adminPassword: res.adminPassword,
                 adminType: res.adminType,
-                createdTime: res.adminCreatedTime,
-                updatedTime: res.adminUpdatedTime
+                /*createdTime: res.data.data.createdTime,
+                updatedTime: res.data.data.updatedTime*/
             }
         });
         if (this.state.updateAdminVisible == false) {
@@ -287,7 +287,7 @@ class Index extends React.Component {
                 params: {
                     adminId: this.state.record.adminId
                 }
-            };
+            }
             console.log('qqq' + data);
             this.getAdminById(data);
         }
@@ -321,10 +321,10 @@ class Index extends React.Component {
     //获取子菜单元素数据等
     formSubAdminRef = (ref) => {
         this.childSub = ref
-    };
+    }
     formUpAdminRef = (ref) => {
         this.childUp = ref
-    };
+    }
 
     //确认添加点击事件
     handleSubmitAdmin = (e) => {
