@@ -11,11 +11,15 @@ import './style.css'
 import 'animate.css/animate.css'
 
 class Index extends Component {
-
-    state = {
+constructor(props){
+    super(props);
+    this.state = {
+        tData:[],
         focusItem: -1,   //保存当前聚焦的input
         code: ''         //验证码
     }
+}
+
 
     componentDidMount() {
         this.particle = new BGParticle('backgroundBox')
@@ -42,8 +46,8 @@ class Index extends Component {
                 }
 
                 let param = {
-                    "adminname": values.username,
-                    "adminpassword": values.password
+                    "adminName": values.username,
+                    "adminPassword": values.password
                 }
                 console.log("data ",param)
                 const _this = this

@@ -58,7 +58,7 @@ class Index extends Component {
                             </Link>
                         </Menu.Item>
                         <Menu.Item key="3">
-                            <Link to="/index/adminManagement"><Icon type="team"/>管理员信息管理</Link>
+                            <Link to="/index/adminManagement"><Icon type="team"/><span>管理员管理</span></Link>
                         </Menu.Item>
                         <SubMenu
                             key="sub1"

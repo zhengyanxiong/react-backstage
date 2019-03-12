@@ -2,9 +2,7 @@ import Login from '@/view/login/index'
 import Index from '@/view/home/index'
 import HomeComponent from '@/components/menu/HomeComponent'
 import DataAnalysisComponent from '@/components/menu/DataAnalysisComponent'
-import AdminManagement from '@/components/menu/AdminManagement'
-
-
+import AdminManagement from '@/components/menu/AdminManagement/index.js'
 
 //路由表
 export const main = [
