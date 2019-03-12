@@ -74,7 +74,7 @@ class Index extends React.Component {
         this.setState({tData: tData});
         Modal.success({
             title: '删除成功',
-            content: '端点删除成功！',
+            content: '管理员删除成功！',
         });
     }
 
@@ -124,7 +124,7 @@ class Index extends React.Component {
         });
         Modal.success({
             title: '成功',
-            content: '端点修改成功!',
+            content: '管理员修改成功!',
         });
         this.getAdminListInPage({
             params: {
@@ -351,7 +351,7 @@ class Index extends React.Component {
             form.resetFields();
         });
     };
-    //更新端点点击事件
+    //更新点击事件
     handleUpdateAdmin = (e) => {
         console.log("更新点击事件", this.formUpAdminRef.props.form);
         const form = this.formUpAdminRef.props.form;
