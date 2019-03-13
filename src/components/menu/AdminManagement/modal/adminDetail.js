@@ -24,6 +24,11 @@ const AdminDetail = Form.create()(
             //console.log("dsfasogi", this.state)
         }
 
+        timeFormat=(time) =>{
+            var dateee = new Date(time).toJSON();
+            return new Date(+new Date(dateee) + 8 * 3600 * 1000).toISOString().replace(/T/g, ' ').replace(/\.[\d]{3}Z/, '')
+
+        };
         render() {
             const {
                 visible, onCancel, form
@@ -69,14 +74,14 @@ const AdminDetail = Form.create()(
                                    hasFeedback
                                    {...formItemLayout}>
                             {getFieldDecorator('createdTime')(
-                                <label>{this.props.adminDetail.createdTime}</label>
+                                <label>{this.timeFormat(this.props.adminDetail.createdTime)}</label>
                             )}
                         </Form.Item>
                         <Form.Item label="更新时间："
                                    hasFeedback
                                    {...formItemLayout}>
                             {getFieldDecorator('updatedTime')(
-                                <label>{this.props.adminDetail.updatedTime}</label>
+                                <label>{this.timeFormat(this.props.adminDetail.updatedTime)}</label>
                             )}
                         </Form.Item>
                     </Form>

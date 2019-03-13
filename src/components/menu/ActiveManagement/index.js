@@ -1,14 +1,14 @@
 import React, {Component} from "react"
 import CustomBreadcrumb from "../../CustomBreadcrumb";
 import AdminDetail from "../../../components/menu/AdminManagement/modal/adminDetail";
-import SubmitAdmin from "../../../components/menu/AdminManagement/modal/submitAdmin";
+import PublishActive from "../../../components/menu/ActiveManagement/modal/pulishActive";
 import UpdateAdmin from "../../../components/menu/AdminManagement/modal/updateAdmin";
-import {_getAdminListInPage} from "../../../api/userAdmin";
-import {_deleteAdminById} from "../../../api/userAdmin";
-import {_deleteAdminByIds} from "../../../api/userAdmin";
-import {_getAdminById} from "../../../api/userAdmin";
-import {_submitAdmin} from "../../../api/userAdmin";
-import {_updateAdmin} from "../../../api/userAdmin";
+import {_getActiveListInPage} from "../../../api/active";
+import {_deleteActiveById} from "../../../api/active";
+import {_deleteActiveByIds} from "../../../api/active";
+import {_getActiveById} from "../../../api/active";
+import {_publishActive} from "../../../api/active";
+import {_updateActive} from "../../../api/active";
 import {
     Form, Input, Modal, Icon, Cascader, Button, Table
 } from 'antd';
@@ -28,23 +28,22 @@ class Index extends React.Component {
             rowkey: 0,
             selectedRowKeys: [],
             loading: false,
-            adminDetail: {
-                adminName: '',
+            activeDetail: {
+                activeName: '',
                 password: '',
-                adminType: '',
                 createdTime: '',
                 updatedTime: ''
             },
             index: '',
             visible: false,
-            adminDetailVisible: false,
-            submitAdminVisible: false,
-            updateAdminVisible: false,
+            activeDetailVisible: false,
+            publishActiveVisible: false,
+            updateActiveVisible: false,
         }
     }
 
     componentDidMount() {
-        this.getAdminListInPage({
+        this.getActiveListInPage({
             params: {
                 page: 1,
                 limit: 10,
@@ -52,8 +51,8 @@ class Index extends React.Component {
         })
     }
 
-    async getAdminListInPage(data) {
-        const res = await _getAdminListInPage(data);
+    async getActiveListInPage(data) {
+        const res = await _getActiveListInPage(data);
         console.log("list返回数据：", res);
         this.setState({
             tData: res.list,
@@ -66,8 +65,8 @@ class Index extends React.Component {
         //alert(this.state.count);
     }
 
-    async deleteAdminById(data) {
-        const res = await _deleteAdminById(data);
+    async deleteActiveById(data) {
+        const res = await _deleteActiveById(data);
         console.log(res);
         const tData = this.state.tData;
         tData.splice(this.state.rowkey, 1);//获取索引，后面的 1 是删除几行
@@ -78,55 +77,53 @@ class Index extends React.Component {
         });
     }
 
-    async getAdminById(data) {
-        console.log("默认adminName:" + this.state.adminDetail.adminName);
-        const res = await _getAdminById(data);
+    async getActiveById(data) {
+        console.log("默认activeName:" + this.state.activeDetail.activeName);
+        const res = await _getActiveById(data);
 
         const form = this.formRef.props.form;
         this.setState({
-            adminDetail: {
-                adminName: res.adminName,
-                adminPassword: res.adminPassword,
-                adminType: res.adminType,
+            activeDetail: {
+                activeName: res.activeName,
                 /*createdTime: res.data.data.createdTime,
                 updatedTime: res.data.data.updatedTime*/
             }
         });
-        if (this.state.updateAdminVisible == false) {
+        if (this.state.updateActiveVisible == false) {
             this.setState({
-                adminDetailVisible: true,
+                activeDetailVisible: true,
             })
         }
     }
 
-    async submitAdmin(data) {
+    async publishActive(data) {
         console.log('res表单数据: ', data);
-        const res = await _submitAdmin(data);
+        const res = await _publishActive(data);
         console.log(res);
         Modal.success({
-            title: '管理员添加成功',
-            content: '管理员类型：普通管理员',
+            title: '发布成功',
+            content: '活动描述：'+data.activeName,
         });
-        this.getAdminListInPage({
+        /*this.getAdminListInPage({
             params: {
                 page: this.state.page,
                 limit: 10
             }
-        });
+        });*/
     }
 
-    async updateAdmin(data) {
+    async updateActive(data) {
         console.log('res表单数据: ', data);
-        const res = await _updateAdmin(data);
+        const res = await _updateActive(data);
         console.log(res);
         this.setState({
-            updateAdminVisible: false
+            updateActiveVisible: false
         });
         Modal.success({
             title: '成功',
             content: '管理员修改成功!',
         });
-        this.getAdminListInPage({
+        this.getActiveListInPage({
             params: {
                 page: this.state.page,
                 limit: 10
@@ -134,8 +131,8 @@ class Index extends React.Component {
         });
     }
 
-    async deleteAdminByIds(data) {
-        const res = await _deleteAdminByIds(data);
+    async deleteActiveByIds(data) {
+        const res = await _deleteActiveByIds(data);
         console.log(res);
         const tData = this.state.tData;
         //console.log("aaaa", this.state.selectedRowKeys);
@@ -149,7 +146,7 @@ class Index extends React.Component {
         });
         Modal.success({
             title: '删除成功',
-            content: '管理员批量删除成功！',
+            content: '活动批量删除成功！',
         });
     }
 
@@ -164,9 +161,9 @@ class Index extends React.Component {
     handleCancel = () => {
         this.setState({
             visible: false,
-            adminDetailVisible: false,
-            submitAdminVisible: false,
-            updateAdminVisible: false
+            activeDetailVisible: false,
+            publishActiveVisible: false,
+            updateActiveVisible: false
         });
         //this.formEndUpRef.props.form.resetFields();
     }
@@ -184,7 +181,7 @@ class Index extends React.Component {
     };
     //获取table行的记录以及行主键
     handleRecord = (record, rowkey) => {
-        console.log("adminId：" + record.adminId)
+        console.log("activeId：" + record.activeId)
         this.setState({
             record: record,
             rowkey: rowkey,
@@ -200,7 +197,7 @@ class Index extends React.Component {
         //return selectedRowKeys
     };
 
-    getAdminByName = (page, limit) => {
+    getActiveByName = (page, limit) => {
         if (!this.isNull(this.state.tData)) {
             console.log('page：', page);
             console.log('limit：', limit);
@@ -210,13 +207,13 @@ class Index extends React.Component {
                     limit: limit
                 }
             };
-            var adminName = this.props.form.getFieldValue("adminName");
+            var activeName = this.props.form.getFieldValue("activeName");
             if (this.isNull(limit)) {
-                if (!this.isNull(adminName)) {
-                    console.log("adminName不为空:", adminName)
+                if (!this.isNull(activeName)) {
+                    console.log("activeName不为空:", activeName)
                     data = {
                         params: {
-                            adminName: adminName,
+                            activeName: activeName,
                             page: this.state.page,
                             limit: this.state.limit
                         }
@@ -230,10 +227,10 @@ class Index extends React.Component {
                     }
                 }
             } else {
-                if (!this.isNull(adminName)) {
+                if (!this.isNull(activeName)) {
                     data = {
                         params: {
-                            adminName: adminName,
+                            activeName: activeName,
                             page: page,
                             limit: limit
                         }
@@ -241,10 +238,10 @@ class Index extends React.Component {
                 }
             }
             console.log("传的data参数:", data)
-            this.getAdminListInPage(data);
+            this.getActiveListInPage(data);
         } else {
             Modal.error({
-                title: '查询admin失败',
+                title: '查询active失败',
                 content: '错误原因：服务器错误，请联系管理员',
             });
         }
@@ -261,16 +258,16 @@ class Index extends React.Component {
             cancelText: '取消',
             //删除行
             onOk() {
-                console.log("recordId:" + _this.state.record.adminId);
+                console.log("recordId:" + _this.state.record.activeId);
                 console.log("rowkey:" + _this.state.rowkey);
-                if (!_this.isNull(_this.state.record.adminId)) {
+                if (!_this.isNull(_this.state.record.activeId)) {
                     var data = {
                         params: {
-                            adminId: _this.state.record.adminId
+                            activeId: _this.state.record.activeId
                         }
                     };
-                    //console.log("data:" + data.params.adminId);
-                    _this.deleteAdminById(data);
+                    //console.log("data:" + data.params.activeId);
+                    _this.deleteActiveById(data);
                 }
             },
             onCancel() {
@@ -279,100 +276,104 @@ class Index extends React.Component {
         });
     };
     //详情点击事件
-    handleAdminDetail = () => {
-        if (!this.isNull(this.state.record.adminId)) {
-            console.log("recordId:" + this.state.record.adminId);
+    handleActiveDetail = () => {
+        if (!this.isNull(this.state.record.activeId)) {
+            console.log("recordId:" + this.state.record.activeId);
             console.log("rowkey:" + this.state.rowkey);
             var data = {
                 params: {
-                    adminId: this.state.record.adminId
+                    activeId: this.state.record.activeId
                 }
             }
             console.log('qqq' + data);
-            this.getAdminById(data);
+            this.getActiveById(data);
         }
     };
     //修改或添加提交表单modal
-    showSubmitConfirm = () => {
-        if (!this.isNull(this.state.tData)) {
+    showPublishConfirm = () => {
+        /*if (!this.isNull(this.state.tData)) {
             this.setState({
-                submitAdminVisible: true
+                publishActiveVisible: true
             });
         } else {
             Modal.error({
-                title: '新增管理员失败',
+                title: '发布活动失败',
                 content: '错误原因：服务器错误，请联系管理员',
             });
-        }
+        }*/
+        this.setState({
+            publishActiveVisible: true
+        });
     };
     showUpdateConfirm = () => {
-        console.log(this.state.record.adminId);
+        console.log(this.state.record.activeId);
         console.log("点击修改按钮事件");
-        this.getAdminById({
+        this.getActiveById({
             params: {
-                adminId: this.state.record.adminId
+                activeId: this.state.record.activeId
             }
         });
         this.setState({
-            updateAdminVisible: true
+            updateActiveVisible: true
         });
     };
 
     //获取子菜单元素数据等
-    formSubAdminRef = (ref) => {
-        this.childSub = ref
-    }
-    formUpAdminRef = (ref) => {
+    formPubActiveRef = (ref) => {
+        this.childPub = ref
+    };
+    formUpActiveRef = (ref) => {
         this.childUp = ref
-    }
+    };
 
     //确认添加点击事件
-    handleSubmitAdmin = (e) => {
-        const form = this.formSubAdminRef.props.form;
-        console.log("formSubAdminRef", this.formSubAdminRef);
+    handlePublishActive = (e) => {
+        const form = this.formPubActiveRef.props.form;
+        console.log("formPubActiveRef", this.formPubActiveRef);
         //调用子组件的自定义方法getItemsValue。注意：通过this.formRef 才能拿到数据
         form.validateFields({force: true}, (err, values) => {
             if (err) {
                 return;
             } else {
                 this.setState({
-                    submitAdminVisible: false
+                    publishActiveVisible: false
                 });
-                console.log("formSubAdminRef", this.formSubAdminRef);
-                var adminInfo = this.childSub.getSubItemsValue();
-                console.log(this.childSub.getSubItemsValue());
+                console.log("formPubActiveRef", this.formPubActiveRef);
+                var activeInfo = this.childPub.getPubItemsValue();
+                console.log(this.childPub.getPubItemsValue());
                 var data = {
-                    adminName: adminInfo.adminName,
-                    adminPassword: adminInfo.adminPassword,
+                    activeName: activeInfo.activeName,
+                    activeStartTime: activeInfo.activeStartTime,
+                    activeEndTime: activeInfo.activeEndTime,
+                    activeDescription: activeInfo.activeDescription,
                 };
                 console.log('表单数据: ', data);
-                this.submitAdmin(data);
+                this.publishActive(data);
             }
             form.resetFields();
         });
     };
     //更新点击事件
-    handleUpdateAdmin = (e) => {
-        console.log("更新点击事件", this.formUpAdminRef.props.form);
-        const form = this.formUpAdminRef.props.form;
+    handleUpdateActive = (e) => {
+        console.log("更新点击事件", this.formUpActiveRef.props.form);
+        const form = this.formUpActiveRef.props.form;
         //调用子组件的自定义方法getItemsValue。注意：通过this.formRef 才能拿到数据
         form.validateFields({force: true}, (err, values) => {
             if (err) {
                 return;
             } else {
                 this.setState({
-                    updateAdminVisible: false
+                    updateActiveVisible: false
                 });
-                console.log("formEndUpRef:", this.formUpAdminRef);
-                var adminInfo = this.childUp.getUpItemsValue();
+                console.log("formEndUpRef:", this.formUpActiveRef);
+                var activeInfo = this.childUp.getUpItemsValue();
                 console.log(this.childUp.getUpItemsValue());
                 var data = {
-                    adminId: this.state.record.adminId,
-                    adminName: adminInfo.adminName,
-                    adminPassword: adminInfo.adminPassword
+                    activeId: this.state.record.activeId,
+                    activeName: activeInfo.activeName,
                 };
                 console.log('修改表单数据: ', data);
-                this.updateAdmin(data);
+                this.updateActive(data);
             }
             form.resetFields();
         });
@@ -388,7 +389,7 @@ class Index extends React.Component {
         for (var i = 0; i < selectedRowKeys.length; i++) {
             var selectedRowKey = selectedRowKeys[i];
             console.log('selectedRowKeys[i]:', selectedRowKeys[i]);
-            idList.push(_this.state.tData[selectedRowKey].adminId);
+            idList.push(_this.state.tData[selectedRowKey].activeId);
         }
         /*var data = {
             idList:idList
@@ -396,8 +397,17 @@ class Index extends React.Component {
         console.log("idList：", idList);
        // console.log("data：", data);
 
-        _this.deleteAdminByIds(idList);
+        _this.deleteActiveByIds(idList);
         this.setState({loading: true});
+
+    };
+    /**
+     * 将"2018-05-19T08:04:52.000+0000"这种格式的时间转化为正常格式
+     * @param time
+     */
+    timeFormat=(time) =>{
+        var dateee = new Date(time).toJSON();
+        return new Date(+new Date(dateee) + 8 * 3600 * 1000).toISOString().replace(/T/g, ' ').replace(/\.[\d]{3}Z/, '')
 
     };
 
@@ -421,35 +431,42 @@ class Index extends React.Component {
             align: 'center',
             fixed: 'left',
             dataIndex: 'key',
-            width: 70,
+            width: 65,
             render: (text, record, index) => `${((_this.state.page) - 1) * (_this.state.limit) + index + 1}`
-
         }, {
-            title: '管理员',
-            dataIndex: 'adminName',
+            title: '活动名称',
+            width: 110,
+            dataIndex: 'activeName'
         }, {
-            title: '管理员类型',
-            dataIndex: 'adminType',
-            render: (text, record, index) => (
-                <div>
-                    普通管理员
-                </div>
+            title: '开始时间',
+            dataIndex: 'activeStartTime',
+            render:(text, record, index)=>(
+                this.timeFormat(_this.state.tData[index].activeStartTime)
             )
+        }, {
+            title: '结束时间',
+            dataIndex: 'activeEndTime',
+            render:(text, record, index)=>(
+                this.timeFormat(_this.state.tData[index].activeEndTime)
+            )
+        }, {
+            title: '活动描述',
+            dataIndex: 'activeDescription'
         }, {
             title: '操作',
             dataIndex: 'operate',
             key: 'action',
-            width: 259,
+            width: 215,
             fixed: 'right',
             align: 'center',
             render: (text, record, index) => (
                 <Button.Group>
-                    <Button type="primary" size="small" htmlType={'button'} style={{margin: "6px"}}
+                    <Button type="primary" size="small" htmlType={'button'} style={{margin: "4px"}}
                             onClick={_this.showUpdateConfirm}>修改</Button>
-                    <Button type="danger" size="small" htmlType={'button'} style={{margin: "6px"}}
+                    <Button type="danger" size="small" htmlType={'button'} style={{margin: "4px"}}
                             onClick={() => showDeleteConfirm(index)}> 删除 </Button>
-                    < Button type="primary" size="small" htmlType={'button'} style={{margin: "6px"}}
-                             onClick={_this.handleAdminDetail}>详情</Button>
+                    <Button type="primary" size="small" htmlType={'button'} style={{margin: "4px"}}
+                             onClick={_this.handleActiveDetail}>详情</Button>
                 </Button.Group>
             ),
         }];
@@ -460,14 +477,14 @@ class Index extends React.Component {
             showSizeChanger: true,
             onShowSizeChange(current, pageSize) {
                 console.log('Current: ', current, '; PageSize: ', pageSize)
-                _this.getAdminByName(current, pageSize);
+                _this.getActiveByName(current, pageSize);
                 _this.setState({
                     selectedRowKeys: []
                 })
             },
             onChange(current, pageSize) {
                 //console.log('Current: ', typeof (current));
-                _this.getAdminByName(current, pageSize);
+                _this.getActiveByName(current, pageSize);
                 _this.setState({
                     selectedRowKeys: []
                 })
@@ -476,22 +493,22 @@ class Index extends React.Component {
 
         return (
             <div>
-                <CustomBreadcrumb arr={["管理员管理"]}/>
+                <CustomBreadcrumb arr={["活动管理"]}/>
                 <div style={{padding: 24, background: '#fff', minHeight: 360}}>
                     <div style={{margin: "-11px 0px -13px 0px", width: "auto"}}>
                         <Form>
-                            <FormItem label="管理员名称："
+                            <FormItem label="活动名称："
                                       {...formItemLayout} style={{width: "710px"}}
                             >
-                                {getFieldDecorator('adminName')(
+                                {getFieldDecorator('activeName')(
                                     <Input placeholder="请输入..."/>
                                 )}
-                                <Button type="primary" className="btn" onClick={this.getAdminByName}>
+                                <Button type="primary" className="btn" onClick={this.getActiveByName}>
                                     <Icon type="search"/>查询
                                 </Button>
-                                <Button type="primary" htmlType="submit" icon="user-add"
-                                        onClick={this.showSubmitConfirm}
-                                        style={{margin: "4px 120px", position: "absolute"}}>添加</Button>
+                                <Button type="primary" htmlType="submit" icon="notification"
+                                        onClick={this.showPublishConfirm}
+                                        style={{margin: "4px 120px", position: "absolute"}}>发布活动</Button>
                             </FormItem>
                             <div style={{float: "left", margin: "-59px 0"}}>
                                 <Button
@@ -507,26 +524,27 @@ class Index extends React.Component {
                             </div>
                         </Form>
                     </div>
-                    <AdminDetail title="管理员详情" visible={_this.state.adminDetailVisible} loading={loading}
+                    <PublishActive title="发布活动" visible={_this.state.publishActiveVisible}
+                                   onOk={_this.handlePublishActive} onCancel={_this.handleCancel}
+                                   wrappedComponentRef={(form) => this.formPubActiveRef = form}
+                                   formPubActiveRef={_this.formPubActiveRef}/>
+                    {/*<AdminDetail title="管理员详情" visible={_this.state.activeDetailVisible} loading={loading}
                                  onCancel={_this.handleCancel} onOk={_this.handleCancel}
                                  wrappedComponentRef={(form) => this.formRef = form}
-                                 adminDetail={_this.state.adminDetail}/>
-                    <SubmitAdmin title="新增管理员" visible={_this.state.submitAdminVisible}
-                                 onOk={_this.handleSubmitAdmin} onCancel={_this.handleCancel}
-                                 wrappedComponentRef={(form) => this.formSubAdminRef = form}
-                                 formSubAdminRef={_this.formSubAdminRef}/>
-                    <UpdateAdmin title="修改管理员" visible={_this.state.updateAdminVisible}
-                                 onOk={_this.handleUpdateAdmin} onCancel={_this.handleCancel}
-                                 adminDetail={_this.state.adminDetail}
-                                 wrappedComponentRef={(form) => this.formUpAdminRef = form}
-                                 formUpAdminRef={_this.formUpAdminRef}/>
+                                 activeDetail={_this.state.activeDetail}/>
+
+                    <UpdateAdmin title="修改管理员" visible={_this.state.updateActiveVisible}
+                                 onOk={_this.handleUpdateActive} onCancel={_this.handleCancel}
+                                 activeDetail={_this.state.activeDetail}
+                                 wrappedComponentRef={(form) => this.formUpActiveRef = form}
+                                 formUpActiveRef={_this.formUpActiveRef}/>*/}
                     <Table
                         className="ant-table-thead ant-table-tbody" rowSelection={rowSelection}
                         dataSource={this.state.tData} bordered
                         scroll={{x: true}}
                         onRow={(record, rowkey) => ({onMouseOver: this.handleRecord.bind(this, record, rowkey)})}
                         pagination={pagination}
-                        rowKey={this.state.tData.adminId}
+                        rowKey={this.state.tData.activeId}
                         columns={columns}>
                     </Table>
                 </div>

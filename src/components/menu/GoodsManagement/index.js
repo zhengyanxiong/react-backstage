@@ -476,11 +476,11 @@ class Index extends React.Component {
 
         return (
             <div>
-                <CustomBreadcrumb arr={["管理员管理"]}/>
+                <CustomBreadcrumb arr={["闲置管理"]}/>
                 <div style={{padding: 24, background: '#fff', minHeight: 360}}>
                     <div style={{margin: "-11px 0px -13px 0px", width: "auto"}}>
                         <Form>
-                            <FormItem label="管理员名称："
+                            <FormItem label="闲置名称："
                                       {...formItemLayout} style={{width: "710px"}}
                             >
                                 {getFieldDecorator('adminName')(

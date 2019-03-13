@@ -476,7 +476,7 @@ class Index extends React.Component {
 
         return (
             <div>
-                <CustomBreadcrumb arr={["管理员管理"]}/>
+                <CustomBreadcrumb arr={["用户信息"]}/>
                 <div style={{padding: 24, background: '#fff', minHeight: 360}}>
                     <div style={{margin: "-11px 0px -13px 0px", width: "auto"}}>
                         <Form>
