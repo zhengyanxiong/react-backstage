@@ -81,8 +81,6 @@ class Index extends React.Component {
     async getAdminById(data) {
         console.log("默认adminName:" + this.state.adminDetail.adminName);
         const res = await _getAdminById(data);
-
-        const form = this.formRef.props.form;
         this.setState({
             adminDetail: {
                 adminName: res.adminName,
@@ -116,7 +114,7 @@ class Index extends React.Component {
     }
 
     async updateAdmin(data) {
-        console.log('res表单数据: ', data);
+        //console.log('res表单数据: ', data);
         const res = await _updateAdmin(data);
         console.log(res);
         this.setState({
@@ -136,7 +134,7 @@ class Index extends React.Component {
 
     async deleteAdminByIds(data) {
         const res = await _deleteAdminByIds(data);
-        console.log(res);
+        //console.log(res);
         const tData = this.state.tData;
         //console.log("aaaa", this.state.selectedRowKeys);
         for (var i = 0; i < this.state.selectedRowKeys.length; i++) {
@@ -168,9 +166,8 @@ class Index extends React.Component {
             submitAdminVisible: false,
             updateAdminVisible: false
         });
-        //this.formEndUpRef.props.form.resetFields();
-    }
-
+        this.formUpAdminRef.props.form.resetFields();
+    };
 
     start = () => {
         this.setState({loading: true});

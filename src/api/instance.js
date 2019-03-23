@@ -1,4 +1,6 @@
 import axios from 'axios';
+import {isLogout} from "../util/Cookie"
+
 import {PromptMsg_Loading} from '../components/PromptMessage'
 import RES_CODE_SUCCESS from '../util/globalCode';
 
@@ -63,6 +65,16 @@ instance.interceptors.response.use(function (response) {
     return Promise.reject({
         messageCode: 'sysError'
     });
+});
+
+instance.interceptors.request.use(function (config) {
+    config.withCredentials = true;
+    config.headers = {
+        token:isLogout()
+    };
+    return config;
+}, function (error) {
+    return Promise.reject(error);
 });
 
 export default instance;

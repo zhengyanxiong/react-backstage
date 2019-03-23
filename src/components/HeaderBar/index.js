@@ -1,10 +1,9 @@
 import React from 'react'
 import {Icon, Badge, Dropdown, Menu, Modal} from 'antd'
-import {isAuthenticated, logout} from "../../util/Cookie"
+import {isAuthenticated, clearName,clearToken} from "../../util/Cookie"
 import {Link, withRouter} from 'react-router-dom'
 import PropTypes from 'prop-types'
 import "../../App.css"
-
 
 class HeaderBar extends React.Component {
     constructor(props) {
@@ -19,17 +18,18 @@ class HeaderBar extends React.Component {
         count: 100,
         visible: false,
         avatar: require('./img/04.jpg')
-    }
+    };
 
     toggle = () => {
         this.props.onToggle()
 
-    }
+    };
 
     logout = () => {
-        logout()
-        this.context.router.history.push("/")
-    }
+        clearName();
+        clearToken();
+        this.context.router.history.push("/");
+    };
 
     render() {
         const {icon, count, visible, avatar} = this.state
@@ -40,7 +40,7 @@ class HeaderBar extends React.Component {
                       style={{color: 'rgba(0, 0, 0, 0.65)'}}>登录</Link>&nbsp;
                 <img src={require('../../assets/img/defaultUser.jpg')} alt=""/>
             </div>
-        )
+        );
         const menu = (
             <Menu className='menu'>
                 <Menu.ItemGroup title='用户中心' className='menu-group'>
@@ -53,12 +53,12 @@ class HeaderBar extends React.Component {
                     <Menu.Item>系统设置</Menu.Item>
                 </Menu.ItemGroup>
             </Menu>
-        )
+        );
         const login = (
             <Dropdown overlay={menu}>
                 <img src={avatar} alt=""/>
             </Dropdown>
-        )
+        );
         return (
             <div id='headerbar'>
                 <div style={{lineHeight: '64px', float: 'right'}}>

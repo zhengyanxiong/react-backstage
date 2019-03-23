@@ -1,7 +1,7 @@
 import React, {Component} from "react"
 import {Form, Input, Row, Col, notification, message} from 'antd'
 import {randomNum, calculateWidth} from '../../util/utils'
-import {authenticateSuccess, authenticateSuccessType} from "../../util/Cookie"
+import {authenticateSuccess, authenticateSuccessType,authenticateSuccessToken} from "../../util/Cookie"
 import PromptBox from "../../components/PromptBox"
 import BGParticle from '../../util/BGParticle'
 import {_adminLogin} from "../../api/userAdmin"
@@ -22,16 +22,16 @@ constructor(props){
 
 
     componentDidMount() {
-        this.particle = new BGParticle('backgroundBox')
-        this.particle.init()
+        this.particle = new BGParticle('backgroundBox');
+        this.particle.init();
         this.createCode()
     }
     
     loginSubmit = (e) => {
-        e.preventDefault()
+        e.preventDefault();
         this.setState({
             focusItem: -1
-        })
+        });
         this.props.form.validateFields((err, values) => {
             if (!err) {
                 // 检测验证码是否正确
@@ -41,21 +41,23 @@ constructor(props){
                             value: values.verification,
                             errors: [new Error('验证码错误')]
                         }
-                    })
+                    });
                     return
                 }
 
                 let param = {
                     "adminName": values.username,
                     "adminPassword": values.password,
-                }
-                console.log("data ",param)
-                const _this = this
+                };
+                console.log("data ",param);
+                const _this = this;
                 _adminLogin(param).then((data) =>{
                     message.success("登录成功！",2).then(()=>{
                         authenticateSuccess(values.username);
                         authenticateSuccessType(data.adminType);
-                        const {from} = this.props.location.state || {from: {pathname: '/'}}
+                        authenticateSuccessToken(data.token);
+
+                        const {from} = this.props.location.state || {from: {pathname: '/'}};
                         this.props.history.push(from)
                     })
                 }).catch(function (data) {
@@ -65,35 +67,35 @@ constructor(props){
                 })
             }
         })
-    }
+    };
 
     /**
      * 生成验证码
      */
     createCode = () => {
-        const ctx = this.canvas.getContext('2d')
-        const chars = [1, 2, 3, 4, 5, 6, 7, 8, 9, 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'j', 'k', 'l', 'm', 'n', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'J', 'K', 'L', 'M', 'N', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z']
-        let code = ''
-        ctx.clearRect(0, 0, 80, 39)
+        const ctx = this.canvas.getContext('2d');
+        const chars = [1, 2, 3, 4, 5, 6, 7, 8, 9, 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'j', 'k', 'l', 'm', 'n', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'J', 'K', 'L', 'M', 'N', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'];
+        let code = '';
+        ctx.clearRect(0, 0, 80, 39);
         for (let i = 0; i < 4; i++) {
-            const char = chars[randomNum(0, 57)]
-            code += char
-            ctx.font = randomNum(20, 25) + 'px SimHei'  //设置字体随机大小
-            ctx.fillStyle = '#D3D7F7'
-            ctx.textBaseline = 'middle'
-            ctx.shadowOffsetX = randomNum(-3, 3)
-            ctx.shadowOffsetY = randomNum(-3, 3)
-            ctx.shadowBlur = randomNum(-3, 3)
-            ctx.shadowColor = 'rgba(0, 0, 0, 0.3)'
-            let x = 80 / 5 * (i + 1)
-            let y = 39 / 2
-            let deg = randomNum(-25, 25)
+            const char = chars[randomNum(0, 57)];
+            code += char;
+            ctx.font = randomNum(20, 25) + 'px SimHei' ; //设置字体随机大小
+            ctx.fillStyle = '#D3D7F7';
+            ctx.textBaseline = 'middle';
+            ctx.shadowOffsetX = randomNum(-3, 3);
+            ctx.shadowOffsetY = randomNum(-3, 3);
+            ctx.shadowBlur = randomNum(-3, 3);
+            ctx.shadowColor = 'rgba(0, 0, 0, 0.3)';
+            let x = 80 / 5 * (i + 1);
+            let y = 39 / 2;
+            let deg = randomNum(-25, 25);
             /**设置旋转角度和坐标原点**/
-            ctx.translate(x, y)
-            ctx.rotate(deg * Math.PI / 180)
-            ctx.fillText(char, 0, 0)
+            ctx.translate(x, y);
+            ctx.rotate(deg * Math.PI / 180);
+            ctx.fillText(char, 0, 0);
             /**恢复旋转角度和坐标原点**/
-            ctx.rotate(-deg * Math.PI / 180)
+            ctx.rotate(-deg * Math.PI / 180);
             ctx.translate(-x, -y)
         }
         this.setState({
@@ -102,9 +104,9 @@ constructor(props){
     }
 
     render() {
-        const {form} = this.props
-        const {getFieldDecorator, getFieldError} = form
-        const {focusItem, code} = this.state
+        const {form} = this.props;
+        const {getFieldDecorator, getFieldError} = form;
+        const {focusItem, code} = this.state;
         return (
             <div id='login-page'>
                 {/*<h3 style={styles.loadingTitle} className='animated bounceInLeft'>登录页面载入中...</h3>

@@ -4,7 +4,9 @@
   "private": true,
   "homepage": ".",
   "dependencies": {
+    "@antv/data-set": "^0.10.2",
     "@babel/core": "7.2.2",
+    "@babel/plugin-proposal-decorators": "^7.4.0",
     "@svgr/webpack": "4.1.0",
     "animate.css": "^3.7.0",
     "antd": "^3.13.6",
@@ -16,11 +18,16 @@
     "babel-plugin-named-asset-import": "^0.3.1",
     "babel-preset-react-app": "^7.0.1",
     "bfj": "6.1.1",
+    "bizcharts": "^3.4.5",
     "bodymovin": "^4.13.0",
     "case-sensitive-paths-webpack-plugin": "2.2.0",
+    "classnames": "^2.2.6",
+    "cmn-utils": "^1.0.9",
     "css-loader": "1.0.0",
     "dotenv": "6.0.0",
     "dotenv-expand": "4.2.0",
+    "dva": "^2.4.1",
+    "echarts": "^4.1.0",
     "eslint": "5.12.0",
     "eslint-config-react-app": "^3.0.7",
     "eslint-loader": "2.1.1",
@@ -38,6 +45,8 @@
     "jest-pnp-resolver": "1.0.2",
     "jest-resolve": "23.6.0",
     "jest-watch-typeahead": "^0.2.1",
+    "less": "^2.7.3",
+    "less-loader": "^4.1.0",
     "mini-css-extract-plugin": "0.5.0",
     "optimize-css-assets-webpack-plugin": "5.0.1",
     "pnp-webpack-plugin": "1.2.1",
@@ -48,8 +57,10 @@
     "prop-types": "^15.7.2",
     "react": "^16.8.3",
     "react-app-polyfill": "^0.2.1",
+    "react-css-animate": "^1.10.0",
     "react-dev-utils": "^7.0.3",
     "react-dom": "^16.8.3",
+    "react-native-config": "^0.11.7",
     "react-router-dom": "^4.3.1",
     "resolve": "1.10.0",
     "sass-loader": "7.1.0",
@@ -121,6 +132,14 @@
     ]
   },
   "babel": {
+    "plugins": [
+      [
+        "@babel/plugin-proposal-decorators",
+        {
+          "legacy": true
+        }
+      ]
+    ],
     "presets": [
       "react-app"
     ]

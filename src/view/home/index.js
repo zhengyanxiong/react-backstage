@@ -13,11 +13,10 @@ class Index extends Component {
     constructor(props) {
         super(props)
         if (!isAuthenticated())
-            this.props.history.push("/login")
+            this.props.history.push("/login");
         else {
             this.props.history.push("/index/homePage")
         }
-
     }
 
     state = {
@@ -26,12 +25,11 @@ class Index extends Component {
     };
 
     toggle = () => {
-        console.log("collapsed", this.state)
+        console.log("collapsed", this.state);
         this.setState({
             collapsed: !this.state.collapsed,
         });
-    }
-
+    };
 
     componentDidMount() {
         this.setState({
@@ -40,7 +38,7 @@ class Index extends Component {
     }
 
     render() {
-        let {routes} = this.props
+        let {routes} = this.props;
         let _this = this.state;
         return (
             <Layout>

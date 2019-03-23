@@ -1,8 +1,9 @@
-import React, {Component} from "react"
+import React, {Component} from "react";
 import CustomBreadcrumb from "../../CustomBreadcrumb";
 import AdminDetail from "../../../components/menu/AdminManagement/modal/adminDetail";
 import PublishActive from "../../../components/menu/ActiveManagement/modal/pulishActive";
 import UpdateAdmin from "../../../components/menu/AdminManagement/modal/updateAdmin";
+import {_publishActivePicture} from "../../../api/activePicture";
 import {_getActiveListInPage} from "../../../api/active";
 import {_deleteActiveById} from "../../../api/active";
 import {_deleteActiveByIds} from "../../../api/active";
@@ -97,12 +98,16 @@ class Index extends React.Component {
     }
 
     async publishActive(data) {
-        console.log('res表单数据: ', data);
+        //console.log('res表单数据: ', data);
         const res = await _publishActive(data);
-        console.log(res);
+        this.publishActivePicture({
+            activeId:res,
+            activePictrueUrl:this.childPub.getPicUrl()
+        });
+        //console.log(res);
         Modal.success({
             title: '发布成功',
-            content: '活动描述：'+data.activeName,
+            content: '活动描述：'+data.activeName
         });
         /*this.getAdminListInPage({
             params: {
@@ -150,6 +155,18 @@ class Index extends React.Component {
         });
     }
 
+    async publishActivePicture(data) {
+        //console.log('res表单数据: ', data);
+        const res = await _publishActivePicture(data);
+        this.getActiveListInPage({
+            params: {
+                page: this.state.page,
+                limit: 10
+            }
+        })
+       // console.log(res);
+    }
+
     //判读是否为空,通用
     isNull = (charts) => {
         if (charts == null || charts == "" || charts == "undefined" || charts === undefined) {
@@ -166,8 +183,7 @@ class Index extends React.Component {
             updateActiveVisible: false
         });
         //this.formEndUpRef.props.form.resetFields();
-    }
-
+    };
 
     start = () => {
         this.setState({loading: true});
@@ -246,7 +262,6 @@ class Index extends React.Component {
             });
         }
     };
-
 
     //删
     showDeleteConfirm = () => {
@@ -329,7 +344,7 @@ class Index extends React.Component {
     //确认添加点击事件
     handlePublishActive = (e) => {
         const form = this.formPubActiveRef.props.form;
-        console.log("formPubActiveRef", this.formPubActiveRef);
+        //console.log("formPubActiveRef", this.formPubActiveRef);
         //调用子组件的自定义方法getItemsValue。注意：通过this.formRef 才能拿到数据
         form.validateFields({force: true}, (err, values) => {
             if (err) {
@@ -347,8 +362,9 @@ class Index extends React.Component {
                     activeEndTime: activeInfo.activeEndTime,
                     activeDescription: activeInfo.activeDescription,
                 };
-                console.log('表单数据: ', data);
+                //console.log('表单数据: ', data);
                 this.publishActive(data);
+
             }
             form.resetFields();
         });

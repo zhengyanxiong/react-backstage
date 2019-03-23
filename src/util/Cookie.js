@@ -1,5 +1,6 @@
-const LOGIN_COOKIE_NAME = 'user_token'
+const LOGIN_COOKIE_NAME = 'user_username'
 const LOGIN_COOKIE_TYPE = 'user_type'
+const LOGIN_COOKIE_TOKEN = 'user_token'
 
 /**
  * 判断用户是否登录
@@ -9,6 +10,15 @@ export function isAuthenticated () {
     return _getCookie(LOGIN_COOKIE_NAME)
 }
 /**
+ * 判断用户是否登录
+ * @returns {string}
+ */
+export function isLogout () {
+    return _getCookie(LOGIN_COOKIE_TOKEN)
+}
+
+
+/**
  * 判断管理员类型
  * @returns {string}
  */
@@ -17,11 +27,19 @@ export function isSupAdmin () {
 }
 
 /**
- * 用户登录成功，设置cookie的token值
+ * 用户登录成功，设置cookie的username值
  * @param token
  */
-export function authenticateSuccess (token) {
-    _setCookie(LOGIN_COOKIE_NAME, token)
+export function authenticateSuccess (username) {
+    _setCookie(LOGIN_COOKIE_NAME, username)
+}
+
+/**
+ * 用户登录成功，设置cookie的username值
+ * @param token
+ */
+export function authenticateSuccessToken (token) {
+    _setCookie(LOGIN_COOKIE_TOKEN, token)
 }
 /**
  * 用户登录成功，设置cookie的type值，管理员类型
@@ -32,10 +50,17 @@ export function authenticateSuccessType (type) {
 }
 
 /**
- * 用户登出操作，设置cookie为空
+ * 用户登出操作，设置username为空
  */
-export function logout () {
+export function clearName () {
     _setCookie(LOGIN_COOKIE_NAME, '', 0)
+}
+
+/**
+ * 用户登出操作，设置token为空
+ */
+export function clearToken () {
+    _setCookie(LOGIN_COOKIE_TOKEN, '', 0)
 }
 
 /**

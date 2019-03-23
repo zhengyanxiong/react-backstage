@@ -287,7 +287,7 @@ class Index extends React.Component {
                 params: {
                     adminId: this.state.record.adminId
                 }
-            }
+            };
             console.log('qqq' + data);
             this.getAdminById(data);
         }
@@ -321,10 +321,10 @@ class Index extends React.Component {
     //获取子菜单元素数据等
     formSubAdminRef = (ref) => {
         this.childSub = ref
-    }
+    };
     formUpAdminRef = (ref) => {
         this.childUp = ref
-    }
+    };
 
     //确认添加点击事件
     handleSubmitAdmin = (e) => {
