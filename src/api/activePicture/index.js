@@ -19,3 +19,14 @@ export const _publishActivePicture = (data) => {
 export const _deleteActivePicById = (data) => {
     return instance.get("/backstageservice/activePicture/deleteActivePicById",data)
 };
+
+/**
+ * 通过activeId获取活动图片
+ * @param data
+ * @returns {AxiosPromise<any>}
+ * @private
+ */
+export const _updateActivePicture = (data) => {
+    return instance.get("/backstageservice/activePicture/updateActivePicture",data)
+};
+

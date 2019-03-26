@@ -2,8 +2,6 @@ import React from "react";
 import {Form, Select, Modal, Input, DatePicker, Upload, Icon} from "antd";
 import moment from 'moment';
 import '../../../../App.css'
-import {_publishActivePicture} from "../../../../api/activePicture"
-import {_fileUpload} from "../../../../api/picUpload"
 import {isLogout} from "../../../../util/Cookie"
 
 const FormItem = Form.Item;
@@ -78,12 +76,10 @@ const PublishAdmin = Form.create()(
             console.log("response:", this.state.url);
         };
 
+        onShow=()=>{
+            console.log("onshow");
+        };
         render() {
-            const uploadProps = {
-                headers: {
-                    token: isLogout()
-                }
-            };
             const {
                 visible, onCancel, onOk, form
             } = this.props;
@@ -103,6 +99,7 @@ const PublishAdmin = Form.create()(
                     onCancel={onCancel}
                     onOk={onOk}
                     maskClosable={false}
+                    onShow={this.onShow}
                 >
                     <Form layout="vertical">
                         <Form.Item label="活动名称："
@@ -152,7 +149,6 @@ const PublishAdmin = Form.create()(
                             )}
                         </Form.Item>
                         <Form.Item label=" 活动图片：" hasFeedback {...formItemLayout}>
-
                             <div className="clearfix">
                                 {getFieldDecorator('pic',{
                                 rules: [{required: true, message: '必填!'}],
@@ -167,7 +163,6 @@ const PublishAdmin = Form.create()(
                                         {fileList.length >= 1 ? null : uploadButton}
                                     </Upload>
                             )}
-
                                 <Modal visible={previewVisible} footer={null} onCancel={this.handleCancel}>
                                     <img alt="example" style={{width: '97%'}} src={previewImage}/>
                                 </Modal>

@@ -28,7 +28,7 @@ const UpdateAdmin = Form.create()(
         getUpItemsValue = () => {    //自定义方法，用来传递数据（需要在父组件中调用获取数据）
             const values = this.props.form.getFieldsValue();
             return values;
-        }
+        };
 
         render() {
             const {

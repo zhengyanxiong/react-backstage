@@ -1,8 +1,8 @@
 import React, {Component} from "react";
 import CustomBreadcrumb from "../../CustomBreadcrumb";
-import AdminDetail from "../../../components/menu/AdminManagement/modal/adminDetail";
+import ActiveDetail from "../../../components/menu/ActiveManagement/modal/activeDetail";
 import PublishActive from "../../../components/menu/ActiveManagement/modal/pulishActive";
-import UpdateAdmin from "../../../components/menu/AdminManagement/modal/updateAdmin";
+import UpdateActive from "../../../components/menu/ActiveManagement/modal/updateActive";
 import {_publishActivePicture} from "../../../api/activePicture";
 import {_getActiveListInPage} from "../../../api/active";
 import {_deleteActiveById} from "../../../api/active";
@@ -29,17 +29,19 @@ class Index extends React.Component {
             rowkey: 0,
             selectedRowKeys: [],
             loading: false,
+            activePictrueUrl:'',
             activeDetail: {
                 activeName: '',
-                password: '',
-                createdTime: '',
-                updatedTime: ''
+                activeDescription: '',
+                activeStartTime: '',
+                activeEndTime: ''
             },
             index: '',
             visible: false,
             activeDetailVisible: false,
             publishActiveVisible: false,
             updateActiveVisible: false,
+            fileList:[]
         }
     }
 
@@ -74,28 +76,58 @@ class Index extends React.Component {
         this.setState({tData: tData});
         Modal.success({
             title: '删除成功',
-            content: '管理员删除成功！',
+            content: '活动删除成功！',
         });
     }
 
     async getActiveById(data) {
-        console.log("默认activeName:" + this.state.activeDetail.activeName);
+        //console.log("默认activeName:" + this.state.activeDetail.activeName);
+        //this.getActivePicById(data);
         const res = await _getActiveById(data);
-
-        const form = this.formRef.props.form;
         this.setState({
             activeDetail: {
-                activeName: res.activeName,
-                /*createdTime: res.data.data.createdTime,
-                updatedTime: res.data.data.updatedTime*/
-            }
+                activeId: this.state.record.activeId,
+                activeName: res.activeTable.activeName,
+                activeStartTime: res.activeTable.activeStartTime,
+                activeEndTime: res.activeTable.activeEndTime,
+                activeDescription:res.activeTable.activeDescription
+            },
+            fileList:[{
+                uid: '-1',
+                name:  res.activeTable.activeName,
+                status: 'done',
+                url: res.activePictrueUrl,
+            }],
+            activePictrueUrl:res.activePictrueUrl
         });
-        if (this.state.updateActiveVisible == false) {
+        if (res.activePictrueUrl==""){
             this.setState({
-                activeDetailVisible: true,
+                activePictrueUrl:'http://47.107.228.169:8099/10/1/365bb11f3a114999a57c8fce38f5ac1c.png',
+                fileList:''
             })
         }
+        if (this.state.activeDetailVisible== false) {
+            this.setState({
+                updateActiveVisible: true,
+            })
+        }
+
     }
+   /* async getActivePicById(data) {
+        const res = await _getActivePicById(data);
+        console.log("res:",res)
+        if (res==null){
+            this.setState({
+                activePictrueUrl:'http://47.107.228.169:8099/10/1/365bb11f3a114999a57c8fce38f5ac1c.png',
+            });
+        }else {
+            this.setState({
+                activePictrueUrl:res,
+            });
+        }
+
+        //console.log("url",this.state.activePictrueUrl)
+    }*/
 
     async publishActive(data) {
         //console.log('res表单数据: ', data);
@@ -118,7 +150,7 @@ class Index extends React.Component {
     }
 
     async updateActive(data) {
-        console.log('res表单数据: ', data);
+        //console.log('res表单数据: ', data);
         const res = await _updateActive(data);
         console.log(res);
         this.setState({
@@ -126,7 +158,7 @@ class Index extends React.Component {
         });
         Modal.success({
             title: '成功',
-            content: '管理员修改成功!',
+            content: '活动修改成功!',
         });
         this.getActiveListInPage({
             params: {
@@ -182,7 +214,7 @@ class Index extends React.Component {
             publishActiveVisible: false,
             updateActiveVisible: false
         });
-        //this.formEndUpRef.props.form.resetFields();
+        this.formUpActiveRef.props.form.resetFields();
     };
 
     start = () => {
@@ -293,14 +325,17 @@ class Index extends React.Component {
     //详情点击事件
     handleActiveDetail = () => {
         if (!this.isNull(this.state.record.activeId)) {
-            console.log("recordId:" + this.state.record.activeId);
-            console.log("rowkey:" + this.state.rowkey);
+            //console.log("recordId:" + this.state.record.activeId);
+            //console.log("rowkey:" + this.state.rowkey);
+            this.setState({
+                activeDetailVisible:true
+            })
             var data = {
                 params: {
                     activeId: this.state.record.activeId
                 }
-            }
-            console.log('qqq' + data);
+            };
+            //console.log('qqq' + data);
             this.getActiveById(data);
         }
     };
@@ -321,16 +356,15 @@ class Index extends React.Component {
         });
     };
     showUpdateConfirm = () => {
-        console.log(this.state.record.activeId);
-        console.log("点击修改按钮事件");
+        //console.log(this.state.record.activeId);
+        //console.log("点击修改按钮事件");
+
         this.getActiveById({
             params: {
                 activeId: this.state.record.activeId
             }
         });
-        this.setState({
-            updateActiveVisible: true
-        });
+
     };
 
     //获取子菜单元素数据等
@@ -383,10 +417,16 @@ class Index extends React.Component {
                 });
                 console.log("formEndUpRef:", this.formUpActiveRef);
                 var activeInfo = this.childUp.getUpItemsValue();
-                console.log(this.childUp.getUpItemsValue());
+                var url = this.childUp.getUpPicUrl();
+                console.log("this.childUp.getUpItemsValue():",this.childUp.getUpItemsValue());
+                console.log("this.childUp.getUPPicUrl():",this.childUp.getUpPicUrl());
                 var data = {
-                    activeId: this.state.record.activeId,
+                    activeId:this.state.record.activeId,
                     activeName: activeInfo.activeName,
+                    activeDescription: activeInfo.activeDescription,
+                    activeStartTime: activeInfo.activeStartTime,
+                    activeEndTime: activeInfo.activeEndTime,
+                    activePictrueUrl:url
                 };
                 console.log('修改表单数据: ', data);
                 this.updateActive(data);
@@ -506,6 +546,17 @@ class Index extends React.Component {
                 })
             }
         };
+       /* let uploadPic=null
+        if (_this.state.updateActiveVisible){
+            uploadPic= <UpdateActive title="修改活动" visible={_this.state.updateActiveVisible}
+                                      onOk={_this.handleUpdateActive} onCancel={_this.handleCancel}
+                                      activeDetail={_this.state.activeDetail}
+                                      activePictrueUrl={_this.state.activePictrueUrl}
+                                      wrappedComponentRef={(form) => this.formUpActiveRef = form}
+                                      formUpActiveRef={_this.formUpActiveRef}
+                                      fileList={_this.state.fileList}
+            />
+        }*/
 
         return (
             <div>
@@ -544,16 +595,26 @@ class Index extends React.Component {
                                    onOk={_this.handlePublishActive} onCancel={_this.handleCancel}
                                    wrappedComponentRef={(form) => this.formPubActiveRef = form}
                                    formPubActiveRef={_this.formPubActiveRef}/>
-                    {/*<AdminDetail title="管理员详情" visible={_this.state.activeDetailVisible} loading={loading}
+                   <ActiveDetail title="活动详情" visible={_this.state.activeDetailVisible} loading={loading}
                                  onCancel={_this.handleCancel} onOk={_this.handleCancel}
                                  wrappedComponentRef={(form) => this.formRef = form}
-                                 activeDetail={_this.state.activeDetail}/>
-
-                    <UpdateAdmin title="修改管理员" visible={_this.state.updateActiveVisible}
-                                 onOk={_this.handleUpdateActive} onCancel={_this.handleCancel}
                                  activeDetail={_this.state.activeDetail}
-                                 wrappedComponentRef={(form) => this.formUpActiveRef = form}
-                                 formUpActiveRef={_this.formUpActiveRef}/>*/}
+                                 activePictrueUrl={_this.state.activePictrueUrl}
+                                 activeDetailVisible={_this.state.activeDetailVisible}
+                   />
+
+                   <UpdateActive title="修改活动" visible={_this.state.updateActiveVisible}
+                                     onOk={_this.handleUpdateActive} onCancel={_this.handleCancel}
+                                     activeDetail={_this.state.activeDetail}
+                                     activePictrueUrl={_this.state.activePictrueUrl}
+                                     wrappedComponentRef={(form) => this.formUpActiveRef = form}
+                                     formUpActiveRef={_this.formUpActiveRef}
+                                     fileList={_this.state.fileList}
+                                 updateActiveVisible={_this.state.updateActiveVisible}
+                />
+                   {/* {
+                        uploadPic
+                    }*/}
                     <Table
                         className="ant-table-thead ant-table-tbody" rowSelection={rowSelection}
                         dataSource={this.state.tData} bordered
