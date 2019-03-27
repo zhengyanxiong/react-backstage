@@ -7,9 +7,9 @@ class DataAnalysisComponent extends Component{
     render() {
         return(
             <div>
-                <CustomBreadcrumb arr={["闲置管理"]}/>
+                <CustomBreadcrumb arr={["关于校园拍拍"]}/>
                 <div style={{ padding: 24, background: '#fff', minHeight: 360 }}>
-                    <div>闲置管理...</div>
+                    <div>关于校园拍拍....</div>
                 </div>
             </div>
 

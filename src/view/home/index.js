@@ -82,6 +82,12 @@ class Index extends Component {
                                 <Icon type="fire"/>
                                 <span>活动管理</span>
                             </Link>
+                            <Menu.Item key="10">
+                            <Link to="/index/orderManagement">
+                                <Icon type="ordered-list"/>
+                                <span>订单管理</span>
+                            </Link>
+                        </Menu.Item>
                         </Menu.Item>
                         {_this.adminType === "false" ? <Menu.Item key="3">
                             <Link to="/index/adminManagement"><Icon type="team"/><span>管理员管理</span></Link>
@@ -93,8 +99,10 @@ class Index extends Component {
                             </Link>
                         </Menu.Item>
                         <Menu.Item key="8">
-                            <Icon type="info-circle-o"/>
-                            <span>关于</span>
+                            <Link to="/index/aboutManagement">
+                                <Icon type="info-circle-o"/>
+                                <span>关于</span>
+                            </Link>
                         </Menu.Item>
                     </Menu>
                 </Sider>

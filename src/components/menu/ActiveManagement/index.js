@@ -11,11 +11,13 @@ import {_getActiveById} from "../../../api/active";
 import {_publishActive} from "../../../api/active";
 import {_updateActive} from "../../../api/active";
 import {
-    Form, Input, Modal, Icon, Cascader, Button, Table
+    Form, Input, Modal, Icon, Cascader, Button, Table, Switch,message
 } from 'antd';
 
 const FormItem = Form.Item;
 const confirm = Modal.confirm;
+
+var container = document.getElementById('components-switch-demo-text');
 
 class Index extends React.Component {
     constructor(props) {
@@ -29,7 +31,7 @@ class Index extends React.Component {
             rowkey: 0,
             selectedRowKeys: [],
             loading: false,
-            activePictrueUrl:'',
+            activePictrueUrl: '',
             activeDetail: {
                 activeName: '',
                 activeDescription: '',
@@ -41,7 +43,10 @@ class Index extends React.Component {
             activeDetailVisible: false,
             publishActiveVisible: false,
             updateActiveVisible: false,
-            fileList:[]
+            fileList: [],
+            currentValue: '',
+            checkedState:"false",
+            activeLoading:true
         }
     }
 
@@ -55,17 +60,16 @@ class Index extends React.Component {
     }
 
     async getActiveListInPage(data) {
-        const res = await _getActiveListInPage(data);
-        console.log("list返回数据：", res);
-        this.setState({
-            tData: res.list,
-            count: res.count,
-            page: res.page,
-            limit: res.limit
+        _getActiveListInPage(data).then((res)=>{
+            this.setState({
+                tData: res.list,
+                count: res.count,
+                page: res.page,
+                limit: res.limit,
+                activeLoading:false
+            });
         })
-        /*localStorage.setItem('username',res.data.data.name)
-          this.props.history.push({pathname:'/home'});*/
-        //alert(this.state.count);
+       // console.log("tdata:",this.state.tData);
     }
 
     async deleteActiveById(data) {
@@ -74,6 +78,12 @@ class Index extends React.Component {
         const tData = this.state.tData;
         tData.splice(this.state.rowkey, 1);//获取索引，后面的 1 是删除几行
         this.setState({tData: tData});
+        this.getActiveListInPage({
+            params: {
+                page: this.state.page,
+                limit: 10,
+            }
+        });
         Modal.success({
             title: '删除成功',
             content: '活动删除成功！',
@@ -81,8 +91,6 @@ class Index extends React.Component {
     }
 
     async getActiveById(data) {
-        //console.log("默认activeName:" + this.state.activeDetail.activeName);
-        //this.getActivePicById(data);
         const res = await _getActiveById(data);
         this.setState({
             activeDetail: {
@@ -90,56 +98,57 @@ class Index extends React.Component {
                 activeName: res.activeTable.activeName,
                 activeStartTime: res.activeTable.activeStartTime,
                 activeEndTime: res.activeTable.activeEndTime,
-                activeDescription:res.activeTable.activeDescription
+                activeDescription: res.activeTable.activeDescription
             },
-            fileList:[{
+            fileList: [{
                 uid: '-1',
-                name:  res.activeTable.activeName,
+                name: res.activeTable.activeName,
                 status: 'done',
                 url: res.activePictrueUrl,
             }],
-            activePictrueUrl:res.activePictrueUrl
+            activePictrueUrl: res.activePictrueUrl
         });
-        if (res.activePictrueUrl==""){
+        if (res.activePictrueUrl == "") {
             this.setState({
-                activePictrueUrl:'http://47.107.228.169:8099/10/1/365bb11f3a114999a57c8fce38f5ac1c.png',
-                fileList:''
+                activePictrueUrl: 'http://47.107.228.169:8099/10/1/365bb11f3a114999a57c8fce38f5ac1c.png',
+                fileList: ''
             })
         }
-        if (this.state.activeDetailVisible== false) {
+        if (this.state.activeDetailVisible == false) {
             this.setState({
                 updateActiveVisible: true,
             })
         }
 
     }
-   /* async getActivePicById(data) {
-        const res = await _getActivePicById(data);
-        console.log("res:",res)
-        if (res==null){
-            this.setState({
-                activePictrueUrl:'http://47.107.228.169:8099/10/1/365bb11f3a114999a57c8fce38f5ac1c.png',
-            });
-        }else {
-            this.setState({
-                activePictrueUrl:res,
-            });
-        }
 
-        //console.log("url",this.state.activePictrueUrl)
-    }*/
+    /* async getActivePicById(data) {
+         const res = await _getActivePicById(data);
+         console.log("res:",res)
+         if (res==null){
+             this.setState({
+                 activePictrueUrl:'http://47.107.228.169:8099/10/1/365bb11f3a114999a57c8fce38f5ac1c.png',
+             });
+         }else {
+             this.setState({
+                 activePictrueUrl:res,
+             });
+         }
+
+         //console.log("url",this.state.activePictrueUrl)
+     }*/
 
     async publishActive(data) {
         //console.log('res表单数据: ', data);
         const res = await _publishActive(data);
         this.publishActivePicture({
-            activeId:res,
-            activePictrueUrl:this.childPub.getPicUrl()
+            activeId: res,
+            activePictrueUrl: this.childPub.getPicUrl()
         });
         //console.log(res);
         Modal.success({
             title: '发布成功',
-            content: '活动描述：'+data.activeName
+            content: '活动描述：' + data.activeName
         });
         /*this.getAdminListInPage({
             params: {
@@ -196,7 +205,7 @@ class Index extends React.Component {
                 limit: 10
             }
         })
-       // console.log(res);
+        // console.log(res);
     }
 
     //判读是否为空,通用
@@ -299,14 +308,14 @@ class Index extends React.Component {
     showDeleteConfirm = () => {
         var _this = this;
         confirm({
-            title: '你确定要删除该管理员吗?',
+            title: '你确定要删除该活动吗?',
             okText: '确定',
             okType: 'danger',
             cancelText: '取消',
             //删除行
             onOk() {
-                console.log("recordId:" + _this.state.record.activeId);
-                console.log("rowkey:" + _this.state.rowkey);
+                //console.log("recordId:" + _this.state.record.activeId);
+                //console.log("rowkey:" + _this.state.rowkey);
                 if (!_this.isNull(_this.state.record.activeId)) {
                     var data = {
                         params: {
@@ -318,7 +327,7 @@ class Index extends React.Component {
                 }
             },
             onCancel() {
-                console.log('取消');
+                //console.log('取消');
             },
         });
     };
@@ -328,7 +337,7 @@ class Index extends React.Component {
             //console.log("recordId:" + this.state.record.activeId);
             //console.log("rowkey:" + this.state.rowkey);
             this.setState({
-                activeDetailVisible:true
+                activeDetailVisible: true
             })
             var data = {
                 params: {
@@ -418,15 +427,15 @@ class Index extends React.Component {
                 console.log("formEndUpRef:", this.formUpActiveRef);
                 var activeInfo = this.childUp.getUpItemsValue();
                 var url = this.childUp.getUpPicUrl();
-                console.log("this.childUp.getUpItemsValue():",this.childUp.getUpItemsValue());
-                console.log("this.childUp.getUPPicUrl():",this.childUp.getUpPicUrl());
+                console.log("this.childUp.getUpItemsValue():", this.childUp.getUpItemsValue());
+                console.log("this.childUp.getUPPicUrl():", this.childUp.getUpPicUrl());
                 var data = {
-                    activeId:this.state.record.activeId,
+                    activeId: this.state.record.activeId,
                     activeName: activeInfo.activeName,
                     activeDescription: activeInfo.activeDescription,
                     activeStartTime: activeInfo.activeStartTime,
                     activeEndTime: activeInfo.activeEndTime,
-                    activePictrueUrl:url
+                    activePictrueUrl: url
                 };
                 console.log('修改表单数据: ', data);
                 this.updateActive(data);
@@ -451,7 +460,7 @@ class Index extends React.Component {
             idList:idList
         }*/
         console.log("idList：", idList);
-       // console.log("data：", data);
+        // console.log("data：", data);
 
         _this.deleteActiveByIds(idList);
         this.setState({loading: true});
@@ -461,11 +470,105 @@ class Index extends React.Component {
      * 将"2018-05-19T08:04:52.000+0000"这种格式的时间转化为正常格式
      * @param time
      */
-    timeFormat=(time) =>{
+    timeFormat = (time) => {
         var dateee = new Date(time).toJSON();
         return new Date(+new Date(dateee) + 8 * 3600 * 1000).toISOString().replace(/T/g, ' ').replace(/\.[\d]{3}Z/, '')
-
     };
+handleSwitch=(checked)=>{
+    console.log('checked:',checked);
+    var checkedState = checked ? 1 : 0;
+    console.log("state:",checkedState);
+    if(checked){
+        const _this=this;
+        confirm({
+            title: '确定要上线该活动吗?',
+            onOk() {
+                _this.updateActive({
+                    activeId: _this.state.record.activeId,
+                    activeState:checkedState
+                });
+            },
+            onCancel() {
+                _this.getActiveListInPage({
+                    params: {
+                        page: _this.state.page,
+                        limit: 10
+                    }
+                });
+            },
+        });
+    }else {
+        const _this=this;
+    confirm({
+        title: '确定将该活动下线吗?',
+        onOk() {
+            _this.updateActive({
+                activeId: _this.state.record.activeId,
+                activeState:checkedState
+            });
+           // console.log("_this.state.checkedState",_this.state.checkedState)
+        },
+        onCancel() {
+            _this.getActiveListInPage({
+                params: {
+                    page: _this.state.page,
+                    limit: 10
+                }
+            });
+        },
+    });
+}
+
+};
+/*
+
+handleClick=()=>{
+    console.log("this.state.checkedState",this.state.checkedState)
+    var checkedState = this.state.checkedState ? 1 : 0;
+    //console.log("state:",checkedState);
+    if(this.state.checkedState=="false"){
+        const _this=this;
+        confirm({
+            title: '确定要上线该活动吗?',
+            onOk() {
+                _this.updateActive({
+                    activeId: _this.state.record.activeId,
+                    activeState:checkedState
+                });
+                _this.setState({
+                    checkedState:"true"
+                });
+            },
+            onCancel() {
+                _this.setState({
+                    checkedState:"false"
+                });
+            },
+        });
+    }else {
+        const _this=this;
+
+    confirm({
+        title: '确定将该活动下线吗?',
+        onOk() {
+            _this.updateActive({
+                activeId: _this.state.record.activeId,
+                activeState:checkedState
+            });
+            _this.setState({
+                checkedState:"false"
+            });
+        },
+        onCancel() {
+            _this.setState({
+                checkedState:"true"
+            });
+        },
+    });
+}
+
+};
+*/
 
     render() {
         const _this = this;
@@ -496,23 +599,36 @@ class Index extends React.Component {
         }, {
             title: '开始时间',
             dataIndex: 'activeStartTime',
-            render:(text, record, index)=>(
+            render: (text, record, index) => (
                 this.timeFormat(_this.state.tData[index].activeStartTime)
             )
         }, {
             title: '结束时间',
             dataIndex: 'activeEndTime',
-            render:(text, record, index)=>(
+            render: (text, record, index) => (
                 this.timeFormat(_this.state.tData[index].activeEndTime)
             )
         }, {
-            title: '活动描述',
+            title: '描述',
+            width: 250,
             dataIndex: 'activeDescription'
+        }, {
+            title: '状态',
+            key: 'state',
+            dataIndex: 'activeState',
+            render: (text, record, index) => {
+                if (_this.state.tData[index].activeState == 1) {
+                    return <Switch defaultChecked={true}  checkedChildren={'上线'} unCheckedChildren={'下线'} onChange={_this.handleSwitch}/>
+                } else {
+                    return <Switch defaultChecked={false} checkedChildren="上线" unCheckedChildren="下线" onChange={_this.handleSwitch}/>
+                }
+            }
+
         }, {
             title: '操作',
             dataIndex: 'operate',
             key: 'action',
-            width: 215,
+            width: 200,
             fixed: 'right',
             align: 'center',
             render: (text, record, index) => (
@@ -522,7 +638,7 @@ class Index extends React.Component {
                     <Button type="danger" size="small" htmlType={'button'} style={{margin: "4px"}}
                             onClick={() => showDeleteConfirm(index)}> 删除 </Button>
                     <Button type="primary" size="small" htmlType={'button'} style={{margin: "4px"}}
-                             onClick={_this.handleActiveDetail}>详情</Button>
+                            onClick={_this.handleActiveDetail}>详情</Button>
                 </Button.Group>
             ),
         }];
@@ -546,17 +662,17 @@ class Index extends React.Component {
                 })
             }
         };
-       /* let uploadPic=null
-        if (_this.state.updateActiveVisible){
-            uploadPic= <UpdateActive title="修改活动" visible={_this.state.updateActiveVisible}
-                                      onOk={_this.handleUpdateActive} onCancel={_this.handleCancel}
-                                      activeDetail={_this.state.activeDetail}
-                                      activePictrueUrl={_this.state.activePictrueUrl}
-                                      wrappedComponentRef={(form) => this.formUpActiveRef = form}
-                                      formUpActiveRef={_this.formUpActiveRef}
-                                      fileList={_this.state.fileList}
-            />
-        }*/
+        /* let uploadPic=null
+         if (_this.state.updateActiveVisible){
+             uploadPic= <UpdateActive title="修改活动" visible={_this.state.updateActiveVisible}
+                                       onOk={_this.handleUpdateActive} onCancel={_this.handleCancel}
+                                       activeDetail={_this.state.activeDetail}
+                                       activePictrueUrl={_this.state.activePictrueUrl}
+                                       wrappedComponentRef={(form) => this.formUpActiveRef = form}
+                                       formUpActiveRef={_this.formUpActiveRef}
+                                       fileList={_this.state.fileList}
+             />
+         }*/
 
         return (
             <div>
@@ -595,24 +711,24 @@ class Index extends React.Component {
                                    onOk={_this.handlePublishActive} onCancel={_this.handleCancel}
                                    wrappedComponentRef={(form) => this.formPubActiveRef = form}
                                    formPubActiveRef={_this.formPubActiveRef}/>
-                   <ActiveDetail title="活动详情" visible={_this.state.activeDetailVisible} loading={loading}
-                                 onCancel={_this.handleCancel} onOk={_this.handleCancel}
-                                 wrappedComponentRef={(form) => this.formRef = form}
-                                 activeDetail={_this.state.activeDetail}
-                                 activePictrueUrl={_this.state.activePictrueUrl}
-                                 activeDetailVisible={_this.state.activeDetailVisible}
-                   />
+                    <ActiveDetail title="活动详情" visible={_this.state.activeDetailVisible} loading={loading}
+                                  onCancel={_this.handleCancel} onOk={_this.handleCancel}
+                                  wrappedComponentRef={(form) => this.formRef = form}
+                                  activeDetail={_this.state.activeDetail}
+                                  activePictrueUrl={_this.state.activePictrueUrl}
+                                  activeDetailVisible={_this.state.activeDetailVisible}
+                    />
 
-                   <UpdateActive title="修改活动" visible={_this.state.updateActiveVisible}
-                                     onOk={_this.handleUpdateActive} onCancel={_this.handleCancel}
-                                     activeDetail={_this.state.activeDetail}
-                                     activePictrueUrl={_this.state.activePictrueUrl}
-                                     wrappedComponentRef={(form) => this.formUpActiveRef = form}
-                                     formUpActiveRef={_this.formUpActiveRef}
-                                     fileList={_this.state.fileList}
-                                 updateActiveVisible={_this.state.updateActiveVisible}
-                />
-                   {/* {
+                    <UpdateActive title="修改活动" visible={_this.state.updateActiveVisible}
+                                  onOk={_this.handleUpdateActive} onCancel={_this.handleCancel}
+                                  activeDetail={_this.state.activeDetail}
+                                  activePictrueUrl={_this.state.activePictrueUrl}
+                                  wrappedComponentRef={(form) => this.formUpActiveRef = form}
+                                  formUpActiveRef={_this.formUpActiveRef}
+                                  fileList={_this.state.fileList}
+                                  updateActiveVisible={_this.state.updateActiveVisible}
+                    />
+                    {/* {
                         uploadPic
                     }*/}
                     <Table
@@ -622,7 +738,9 @@ class Index extends React.Component {
                         onRow={(record, rowkey) => ({onMouseOver: this.handleRecord.bind(this, record, rowkey)})}
                         pagination={pagination}
                         rowKey={this.state.tData.activeId}
-                        columns={columns}>
+                        columns={columns}
+                        loading={this.state.activeLoading}
+                    >
                     </Table>
                 </div>
             </div>

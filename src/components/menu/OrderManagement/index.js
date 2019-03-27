@@ -7,12 +7,11 @@ class DataAnalysisComponent extends Component{
     render() {
         return(
             <div>
-                <CustomBreadcrumb arr={["闲置管理"]}/>
+                <CustomBreadcrumb arr={["订单管理"]}/>
                 <div style={{ padding: 24, background: '#fff', minHeight: 360 }}>
-                    <div>闲置管理...</div>
+                    <div>订单管理组件</div>
                 </div>
             </div>
-
         )
     }
 }

@@ -1,13 +1,13 @@
 import React, {Component} from "react"
-import {Layout, Col, Row} from 'antd';
+import {Layout, Col, Row,Badge} from 'antd';
 import Icon from '../../Utils/Icon/Icon.js';
-
+import {_getUserByUserState} from '../../../api/user'
+import {_getActiveCount} from '../../../api/active'
 import 'echarts/map/js/china';
 import BaseComponent from '../../Utils/BaseComponent';
 import Panel from '../../Utils/Panel';
 import G2 from '../../Utils/Charts/G2';
 import DataSet from '@antv/data-set';
-
 import './index.less';
 import '../../../components/Utils/assets/styles/index.less'
 const {Content} = Layout;
@@ -74,6 +74,56 @@ for (let i = 0; i < 7; i += 1) {
 }
 
 class HomeComponent extends BaseComponent {
+    constructor(props) {
+        super(props);
+        this.state = {
+            show:true,
+            count:0,
+            countState:0,
+            activeCount:0,
+            homeLoading:true
+        }
+    }
+    componentDidMount() {
+        this.getUserByUserState({params:{"userState":1}});
+        this.getActiveCount();
+        this.getUser({params:{"userState":2}});
+    }
+
+    async getUser(data) {
+        const res = await _getUserByUserState(data);
+        console.log("返回数据count：", res);
+        this.setState({
+            count: res
+        })
+    }
+    async getActiveCount(data) {
+        const res = await _getActiveCount(data);
+        console.log("返回数据count：", res);
+        this.setState({
+            activeCount: res
+        })
+    }
+    async getUserByUserState(data) {
+        const res = await _getUserByUserState(data);
+
+        console.log("返回数据count：", res);
+        this.setState({
+            countState: res
+        })
+        /*localStorage.setItem('username',res.data.data.name)
+          this.props.history.push({pathname:'/home'});*/
+        //alert(this.state.count);
+    }
+
+    clickUserNo=()=>{
+        const {from} = this.props.location.state || {from: {pathname: '/index/checkUserManagement'}};
+        this.props.history.push(from)
+    };
+    clickActive=()=>{
+        const {from} = this.props.location.state || {from: {pathname: '/index/activeManagement'}};
+        this.props.history.push(from)
+    };
     render() {
         return (
             <div>
@@ -81,12 +131,16 @@ class HomeComponent extends BaseComponent {
 
                     <Content>
                         <Row gutter={20}>
-                            <Col md={6}>
-                                <Panel className="qq" header={false} cover>
+                            <Col md={6} onClick={this.clickUserNo}>
+                                <Panel className="qq" header={false} cover >
                                     <Icon type="aliwangwang" antd/>
-                                    <h2>
-                                        <b>99+</b>
-                                    </h2>
+
+                                        <Badge dot={this.state.show} style={{ marginTop: 10 }}>
+                                            <h2>
+                                                <b>{this.state.countState}</b>
+                                            </h2>
+                                        </Badge>
+
                                     <h5 className="text-muted">未读消息</h5>
                                 </Panel>
                             </Col>
@@ -94,7 +148,7 @@ class HomeComponent extends BaseComponent {
                                 <Panel className="wechat" header={false} cover>
                                     <Icon type="user" antd/>
                                     <h2>
-                                        <b>523</b>
+                                        <b>{this.state.count}</b>
                                     </h2>
                                     <h5 className="text-muted">已注册</h5>
                                 </Panel>
@@ -108,19 +162,21 @@ class HomeComponent extends BaseComponent {
                                     <h5 className="text-muted">成交量</h5>
                                 </Panel>
                             </Col>
-                            <Col md={6}>
+                            <Col md={6}onClick={this.clickActive}>
                                 <Panel className="github" header={false} cover>
                                     <Icon type="sound" antd/>
-                                    <h2>
-                                        <b>999</b>
-                                    </h2>
+                                    <Badge dot={this.state.show} style={{ marginTop: 10 }}>
+                                        <h2>
+                                            <b>{this.state.activeCount}</b>
+                                        </h2>
+                                    </Badge>
                                     <h5 className="text-muted">活动</h5>
                                 </Panel>
                             </Col>
                         </Row>
                         <Row>
                             <Col>
-                                <Panel title="数据面板组件">
+                                <Panel title="数据面板">
                                     <div className="flex">
                                         <div className="flex-auto-hidden flex flex-column">
                                             <h4 className="flex-none">用户与销售量分布</h4>

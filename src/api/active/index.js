@@ -58,3 +58,12 @@ export const _getActiveById = (data) => {
 export const _updateActive = (data) => {
     return instance.post("/backstageservice/active/updateActive",data)
 };
+/**
+ * 查询活动个数
+ * @param data
+ * @returns {AxiosPromise<any>}
+ * @private
+ */
+export const _getActiveCount = (data) => {
+    return instance.post("/backstageservice/active/getActiveCount",data)
+};

@@ -7,6 +7,8 @@ import UserManagement from '@/components/menu/UserManagement/index.js'
 import CheckUserManagement from '@/components/menu/CheckManagement/index.js'
 import GoodsManagement from '@/components/menu/GoodsManagement/index.js'
 import ActiveManagement from '@/components/menu/ActiveManagement/index.js'
+import OrderManagement from '@/components/menu/OrderManagement/index.js'
+import AboutManagement from '@/components/menu/AboutManagement/index.js'
 
 //路由表
 export const main = [
@@ -20,7 +22,9 @@ export const main = [
             {path: '/index/userManagement', name:'用户管理', component: UserManagement},
             {path: '/index/checkUserManagement', name:'审核注册管理', component: CheckUserManagement},
             {path: '/index/goodsManagement', name:'闲置管理', component: GoodsManagement},
-            {path: '/index/activeManagement', name:'闲置管理', component: ActiveManagement}
+            {path: '/index/activeManagement', name:'活动管理', component: ActiveManagement},
+            {path: '/index/orderManagement', name:'订单管理', component: OrderManagement},
+            {path: '/index/aboutManagement', name:'关于', component: AboutManagement},
         ]
     },
     {path: '/login', name: '登录', component: Login}

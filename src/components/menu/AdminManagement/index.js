@@ -40,6 +40,7 @@ class Index extends React.Component {
             adminDetailVisible: false,
             submitAdminVisible: false,
             updateAdminVisible: false,
+            adminLoading:true
         }
     }
 
@@ -59,7 +60,8 @@ class Index extends React.Component {
             tData: res.list,
             count: res.count,
             page: res.page,
-            limit: res.limit
+            limit: res.limit,
+            adminLoading:false
         })
         /*localStorage.setItem('username',res.data.data.name)
           this.props.history.push({pathname:'/home'});*/
@@ -524,7 +526,9 @@ class Index extends React.Component {
                         onRow={(record, rowkey) => ({onMouseOver: this.handleRecord.bind(this, record, rowkey)})}
                         pagination={pagination}
                         rowKey={this.state.tData.adminId}
-                        columns={columns}>
+                        columns={columns}
+                        loading={this.state.adminLoading}
+                    >
                     </Table>
                 </div>
             </div>

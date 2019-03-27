@@ -1,5 +1,6 @@
 import axios from 'axios';
 import {isLogout} from "../util/Cookie"
+import {message} from 'antd';
 
 import {PromptMsg_Loading} from '../components/PromptMessage'
 import RES_CODE_SUCCESS from '../util/globalCode';
@@ -13,13 +14,13 @@ const instance = axios.create({
 });
 
 //添加请求拦截器
-instance.interceptors.request.use(function(config){
+instance.interceptors.request.use(function (config) {
     //在发送请求之前做某事，比如加一个loading
     /*if(commonInfo.hasLoading){
         //Toast.loading('', 3);
     }*/
     return config;
-},function(error){
+}, function (error) {
     //请求错误时做些事
     //Toast.hide();
     return Promise.reject(error);
@@ -28,13 +29,18 @@ instance.interceptors.request.use(function(config){
 //添加一个响应拦截器
 instance.interceptors.response.use(function (response) {
     // 1.成功
-    if ( response.data.code === 200 && response.data.msg === "success") {
+    if (response.data.code === 200 && response.data.msg === "success") {
         /*if(commonInfo.hasLoading){
             //Toast.hide();
         }*/
         return response.data.data;
     }
-
+    if (response.data.code === 500) {
+        /*if(commonInfo.hasLoading){
+            //Toast.hide();
+        }*/
+        message.error(response.data.msg);
+    }
     // 2.session过期
     /*if (!response.data.success && response.data.messageCode === globalCode.timeout) {
         //Toast.hide();
@@ -55,6 +61,12 @@ instance.interceptors.response.use(function (response) {
             messageCode: 'netError'
         })
     }*/
+    if (response.data === null && response.data.msg === "f") {
+        /*if(commonInfo.hasLoading){
+            //Toast.hide();as
+    }*/
+        message.error('网络不给力哟，请检查网络设置');
+    }
 
     // 3.其他失败，比如校验不通过等
     return Promise.reject(response.data);
@@ -70,7 +82,7 @@ instance.interceptors.response.use(function (response) {
 instance.interceptors.request.use(function (config) {
     config.withCredentials = true;
     config.headers = {
-        token:isLogout()
+        token: isLogout()
     };
     return config;
 }, function (error) {

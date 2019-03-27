@@ -1,5 +1,5 @@
 import React, {Component} from "react"
-import {Form, Input, Row, Col, notification, message} from 'antd'
+import {Form, Input, Row, Col, notification, message,Spin,Icon} from 'antd'
 import {randomNum, calculateWidth} from '../../util/utils'
 import {authenticateSuccess, authenticateSuccessType,authenticateSuccessToken} from "../../util/Cookie"
 import PromptBox from "../../components/PromptBox"
@@ -9,6 +9,7 @@ import Loading from "../../components/Loading"
 
 import './style.css'
 import 'animate.css/animate.css'
+const antIcon = <Icon type="loading" style={{fontSize: 18 }} spin />;
 
 class Index extends Component {
 constructor(props){
@@ -16,7 +17,8 @@ constructor(props){
     this.state = {
         tData:[],
         focusItem: -1,   //保存当前聚焦的input
-        code: ''         //验证码
+        code: '',         //验证码
+        loading: false
     }
 }
 
@@ -44,7 +46,9 @@ constructor(props){
                     });
                     return
                 }
-
+                this.setState({
+                    loading:true
+                });
                 let param = {
                     "adminName": values.username,
                     "adminPassword": values.password,
@@ -52,20 +56,26 @@ constructor(props){
                 console.log("data ",param);
                 const _this = this;
                 _adminLogin(param).then((data) =>{
+                    console.log(data);
                     message.success("登录成功！",2).then(()=>{
+                        _this.setState({
+                            loading:false
+                        });
                         authenticateSuccess(values.username);
                         authenticateSuccessType(data.adminType);
                         authenticateSuccessToken(data.token);
-
                         const {from} = this.props.location.state || {from: {pathname: '/'}};
-                        this.props.history.push(from)
+                        this.props.history.push(from);
                     })
-                }).catch(function (data) {
-                    message.error(data.msg).then(()=>{
-                        _this.createCode()
-                    })
-                })
+                }).catch(function () {
+                    _this.setState({
+                        loading:false
+                    });
+                    _this.createCode()
+                });
+
             }
+
         })
     };
 
@@ -101,16 +111,18 @@ constructor(props){
         this.setState({
             code
         })
-    }
+    };
 
     render() {
         const {form} = this.props;
         const {getFieldDecorator, getFieldError} = form;
         const {focusItem, code} = this.state;
         return (
-            <div id='login-page'>
+
+                <div id='login-page'>
                 {/*<h3 style={styles.loadingTitle} className='animated bounceInLeft'>登录页面载入中...</h3>
                 <Loading/>*/}
+
                 <div id='backgroundBox' style={styles.backgroundBox}/>
                 <div className='container'>
                     <div className='box showBox'>
@@ -181,18 +193,19 @@ constructor(props){
                                     </Row>
                                 )}
                             </Form.Item>
+
                             <div className='bottom'>
-                                <input className='loginBtn' type="submit" value='登录'/>
+                                <Spin spinning={this.state.loading} style={{position: "absolute", marginLeft: "60px"}}  />
+                                <input className='loginBtn' type="submit" value='登录'></input>
                             </div>
                         </Form>
                         <div className='footer'>
                             <div>欢迎登陆校园拍拍后台管理系统</div>
                         </div>
                     </div>
-
                 </div>
+                    </div>
 
-            </div>
 
         )
     }

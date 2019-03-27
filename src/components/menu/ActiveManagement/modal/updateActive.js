@@ -136,7 +136,7 @@ const UpdateActive = Form.create()(
                 {this.props.fileList.length >= 1 ? null : uploadButton}
             </Upload>);
 
-            console.log('this.props.fileList',this.props.fileList);
+           // console.log('this.props.fileList',this.props.fileList);
             return (
                 <Modal
                     visible={visible}
