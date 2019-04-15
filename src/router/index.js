@@ -6,7 +6,9 @@ import AdminManagement from '@/components/menu/AdminManagement/index.js'
 import UserManagement from '@/components/menu/UserManagement/index.js'
 import CheckUserManagement from '@/components/menu/CheckManagement/index.js'
 import GoodsManagement from '@/components/menu/GoodsManagement/index.js'
+import GoodsClassManagement from '@/components/menu/GoodsClassManagement/index.js'
 import ActiveManagement from '@/components/menu/ActiveManagement/index.js'
+import ActiveEnterManagement from '@/components/menu/ActiveEnterManagement/index.js'
 import OrderManagement from '@/components/menu/OrderManagement/index.js'
 import AboutManagement from '@/components/menu/AboutManagement/index.js'
 
@@ -21,8 +23,10 @@ export const main = [
             {path: '/index/adminManagement', name:'管理员管理', component: AdminManagement},
             {path: '/index/userManagement', name:'用户管理', component: UserManagement},
             {path: '/index/checkUserManagement', name:'审核注册管理', component: CheckUserManagement},
-            {path: '/index/goodsManagement', name:'闲置管理', component: GoodsManagement},
+            {path: '/index/goodsManagement', name:'闲置信息', component: GoodsManagement},
+            {path: '/index/goodsClassManagement', name:'闲置分类', component: GoodsClassManagement},
             {path: '/index/activeManagement', name:'活动管理', component: ActiveManagement},
+            {path: '/index/activeEnterManagement', name:'活动报名', component: ActiveEnterManagement},
             {path: '/index/orderManagement', name:'订单管理', component: OrderManagement},
             {path: '/index/aboutManagement', name:'关于', component: AboutManagement},
         ]

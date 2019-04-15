@@ -71,23 +71,41 @@ class Index extends Component {
                                 </Link>
                             </Menu.Item>
                         </SubMenu>
-                        <Menu.Item key="6">
-                            <Link to="/index/goodsManagement">
-                                <Icon type="dropbox"/>
-                                <span>闲置管理</span>
-                            </Link>
-                        </Menu.Item>
-                        <Menu.Item key="7">
-                            <Link to="/index/activeManagement">
-                                <Icon type="fire"/>
-                                <span>活动管理</span>
-                            </Link>
-                            <Menu.Item key="10">
+                        <SubMenu
+                            key="sub2"
+                            title={<span><Icon type="dropbox"/><span>闲置管理</span></span>}
+                        >
+                            <Menu.Item key="12">
+                                <Link to="/index/goodsManagement">
+                                    <span>闲置信息</span>
+                                </Link>
+                            </Menu.Item>
+                            <Menu.Item key="13">
+                                <Link to="/index/goodsClassManagement">
+                                    <span>闲置分类</span>
+                                </Link>
+                            </Menu.Item>
+                        </SubMenu>
+                        <SubMenu
+                            key="sub3"
+                            title={<span><Icon type="fire"/><span>活动管理</span></span>}
+                        >
+                            <Menu.Item key="14">
+                                <Link to="/index/activeManagement">
+                                    <span>活动信息</span>
+                                </Link>
+                            </Menu.Item>
+                            <Menu.Item key="15">
+                                <Link to="/index/activeEnterManagement">
+                                    <span>活动报名</span>
+                                </Link>
+                            </Menu.Item>
+                        </SubMenu>
+                        <Menu.Item key="10">
                             <Link to="/index/orderManagement">
-                                <Icon type="ordered-list"/>
+                                <Icon type="check-circle"/>
                                 <span>订单管理</span>
                             </Link>
-                        </Menu.Item>
                         </Menu.Item>
                         {_this.adminType === "false" ? <Menu.Item key="3">
                             <Link to="/index/adminManagement"><Icon type="team"/><span>管理员管理</span></Link>

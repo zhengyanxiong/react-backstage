@@ -1,15 +1,16 @@
 import React, {Component} from "react"
 import CustomBreadcrumb from "../../CustomBreadcrumb";
-/*import UserDetail from "../../../components/menu/UserManagement/modal/userDetail";
-import SubmitUser from "../../../components/menu/UserManagement/modal/submitUser";
+import UserDetail from "../../../components/menu/UserManagement/modal/userDetail";
+import UserComment from "../../../components/menu/UserManagement/modal/userComment";
+/*import SubmitUser from "../../../components/menu/UserManagement/modal/submitUser";
 import UpdateUser from "../../../components/menu/UserManagement/modal/updateUser";*/
 import {_getMemberListInPage} from "../../../api/user";
 import {_updatePersonal} from "../../../api/user";
-/*import {_deleteUserByIds} from "../../../api/user";
-import {_getUserById} from "../../../api/user";
+import {_getUserAllByUserId} from "../../../api/user";
+/*import {_getUserById} from "../../../api/user";
 import {_updateUser} from "../../../api/user";*/
 import {
-    Form, Input, Modal, Icon, Cascader, Button, Table
+    Form, Input, Modal, Icon, Cascader, Button, Table, Tag, message
 } from 'antd';
 
 const FormItem = Form.Item;
@@ -23,29 +24,96 @@ class Index extends React.Component {
             count: 0,
             page: 1,
             limit: 10,
-            record: 0,
+            record: [{
+                userId: 0
+            }],
             rowkey: 0,
             selectedRowKeys: [],
             loading: false,
             userDetail: {
-                username: '',
-                password: '',
-                userState: '',
-                createdTime: '',
-                updatedTime: ''
+                commentList: [
+                    {
+                        commentId: 0,
+                        orderId: 0,
+                        commentPerId: 0,
+                        commentedPerId: 0,
+                        serviceNum: 5,
+                        descriptionNum: 0,
+                        logisticsNum: 0,
+                        damageNum: 0,
+                        commentExpand1: "",
+                        comment: "",
+                        username: "",
+                        orderNum: "",
+                    }],
+                commentedList: [
+                    {
+                        commentId: 0,
+                        orderId: 0,
+                        commentPerId: 0,
+                        commentedPerId: 0,
+                        serviceNum: 5,
+                        descriptionNum: 0,
+                        logisticsNum: 0,
+                        damageNum: 0,
+                        commentExpand1: "",
+                        comment: "",
+                        username: "",
+                        orderNum: "",
+                    }],
+                userInfo: {
+                    userId: 0,
+                    schoolId: 0,
+                    studentId: 0,
+                    username: "",
+                    headImag: "",
+                    phoneNum: "",
+                    sex: "",
+                    email: "",
+                    realName: "",
+                    idCard: "",
+                    stuCardFront: "",
+                    stuCardBack: "",
+                    registerDate: "",
+                    userCreatedTime: "",
+                    userUpdatedTime: "",
+                    userState: 0,
+                    creditNum: 0,
+                    loveValue: 0,
+                    sumGrade: 0,
+                    schoolName: ""
+                },
+                userBuyCount: 0,
+                publishGoodsCount: 0,
+                userSellCount: 0,
+                goodsList: [],
+                goodsOnCount: 0,
+                goodsSellCount: 0,
+                goodsUpCount: 0,
+                goodsActiveCount: 0,
+                publishClassCount:0
             },
+            receiptPlacelist: [
+                {
+                    receiptId: 0,
+                    userId: 0,
+                    addressName: "",
+                    addressState: ""
+                }
+            ],
             index: '',
             visible: false,
             userDetailVisible: false,
+            userCommentVisible: false,
             submitUserVisible: false,
             updateUserVisible: false,
-            userLoading:true
+            userLoading: true
         }
     }
 
     componentDidMount() {
         this.getMemberListInPage({
-            state:2,
+            state: 2,
             page: 1,
             limit: 10
         })
@@ -53,20 +121,21 @@ class Index extends React.Component {
 
     async getMemberListInPage(data) {
         const res = await _getMemberListInPage(data);
-       // console.log("list返回数据：", res);
+        // console.log("list返回数据：", res);
         this.setState({
             tData: res.list,
             count: res.count,
             page: res.page,
             limit: res.limit,
-            userLoading:false
+            userLoading: false
         })
     }
+
     async updatePersonal(data) {
         const res = await _updatePersonal(data);
         console.log("list返回数据：", res);
         this.getMemberListInPage({
-            state:2,
+            state: 2,
             page: this.state.page,
             limit: 10
         });
@@ -76,63 +145,138 @@ class Index extends React.Component {
         });
     }
 
-    /* async getUserById(data) {
-         console.log("默认UserName:" + this.state.userDetail.username);
-         const res = await _getUserById(data);
+    async getUserAllByUserId(data) {
+        const res = await _getUserAllByUserId(data);
+        if (0 == res.receiptPlacelist) {
+            this.setState({
+                /* userDetail:{
+                     username: res.username,
+                     headImag: res.headImag,
+                     phoneNum: res.phoneNum,
+                     sex: res.sex,
+                     email: res.email,
+                     realName: res.realName,
+                     idCard: res.idCard,
+                     stuCardFront: res.stuCardFront,
+                     stuCardBack: res.stuCardBack,
+                     registerDate: res.registerDate,
+                     userCreatedTime: res.userCreatedTime,
+                     userUpdatedTime: res.userUpdatedTime,
+                     userState: res.userState,
+                     creditNum: res.creditNum,
+                     loveValue: res.loveValue,
+                     sumGrade: res.sumGrade,
+                     schoolName: res.schoolName,
+                 }*/
+                receiptPlacelist: [{
+                    addressName: "",
+                    receiptId: 0
+                }],
+                userDetail: res,
+            });
+        } else {
+            this.setState({
+                /* userDetail:{
+                     username: res.username,
+                     headImag: res.headImag,
+                     phoneNum: res.phoneNum,
+                     sex: res.sex,
+                     email: res.email,
+                     realName: res.realName,
+                     idCard: res.idCard,
+                     stuCardFront: res.stuCardFront,
+                     stuCardBack: res.stuCardBack,
+                     registerDate: res.registerDate,
+                     userCreatedTime: res.userCreatedTime,
+                     userUpdatedTime: res.userUpdatedTime,
+                     userState: res.userState,
+                     creditNum: res.creditNum,
+                     loveValue: res.loveValue,
+                     sumGrade: res.sumGrade,
+                     schoolName: res.schoolName,
+                 }*/
+                userDetail: res,
+                receiptPlacelist: res.receiptPlacelist
+            });
 
-         const form = this.formRef.props.form;
-         this.setState({
-             userDetail: {
-                 username: res.username,
+        }
 
-                 /!*createdTime: res.data.data.createdTime,
-                 updatedTime: res.data.data.updatedTime*!/
-             }
-         });
-         if (this.state.updateUserVisible == false) {
-             this.setState({
-                 userDetailVisible: true,
-             })
-         }
-     }
+        console.log("user:", this.state.userDetail)
+    }
 
-     async updateUser(data) {
-         console.log('res表单数据: ', data);
-         const res = await _updateUser(data);
-         console.log(res);
-         this.setState({
-             updateUserVisible: false
-         });
-         Modal.success({
-             title: '成功',
-             content: '管理员修改成功!',
-         });
-         this.getMemberListInPage({
-             params: {
-                 page: this.state.page,
-                 limit: 10
-             }
-         });
-     }
+    handleToOrder = () => {
+        if (this.state.userDetail.userBuyCount == 0) {
+            message.warning('该用户还没有订单哦');
+        } else {
+            localStorage.setItem("userId", this.state.record.userId);
+            this.setState({
+                userDetailVisible: false
+            });
+            const {from} = {from: {pathname: '/index/orderManagement'}};
+            this.props.history.push(from)
+        }
+    };
+    handleToSellOrder = () => {
+        if (this.state.userDetail.userSellCount == 0) {
+            message.warning('该用户还没有卖出过哦');
+        } else {
+            localStorage.setItem("userSellId", this.state.record.userId);
+            this.setState({
+                userDetailVisible: false
+            });
+            const {from} = {from: {pathname: '/index/orderManagement'}};
+            this.props.history.push(from)
+        }
+    };
 
-     async deleteUserByIds(data) {
-         const res = await _deleteUserByIds(data);
-         console.log(res);
-         const tData = this.state.tData;
-         //console.log("aaaa", this.state.selectedRowKeys);
-         for (var i = 0; i < this.state.selectedRowKeys.length; i++) {
-             tData.splice(this.state.selectedRowKeys[i], 1);//获取索引，后面的 1 是删除几行
-         }
-         this.setState({tData: tData});
-         this.setState({
-             selectedRowKeys: [],
-             loading: false
-         });
-         Modal.success({
-             title: '删除成功',
-             content: '管理员批量删除成功！',
-         });
-     }*/
+    handleToComment = () => {
+        if (this.state.userDetail.userBuyCount == 0&&this.state.userDetail.publishGoodsCount==0) {
+            message.warning('该用户还没有发布过或者收到过评论哦');
+        }else {
+            this.setState({
+                userDetailVisible: false,
+                userCommentVisible: true
+            });
+        }
+    };
+
+    /*   async updateUser(data) {
+           console.log('res表单数据: ', data);
+           const res = await _updateUser(data);
+           console.log(res);
+           this.setState({
+               updateUserVisible: false
+           });
+           Modal.success({
+               title: '成功',
+               content: '管理员修改成功!',
+           });
+           this.getMemberListInPage({
+               params: {
+                   page: this.state.page,
+                   limit: 10
+               }
+           });
+       }
+
+       async deleteUserByIds(data) {
+           const res = await _deleteUserByIds(data);
+           console.log(res);
+           const tData = this.state.tData;
+           //console.log("aaaa", this.state.selectedRowKeys);
+           for (var i = 0; i < this.state.selectedRowKeys.length; i++) {
+               tData.splice(this.state.selectedRowKeys[i], 1);//获取索引，后面的 1 是删除几行
+           }
+           this.setState({tData: tData});
+           this.setState({
+               selectedRowKeys: [],
+               loading: false
+           });
+           Modal.success({
+               title: '删除成功',
+               content: '管理员批量删除成功！',
+           });
+       }*/
 
     //判读是否为空,通用
     isNull = (charts) => {
@@ -143,17 +287,30 @@ class Index extends React.Component {
     };
     //modal取消事件通用
     handleCancel = () => {
+        localStorage.removeItem("userId");
+        localStorage.removeItem("commentedPerId");
+        localStorage.removeItem("commentPerId");
         this.setState({
             visible: false,
             userDetailVisible: false,
             submitUserVisible: false,
-            updateUserVisible: false
+            updateUserVisible: false,
+            userCommentVisible: false
         });
         //this.formEndUpRef.props.form.resetFields();
-    }
-
-
-    start = () => {
+    };
+    toOrderOne=()=>{
+       var orderNum= localStorage.getItem("orderNum", orderNum);
+        //alert("commentedPerId"+commentedPerId);
+       if(!this.isNull(orderNum)){
+           this.setState({
+               userCommentVisible: false
+           });
+           const {from} = {from: {pathname: '/index/orderManagement'}};
+           this.props.history.push(from)
+       }
+    };
+     start = () => {
         this.setState({loading: true});
         // ajax request after empty completing
         setTimeout(() => {
@@ -186,34 +343,34 @@ class Index extends React.Component {
             console.log('page：', page);
             console.log('limit：', limit);
             var data = {
-                state:2,
-                    page: page,
-                    limit: limit
+                state: 2,
+                page: page,
+                limit: limit
             };
             var username = this.props.form.getFieldValue("username");
             if (this.isNull(limit)) {
                 if (!this.isNull(username)) {
                     console.log("userName不为空:", username)
                     data = {
-                        state:2,
-                            username: username,
-                            page: this.state.page,
-                            limit: this.state.limit
+                        state: 2,
+                        username: username,
+                        page: this.state.page,
+                        limit: this.state.limit
                     }
                 } else {
                     data = {
-                        state:2,
-                            page: this.state.page,
-                            limit: this.state.limit
+                        state: 2,
+                        page: this.state.page,
+                        limit: this.state.limit
                     }
                 }
             } else {
                 if (!this.isNull(username)) {
                     data = {
-                        state:2,
-                            username: username,
-                            page: page,
-                            limit: limit
+                        state: 2,
+                        username: username,
+                        page: page,
+                        limit: limit
                     }
                 }
             }
@@ -242,8 +399,8 @@ class Index extends React.Component {
                 console.log("rowkey:" + _this.state.rowkey);
                 if (!_this.isNull(_this.state.record.userId)) {
                     var data = {
-                            userId: _this.state.record.userId,
-                            userState:2
+                        userId: _this.state.record.userId,
+                        userState: 2
                     };
                     //console.log("data:" + data.params.userId);
                     _this.updatePersonal(data);
@@ -254,7 +411,7 @@ class Index extends React.Component {
             },
         });
     };
-    showStopConfirm=()=>{
+    showStopConfirm = () => {
         var _this = this;
         confirm({
             title: '你确定要停用该用户吗?',
@@ -268,7 +425,7 @@ class Index extends React.Component {
                 if (!_this.isNull(_this.state.record.userId)) {
                     var data = {
                         userId: _this.state.record.userId,
-                        userState:3
+                        userState: 3
                     };
                     //console.log("data:" + data.params.userId);
                     _this.updatePersonal(data);
@@ -282,17 +439,26 @@ class Index extends React.Component {
     //详情点击事件
     handleUserDetail = () => {
         if (!this.isNull(this.state.record.userId)) {
-            console.log("recordId:" + this.state.record.userId);
-            console.log("rowkey:" + this.state.rowkey);
+            /*console.log("recordId:" + this.state.record.userId);
+            console.log("rowkey:" + this.state.rowkey);*/
             var data = {
                 params: {
                     userId: this.state.record.userId
                 }
-            }
-            console.log('qqq' + data);
-            this.getUserById(data);
+            };
+            this.setState({
+                userDetailVisible: true
+            });
+            //console.log('qqq' + data);
+            this.getUserAllByUserId(data);
         }
     };
+    handleUserGoods = () => {
+        localStorage.setItem("userId", this.state.record.userId);
+        const {from} = this.props.location.state || {from: {pathname: '/index/goodsManagement'}};
+        this.props.history.push(from)
+    };
+
     //修改或添加提交表单modal
     showSubmitConfirm = () => {
         if (!this.isNull(this.state.tData)) {
@@ -330,7 +496,7 @@ class Index extends React.Component {
     //确认添加点击事件
     handleSubmitUser = (e) => {
         const form = this.formSubUserRef.props.form;
-        console.log("formSubUserRef", this.formSubUserRef);
+      //  console.log("formSubUserRef", this.formSubUserRef);
         //调用子组件的自定义方法getItemsValue。注意：通过this.formRef 才能拿到数据
         form.validateFields({force: true}, (err, values) => {
             if (err) {
@@ -353,7 +519,7 @@ class Index extends React.Component {
     };
     //更新点击事件
     handleUpdateUser = (e) => {
-        console.log("更新点击事件", this.formUpUserRef.props.form);
+        //console.log("更新点击事件", this.formUpUserRef.props.form);
         const form = this.formUpUserRef.props.form;
         //调用子组件的自定义方法getItemsValue。注意：通过this.formRef 才能拿到数据
         form.validateFields({force: true}, (err, values) => {
@@ -392,7 +558,7 @@ class Index extends React.Component {
         /*var data = {
             idList:idList
         }*/
-       // console.log("idList：", idList);
+        // console.log("idList：", idList);
         // console.log("data：", data);
 
         _this.deleteUserByIds(idList);
@@ -439,18 +605,19 @@ class Index extends React.Component {
         }, {
             title: '用户状态',
             dataIndex: 'userState',
+            align: 'center',
             render(userState) {
                 if (userState == 2) {
-                    return "审核正常"
+                    return <Tag color="green">审核正常</Tag>
                 } else if (userState == 3) {
-                    return "已停用"
+                    return <Tag color="red">已停用</Tag>
                 }
             }
         }, {
             title: '操作',
             dataIndex: 'operate',
             key: 'action',
-            width: 180,
+            width: 240,
             fixed: 'right',
             align: 'center',
             render: (text, record, index) => {
@@ -459,21 +626,23 @@ class Index extends React.Component {
                     return <Button.Group>
                         < Button type="primary" size="small" htmlType={'button'} style={{margin: "6px"}}
                                  onClick={_this.handleUserDetail}>详情</Button>
-
+                        < Button type="primary" size="small" htmlType={'button'} style={{margin: "6px"}}
+                                 onClick={_this.handleUserGoods}>查看发布</Button>
                         <Button type="danger" size="small" htmlType={'button'} style={{margin: "6px"}}
-                                onClick={() => showThawConfirm(index)} >解冻 </Button>
+                                onClick={() => showThawConfirm(index)}>解冻 </Button>
                     </Button.Group>
                 } else {
                     return <Button.Group>
                         < Button type="primary" size="small" htmlType={'button'} style={{margin: "6px"}}
                                  onClick={_this.handleUserDetail}>详情</Button>
-
+                        < Button type="primary" size="small" htmlType={'button'} style={{margin: "6px"}}
+                                 onClick={_this.handleUserGoods}>查看发布</Button>
                         <Button type="danger" size="small" htmlType={'button'} style={{margin: "6px"}}
                                 onClick={() => showStopConfirm(index)}>停用 </Button>
                     </Button.Group>
                 }
             }
-            }];
+        }];
 
         //分页
         const pagination = {
@@ -510,7 +679,7 @@ class Index extends React.Component {
                                 <Button type="primary" className="btn" onClick={this.getUserByName}>
                                     <Icon type="search"/>查询
                                 </Button>
-                               {/* <Button type="primary" htmlType="submit" icon="user-add"
+                                {/* <Button type="primary" htmlType="submit" icon="user-add"
                                         onClick={this.showSubmitConfirm}
                                         style={{margin: "4px 120px", position: "absolute"}}>添加</Button>*/}
                             </FormItem>
@@ -528,19 +697,23 @@ class Index extends React.Component {
                             </div>
                         </Form>
                     </div>
-                    {/*<UserDetail title="管理员详情" visible={_this.state.userDetailVisible} loading={loading}
-                                 onCancel={_this.handleCancel} onOk={_this.handleCancel}
-                                 wrappedComponentRef={(form) => this.formRef = form}
-                                 userDetail={_this.state.userDetail}/>
-                    <SubmitUser title="新增管理员" visible={_this.state.submitUserVisible}
-                                 onOk={_this.handleSubmitUser} onCancel={_this.handleCancel}
-                                 wrappedComponentRef={(form) => this.formSubUserRef = form}
-                                 formSubUserRef={_this.formSubUserRef}/>
-                    <UpdateUser title="修改管理员" visible={_this.state.updateUserVisible}
-                                 onOk={_this.handleUpdateUser} onCancel={_this.handleCancel}
+                    <UserDetail title="用户详情" visible={_this.state.userDetailVisible} loading={loading}
+                                onCancel={_this.handleCancel} onOk={_this.handleCancel}
+                                wrappedComponentRef={(form) => this.formRef = form}
+                                userDetail={_this.state.userDetail}
+                                receiptPlacelist={_this.state.receiptPlacelist}
+                                record={_this.state.record}
+                                handleToOrder={_this.handleToOrder}
+                                handleToSellOrder={_this.handleToSellOrder}
+                                handleToComment={_this.handleToComment}
+                    />
+                    <UserComment visible={_this.state.userCommentVisible} onCancel={_this.handleCancel}
+                                 onOk={_this.handleCancel}
+                                 wrappedComponentRef={(form) => this.formRef1 = form}
                                  userDetail={_this.state.userDetail}
-                                 wrappedComponentRef={(form) => this.formUpUserRef = form}
-                                 formUpUserRef={_this.formUpUserRef}/>*/}
+                                 toOrderOne={_this.toOrderOne}
+                                 toOrderMine={_this.toOrderMine}
+                    />
                     <Table
                         className="ant-table-thead ant-table-tbody" rowSelection={rowSelection}
                         dataSource={this.state.tData} bordered
@@ -556,7 +729,7 @@ class Index extends React.Component {
             </div>
         )
     }
-    }
+}
 
-    Index = Form.create()(Index);
+Index = Form.create()(Index);
 export default Index;

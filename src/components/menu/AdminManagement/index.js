@@ -305,8 +305,8 @@ class Index extends React.Component {
         }
     };
     showUpdateConfirm = () => {
-        console.log(this.state.record.adminId);
-        console.log("点击修改按钮事件");
+       // console.log(this.state.record.adminId);
+        //console.log("点击修改按钮事件");
         this.getAdminById({
             params: {
                 adminId: this.state.record.adminId
@@ -352,7 +352,7 @@ class Index extends React.Component {
     };
     //更新点击事件
     handleUpdateAdmin = (e) => {
-        console.log("更新点击事件", this.formUpAdminRef.props.form);
+        //console.log("更新点击事件", this.formUpAdminRef.props.form);
         const form = this.formUpAdminRef.props.form;
         //调用子组件的自定义方法getItemsValue。注意：通过this.formRef 才能拿到数据
         form.validateFields({force: true}, (err, values) => {
@@ -362,20 +362,19 @@ class Index extends React.Component {
                 this.setState({
                     updateAdminVisible: false
                 });
-                console.log("formEndUpRef:", this.formUpAdminRef);
+               // console.log("formEndUpRef:", this.formUpAdminRef);
                 var adminInfo = this.childUp.getUpItemsValue();
-                console.log(this.childUp.getUpItemsValue());
+               // console.log(this.childUp.getUpItemsValue());
                 var data = {
                     adminId: this.state.record.adminId,
                     adminName: adminInfo.adminName,
                     adminPassword: adminInfo.adminPassword
                 };
-                console.log('修改表单数据: ', data);
+                //console.log('修改表单数据: ', data);
                 this.updateAdmin(data);
             }
             form.resetFields();
         });
-
     };
     //批量删
     startDelete = () => {

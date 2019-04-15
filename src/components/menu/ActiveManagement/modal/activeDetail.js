@@ -101,6 +101,14 @@ const ActiveDetail = Form.create()(
                                 <label>{this.timeFormat(this.props.activeDetail.activeEndTime)}</label>
                             )}
                         </Form.Item>
+                        <Form.Item label=" 活动描述：" hasFeedback {...formItemLayout}>
+                            {getFieldDecorator('activeDescription', {
+                                rules: [{required: true, message: '必填!'}],
+                            })(
+                                <label>{this.props.activeDetail.activeDescription}</label>
+                            )}
+                        </Form.Item>
+
                         <Form.Item label="活动图片："
                                    hasFeedback
                                    {...formItemLayout}>

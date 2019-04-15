@@ -3,6 +3,7 @@ import {Layout, Col, Row,Badge} from 'antd';
 import Icon from '../../Utils/Icon/Icon.js';
 import {_getUserByUserState} from '../../../api/user'
 import {_getActiveCount} from '../../../api/active'
+import {_getOrderCount} from '../../../api/order'
 import 'echarts/map/js/china';
 import BaseComponent from '../../Utils/BaseComponent';
 import Panel from '../../Utils/Panel';
@@ -81,6 +82,7 @@ class HomeComponent extends BaseComponent {
             count:0,
             countState:0,
             activeCount:0,
+            orderCount:0,
             homeLoading:true
         }
     }
@@ -88,6 +90,7 @@ class HomeComponent extends BaseComponent {
         this.getUserByUserState({params:{"userState":1}});
         this.getActiveCount();
         this.getUser({params:{"userState":2}});
+        this.getOrderCount();
     }
 
     async getUser(data) {
@@ -102,6 +105,13 @@ class HomeComponent extends BaseComponent {
         console.log("返回数据count：", res);
         this.setState({
             activeCount: res
+        })
+    }
+    async getOrderCount(data) {
+        const res = await _getOrderCount(data);
+        console.log("返回数据count：", res);
+        this.setState({
+            orderCount: res
         })
     }
     async getUserByUserState(data) {
@@ -157,7 +167,7 @@ class HomeComponent extends BaseComponent {
                                 <Panel className="skype" header={false} cover>
                                     <Icon type="rise" antd/>
                                     <h2>
-                                        <b>2</b>
+                                        <b>{this.state.orderCount}</b>
                                     </h2>
                                     <h5 className="text-muted">成交量</h5>
                                 </Panel>

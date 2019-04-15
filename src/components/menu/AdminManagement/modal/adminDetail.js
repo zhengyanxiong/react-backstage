@@ -1,7 +1,7 @@
 import React from "react";
 import {Form, Select, Modal} from "antd";
 
-const FormItem = Form.Item
+const FormItem = Form.Item;
 const {Option} = Select;
 const formItemLayout = {
     labelCol: {

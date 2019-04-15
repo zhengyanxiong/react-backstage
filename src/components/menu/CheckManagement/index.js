@@ -1,15 +1,18 @@
 import React, {Component} from "react"
 import CustomBreadcrumb from "../../CustomBreadcrumb";
-/*import UserDetail from "../../../components/menu/UserManagement/modal/userDetail";
-import SubmitUser from "../../../components/menu/UserManagement/modal/submitUser";
+import CheckDetail from "../../../components/menu/CheckManagement/modal/checkDetail";
+/*import SubmitUser from "../../../components/menu/UserManagement/modal/submitUser";
 import UpdateUser from "../../../components/menu/UserManagement/modal/updateUser";*/
 import {_getMemberListInPage} from "../../../api/user";
 import {_updatePersonal} from "../../../api/user";
+import {_getUserAllByUserId} from "../../../api/user";
+import CheckComment from "../../../components/menu/CheckManagement/modal/checkComment";
+
 /*import {_deleteUserByIds} from "../../../api/user";
 import {_getUserById} from "../../../api/user";
 import {_updateUser} from "../../../api/user";*/
 import {
-    Form, Input, Modal, Icon, Cascader, Button, Table
+    Form, Input, Modal, Icon, Cascader, Button, Table,Tag,message
 } from 'antd';
 
 const FormItem = Form.Item;
@@ -28,17 +31,80 @@ class Index extends React.Component {
             selectedRowKeys: [],
             loading: false,
             userDetail: {
-                username: '',
-                password: '',
-                userState: '',
-                createdTime: '',
-                updatedTime: ''
+                commentList: [
+                    {
+                        commentId: 0,
+                        orderId: 0,
+                        commentPerId: 0,
+                        commentedPerId: 0,
+                        serviceNum: 5,
+                        descriptionNum: 0,
+                        logisticsNum: 0,
+                        damageNum: 0,
+                        commentExpand1: "",
+                        comment: "",
+                        username: "",
+                        orderNum: "",
+                    }],
+                commentedList: [
+                    {
+                        commentId: 0,
+                        orderId: 0,
+                        commentPerId: 0,
+                        commentedPerId: 0,
+                        serviceNum: 5,
+                        descriptionNum: 0,
+                        logisticsNum: 0,
+                        damageNum: 0,
+                        commentExpand1: "",
+                        comment: "",
+                        username: "",
+                        orderNum: "",
+                    }],
+                userInfo: {
+                    userId: 0,
+                    schoolId: 0,
+                    studentId: 0,
+                    username: "",
+                    headImag: "",
+                    phoneNum: "",
+                    sex: "",
+                    email: "",
+                    realName: "",
+                    idCard: "",
+                    stuCardFront: "",
+                    stuCardBack: "",
+                    registerDate: "",
+                    userCreatedTime: "",
+                    userUpdatedTime: "",
+                    userState: 0,
+                    creditNum: 0,
+                    loveValue: 0,
+                    sumGrade: 0,
+                    schoolName: ""
+                },
+                userBuyCount: 0,
+                publishGoodsCount: 0,
+                userSellCount: 0,
+                goodsList: [],
+                goodsOnCount: 0,
+                goodsSellCount: 0,
+                goodsUpCount: 0,
+                goodsActiveCount: 0
             },
+            receiptPlacelist: [
+                {receiptId: 0,
+                    userId: 0,
+                    addressName: "",
+                    addressState:""
+                }
+            ],
             index: '',
             visible: false,
             userDetailVisible: false,
             submitUserVisible: false,
             updateUserVisible: false,
+            checkCommentVisible: false,
             checkLoading:true
         }
     }
@@ -83,8 +149,90 @@ class Index extends React.Component {
         } else
             return false
     };
+    async getUserAllByUserId(data) {
+        const res = await _getUserAllByUserId(data);
+        if(0==res.receiptPlacelist){
+            this.setState({
+                /* userDetail:{
+                     username: res.username,
+                     headImag: res.headImag,
+                     phoneNum: res.phoneNum,
+                     sex: res.sex,
+                     email: res.email,
+                     realName: res.realName,
+                     idCard: res.idCard,
+                     stuCardFront: res.stuCardFront,
+                     stuCardBack: res.stuCardBack,
+                     registerDate: res.registerDate,
+                     userCreatedTime: res.userCreatedTime,
+                     userUpdatedTime: res.userUpdatedTime,
+                     userState: res.userState,
+                     creditNum: res.creditNum,
+                     loveValue: res.loveValue,
+                     sumGrade: res.sumGrade,
+                     schoolName: res.schoolName,
+                 }*/
+                receiptPlacelist:[{
+                    addressName:"",
+                    receiptId:0
+                }],
+                userDetail:res,
+            });
+        }else {
+            this.setState({
+                /* userDetail:{
+                     username: res.username,
+                     headImag: res.headImag,
+                     phoneNum: res.phoneNum,
+                     sex: res.sex,
+                     email: res.email,
+                     realName: res.realName,
+                     idCard: res.idCard,
+                     stuCardFront: res.stuCardFront,
+                     stuCardBack: res.stuCardBack,
+                     registerDate: res.registerDate,
+                     userCreatedTime: res.userCreatedTime,
+                     userUpdatedTime: res.userUpdatedTime,
+                     userState: res.userState,
+                     creditNum: res.creditNum,
+                     loveValue: res.loveValue,
+                     sumGrade: res.sumGrade,
+                     schoolName: res.schoolName,
+                 }*/
+                userDetail:res,
+                receiptPlacelist:res.receiptPlacelist
+            });
+
+        }
+        console.log("user:",this.state.userDetail)
+    }
+    handleToOrder=()=>{
+        /*localStorage.setItem("userDetailVisible","false");*/
+        if(this.state.userDetail.userBuyCount==0){
+            message.warning('该用户还没有订单哦');
+
+        }else {
+            localStorage.setItem("userId",this.state.record.userId);
+            this.setState({
+            userDetailVisible:false
+        });
+            const {from} = {from: {pathname: '/index/orderManagement'}};
+            this.props.history.push(from)
+        }
+    };
+    handleToCommentC = () => {
+        if (this.state.userDetail.userBuyCount == 0) {
+            message.warning('该用户还没有买过东西哦');
+        }else {
+            this.setState({
+                userDetailVisible: false,
+                checkCommentVisible: true
+            });
+        }
+    };
     //modal取消事件通用
     handleCancel = () => {
+        localStorage.removeItem("userId");
         this.setState({
             visible: false,
             userDetailVisible: false,
@@ -92,9 +240,19 @@ class Index extends React.Component {
             updateUserVisible: false
         });
         //this.formEndUpRef.props.form.resetFields();
-    }
+    };
 
-
+    toOrderOne=()=>{
+        var orderNum= localStorage.getItem("orderNum", orderNum);
+        //alert("commentedPerId"+commentedPerId);
+        if(!this.isNull(orderNum)){
+            this.setState({
+                checkCommentVisible: false
+            });
+            const {from} = {from: {pathname: '/index/orderManagement'}};
+            this.props.history.push(from)
+        }
+    };
     start = () => {
         this.setState({loading: true});
         // ajax request after empty completing
@@ -123,39 +281,40 @@ class Index extends React.Component {
         //return selectedRowKeys
     };
 
+
     getUserByName = (page, limit) => {
         if (!this.isNull(this.state.tData)) {
             console.log('page：', page);
             console.log('limit：', limit);
             var data = {
-                state:1,
-                    page: page,
-                    limit: limit
+                state:2,
+                page: page,
+                limit: limit
             };
             var username = this.props.form.getFieldValue("username");
             if (this.isNull(limit)) {
                 if (!this.isNull(username)) {
                     console.log("userName不为空:", username)
                     data = {
-                        state:1,
-                            username: username,
-                            page: this.state.page,
-                            limit: this.state.limit
+                        state:2,
+                        username: username,
+                        page: this.state.page,
+                        limit: this.state.limit
                     }
                 } else {
                     data = {
-                        state:1,
-                            page: this.state.page,
-                            limit: this.state.limit
+                        state:2,
+                        page: this.state.page,
+                        limit: this.state.limit
                     }
                 }
             } else {
                 if (!this.isNull(username)) {
                     data = {
-                        state:1,
-                            username: username,
-                            page: page,
-                            limit: limit
+                        state:2,
+                        username: username,
+                        page: page,
+                        limit: limit
                     }
                 }
             }
@@ -169,18 +328,22 @@ class Index extends React.Component {
         }
     };
 
+
     //详情点击事件
     handleUserDetail = () => {
         if (!this.isNull(this.state.record.userId)) {
-            console.log("recordId:" + this.state.record.userId);
-            console.log("rowkey:" + this.state.rowkey);
+            /*console.log("recordId:" + this.state.record.userId);
+            console.log("rowkey:" + this.state.rowkey);*/
             var data = {
                 params: {
                     userId: this.state.record.userId
                 }
-            }
-            console.log('qqq' + data);
-            this.getUserById(data);
+            };
+            this.setState({
+                userDetailVisible:true
+            });
+            //console.log('qqq' + data);
+            this.getUserAllByUserId(data);
         }
     };
     //修改或添加提交表单modal
@@ -319,8 +482,9 @@ class Index extends React.Component {
         }, {
             title: '用户状态',
             dataIndex: 'userState',
+            align:'center',
             render(userState) {
-                return <font color="#FF0000">未审核</font>
+                return <Tag color="orange">未审核</Tag>
             }
         }, {
             title: '操作',
@@ -398,11 +562,22 @@ class Index extends React.Component {
                             </div>
                         </Form>
                     </div>
-                    {/*<UserDetail title="管理员详情" visible={_this.state.userDetailVisible} loading={loading}
-                                 onCancel={_this.handleCancel} onOk={_this.handleCancel}
-                                 wrappedComponentRef={(form) => this.formRef = form}
-                                 userDetail={_this.state.userDetail}/>
-                    <SubmitUser title="新增管理员" visible={_this.state.submitUserVisible}
+                    <CheckDetail title="用户详情" visible={_this.state.userDetailVisible} loading={loading}
+                                onCancel={_this.handleCancel} onOk={_this.handleCancel}
+                                wrappedComponentRef={(form) => this.formRef = form}
+                                userDetail={_this.state.userDetail}
+                                receiptPlacelist={_this.state.receiptPlacelist}
+                                record={_this.state.record}
+                                handleToOrder={_this.handleToOrder}
+                                 handleToCommentC={_this.handleToCommentC}
+                    />
+                    <CheckComment visible={_this.state.checkCommentVisible} onCancel={_this.handleCancel}
+                                 onOk={_this.handleCancel}
+                                 wrappedComponentRef={(form) => this.formRef1 = form}
+                                 userDetail={_this.state.userDetail}
+                                 toOrderOne={_this.toOrderOne}
+                    />
+                   {/* <SubmitUser title="新增管理员" visible={_this.state.submitUserVisible}
                                  onOk={_this.handleSubmitUser} onCancel={_this.handleCancel}
                                  wrappedComponentRef={(form) => this.formSubUserRef = form}
                                  formSubUserRef={_this.formSubUserRef}/>

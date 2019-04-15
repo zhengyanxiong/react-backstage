@@ -11,7 +11,7 @@ import {_getActiveById} from "../../../api/active";
 import {_publishActive} from "../../../api/active";
 import {_updateActive} from "../../../api/active";
 import {
-    Form, Input, Modal, Icon, Cascader, Button, Table, Switch,message
+    Form, Input, Modal, Icon, Cascader, Button, Table, Switch,message,Tag
 } from 'antd';
 
 const FormItem = Form.Item;
@@ -610,11 +610,12 @@ handleClick=()=>{
             )
         }, {
             title: '描述',
-            width: 250,
+            width: 230,
             dataIndex: 'activeDescription'
         }, {
             title: '状态',
             key: 'state',
+            width: 100,
             dataIndex: 'activeState',
             render: (text, record, index) => {
                 if (_this.state.tData[index].activeState == 1) {

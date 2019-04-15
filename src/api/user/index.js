@@ -37,8 +37,8 @@ export const _deletememberByIds = (data) => {
  * @returns {AxiosPromise<any>}
  * @private
  */
-export const _getAdminById = (data) => {
-    return instance.get("/memberservice/member/getAdminById",data)
+export const _getUserAllByUserId = (data) => {
+    return instance.get("/memberservice/member/getUserAllByUserId",data)
 };
 
 
