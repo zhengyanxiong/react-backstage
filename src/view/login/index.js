@@ -1,7 +1,10 @@
 import React, {Component} from "react"
 import {Form, Input, Row, Col, notification, message,Spin,Icon} from 'antd'
 import {randomNum, calculateWidth} from '../../util/utils'
-import {authenticateSuccess, authenticateSuccessType,authenticateSuccessToken} from "../../util/Cookie"
+import {
+    authenticateSuccess, authenticateSuccessType, authenticateSuccessToken,
+    authenticateSuccessAdmin
+} from "../../util/Cookie"
 import PromptBox from "../../components/PromptBox"
 import BGParticle from '../../util/BGParticle'
 import {_adminLogin} from "../../api/userAdmin"
@@ -64,6 +67,7 @@ constructor(props){
                         authenticateSuccess(values.username);
                         authenticateSuccessType(data.adminType);
                         authenticateSuccessToken(data.token);
+                        authenticateSuccessAdmin(data.admin);
                         const {from} = this.props.location.state || {from: {pathname: '/'}};
                         this.props.history.push(from);
                     })

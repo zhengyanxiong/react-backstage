@@ -87,7 +87,7 @@ const UserComment = Form.create()(
                                     >
                                         <Skeleton loading={this.state.loading} active avatar>
                                             <List.Item.Meta
-                                                avatar={<Avatar src={item.avatar} />}
+                                                avatar={<Avatar src={item.headImge} />}
                                                 title={<Tag color="#2db7f5">{item.username}</Tag>}
                                                 description={"买家"+item.username+"在"+item.commentExpand1+"这个时间，针对订单号为"+item.orderNum+"的评论描述如下："}
                                             />
@@ -111,7 +111,7 @@ const UserComment = Form.create()(
                                     >
                                         <Skeleton loading={this.state.loading} active avatar>
                                             <List.Item.Meta
-                                                avatar={<Avatar src={item.avatar} />}
+                                                avatar={<Avatar src={item.headImge} />}
                                                 title={<Tag color="#2db7f5">{item.username}</Tag>}
                                                 description={item.username+"在"+item.commentExpand1+"这个时间，针对已买订单订单号为"+item.orderNum+"的评论描述如下："}
                                             />

@@ -76,6 +76,7 @@ ul, ol { list-style: none; }
 #headerbar{
   float: right;
   padding-right: 29px;
+
 }
 .trigger{
   font-size: 18px;
@@ -88,6 +89,7 @@ ul, ol { list-style: none; }
 .header-ul{
   display: flex;
   width: 200px;
+  width: 440px;
 }
 .header-ul li {
   flex-grow: 1;

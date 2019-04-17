@@ -198,7 +198,7 @@ const OrderDetail = Form.create()(
                                             <Tag style={{marginRight:"-7px"}}color="cyan">{"库存："+item.goodsStock+"件"} </Tag>,
                                             <Tag style={{marginRight:"-7px"}}color="purple">{"发布时间："+this.timeFormat(item.goodsPublishTime)}</Tag>,
                                         ]}
-                                        extra={<img width={160} height={145} style={{borderRadius: "5px",margin:"30px 8px 0 0px"}} alt="logo" src={item.goodImge} />}
+                                        extra={<img width={160} height={145} style={{borderRadius: "5px",margin:"30px 8px 0 0px"}} alt="logo" src={item.goodImages} />}
                                     >
                                         <Skeleton loading={false} active >
                                             <List.Item.Meta
@@ -227,7 +227,7 @@ const OrderDetail = Form.create()(
                                         >
                                             <Skeleton loading={false} active avatar>
                                                 <List.Item.Meta
-                                                    avatar={<Avatar src={item.avatar} />}
+                                                    avatar={<Avatar src={this.props.orderDetail.orders.headImag}/>}
                                                     title={<Tag color="#2db7f5">{this.props.orderDetail.orders.username}</Tag>}
                                                     description={"评论时间："+this.timeFormat(item.commentCreatedTime)+" | 订单号："+this.props.orderDetail.orders.orderNum}
                                                 />

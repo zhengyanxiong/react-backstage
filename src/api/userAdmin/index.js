@@ -69,3 +69,12 @@ export const _submitAdmin = (data) => {
 export const _updateAdmin = (data) => {
     return instance.post("/backstageservice/admin/updateAdmin",data)
 };
+/**
+ * 修改密码管理员
+ * @param data
+ * @returns {AxiosPromise<any>}
+ * @private
+ */
+export const _updateAdCheck = (data) => {
+    return instance.post("/backstageservice/admin/updateAdCheck",data)
+};

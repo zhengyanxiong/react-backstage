@@ -83,7 +83,6 @@ const GoodsDetail = Form.create()(
                     items.push(<Zmage  style={{marginRight: "15px",width: "120px",height:"120px",border:"1px solid #cec6c6",borderRadius:"4px"}} src={this.props.goodImge[i] }/>)
                 }}
             }else {
-
                 items.push(<Tag color="red">该商品没有图片</Tag>)
             }
             return (

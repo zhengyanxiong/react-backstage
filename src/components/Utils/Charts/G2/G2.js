@@ -19,7 +19,7 @@ class Charts extends PureComponent {
     return (
       <Chart 
         height={270}
-        width={640}
+        width={790}
         padding={'auto'} 
         {...otherProps}
         onGetG2Instance={(chart) => {

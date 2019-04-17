@@ -45,6 +45,7 @@ class Index extends React.Component {
                         comment: "",
                         username: "",
                         orderNum: "",
+                        headImge:""
                     }],
                 commentedList: [
                     {
@@ -60,6 +61,7 @@ class Index extends React.Component {
                         comment: "",
                         username: "",
                         orderNum: "",
+                        headImge:""
                     }],
                 userInfo: {
                     userId: 0,
@@ -593,6 +595,13 @@ class Index extends React.Component {
         }, {
             title: '用户名',
             dataIndex: 'username',
+            render(username) {
+                if (username==null){
+                    return <Tag color="red">未设置昵称</Tag>
+                }else {
+                    return <label style={{fontSize: "12px"}}>{username}</label>
+                }
+            }
         }, {
             title: '学号',
             dataIndex: 'studentId',

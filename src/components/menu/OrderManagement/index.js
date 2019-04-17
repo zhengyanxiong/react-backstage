@@ -44,7 +44,8 @@ class Index extends Component {
                     serviceNum: 0,
                     descriptionNum: 0,
                     damageNum: 0,
-                    commentCreatedTime:""
+                    commentCreatedTime:"",
+                    headImag:""
                 },
                 goodsList: [{
                     goodsId: 0,
@@ -62,6 +63,7 @@ class Index extends Component {
                     goodsDescription: "",
                     goodClassName: "",
                     goodImge: "",
+                    goodImages: "",
                     goodsCounts: ""
                 }]
 
@@ -404,9 +406,26 @@ class Index extends Component {
         }, {
             title: '店家',
             dataIndex: 'sellname',
+            render(sellname) {
+                if (sellname==null){
+                    return <Tag color="red">未设置昵称</Tag>
+
+                }else {
+                    return <label style={{fontSize: "12px"}}>{sellname}</label>
+
+                }
+            }
         }, {
             title: '买家',
             dataIndex: 'username',
+            render(username) {
+                if (username==null){
+                    return <Tag color="red">未设置昵称</Tag>
+                }else {
+                    return <label style={{fontSize: "12px"}}>{username}</label>
+
+                }
+            }
         }, {
             title: '商品数量',
             dataIndex: 'orderGoodsCount',
@@ -509,18 +528,6 @@ class Index extends Component {
                                     <Icon type="search"/>查询
                                 </Button>
                             </FormItem>
-                            <div style={{float: "left", margin: "-59px 0"}}>
-                                <Button
-                                    icon="usergroup-delete" type="danger"
-                                    onClick={this.startDelete}
-                                    disabled={!hasSelected}
-                                    loading={loading}
-                                >
-                                    批量下架
-                                </Button>
-                                <span
-                                    style={{marginLeft: 8}}> {hasSelected ? `已选 ${selectedRowKeys.length} 项` : ''} </span>
-                            </div>
                         </Form>
                     </div>
                     <OrderDetail title="订单详情" visible={_this.state.orderDetailVisible} loading={loading}

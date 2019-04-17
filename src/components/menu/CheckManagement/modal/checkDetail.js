@@ -1,7 +1,7 @@
 import React from "react";
 import {Form, Select, Modal, Rate, Row, Col, Tag} from "antd";
 import Button from "antd/es/button/button";
-
+import Zmage from 'react-zmage'
 const FormItem = Form.Item;
 const desc = ['1.0', '2.0', '3.0', '4.0', '5.0'];
 const {Option} = Select;
@@ -52,6 +52,49 @@ const CheckDetail = Form.create()(
             } = this.props;
             const {getFieldDecorator} = form;
 
+            var itemsStu=null;
+
+            if (this.props.userDetail.userInfo.stuCardBack!=null){
+                itemsStu=(<Zmage  style={{marginRight: "15px",width: "120px",height:"120px",border:"1px solid #cec6c6",borderRadius:"4px"}} src={this.props.userDetail.userInfo.stuCardBack}/>)
+            }else {
+                itemsStu=(<Tag color="red">该用户还未完成认证</Tag>)
+            }
+
+            var itemsStuf=null;
+
+            if (this.props.userDetail.userInfo.stuCardFront!=null){
+                itemsStuf=(
+                    <Zmage style={{marginRight: "15px",width: "120px",height:"120px",border:"1px solid #cec6c6",borderRadius:"4px"}}  src={this.props.userDetail.userInfo.stuCardFront} />
+                )
+            }else {
+                itemsStuf=(<Tag color="red">该用户还未完成认证</Tag>)
+            }
+
+            var itemsHeadImg=null;
+
+            if (this.props.userDetail.userInfo.headImag!=null){
+                itemsHeadImg=(
+                    <img style={{
+                        float: "left",
+                        borderRadius: "50%",
+                        width: "50px",
+                        height: "50px",
+                        margin: "-10px 7px 0 28px",
+                        textAlign: "center"
+                    }}
+                         src={this.props.userDetail.userInfo.headImag}/>                )
+            }else {
+                itemsHeadImg=( <div style={{
+                    float: "left",
+                    background: "pink",
+                    borderRadius: "50%",
+                    width: "50px",
+                    height: "50px",
+                    margin: "-10px 7px 0 28px",
+                    textAlign: "center"
+                }}
+                />)
+            }
             return (
                 <Modal
                     visible={visible}
@@ -63,19 +106,11 @@ const CheckDetail = Form.create()(
                     width="85%"
                 >
                     <div style={{height: "50px", marginBottom: "20px"}}>
-                        <div style={{
-                            float: "left",
-                            background: "pink",
-                            borderRadius: "50%",
-                            width: "50px",
-                            height: "50px",
-                            margin: "-10px 7px 0 28px",
-                            textAlign: "center"
-                        }}>头像
-                        </div>
+                         {itemsHeadImg}
+
                         <Tag color="#2db7f5"
-                             style={{margin: "17px 15px 8px 10px"}}>{this.props.userDetail.userInfo.username}</Tag>
-                        <Tag color="red">{this.props.userDetail.userInfo.sex}生</Tag>
+                             style={{margin: "17px 15px 8px 10px"}}>{this.props.userDetail.userInfo.username==null?this.props.userDetail.userInfo.studentId:this.props.userDetail.userInfo.username}</Tag>
+                        {this.props.userDetail.userInfo.sex==null?'':<Tag color="red">{this.props.userDetail.userInfo.sex+'生'}</Tag>}
                         <label>
                             共买{this.props.userDetail.userBuyCount}件
                         </label>
@@ -92,20 +127,20 @@ const CheckDetail = Form.create()(
                                     <Rate allowHalf disabled tooltips={desc}
                                           value={this.props.userDetail.userInfo.creditNum}/>
                                     {this.props.userDetail.userInfo.creditNum ? <span
-                                        className="ant-rate-text">{desc[this.props.userDetail.userInfo.creditNum - 1]}</span> : ''}
+                                        className="ant-rate-text">{desc[this.props.userDetail.userInfo.creditNum - 1]}</span> : '0.0'}
                                 </Form.Item>
                                 <Form.Item label="用户名：" hasFeedback {...formItemLayout}>
                                     {getFieldDecorator('realName', {
                                         rules: [{required: true, message: '必填!'}],
                                     })(
-                                        <label>{this.props.userDetail.userInfo.realName}</label>
+                                        <label>{this.props.userDetail.userInfo.realName==null?"未认证":this.props.userDetail.userInfo.realName}</label>
                                     )}
                                 </Form.Item>
                                 <Form.Item label="身份证：" hasFeedback {...formItemLayout}>
                                     {getFieldDecorator('idCard', {
                                         rules: [{required: true, message: '必填!'}],
                                     })(
-                                        <label>{this.props.userDetail.userInfo.idCard}</label>
+                                        <label>{this.props.userDetail.userInfo.idCard==null?'未认证':this.props.userDetail.userInfo.idCard}</label>
                                     )}
                                 </Form.Item>
                                 <Form.Item label="注册时间："
@@ -140,7 +175,7 @@ const CheckDetail = Form.create()(
                                     <Rate allowHalf disabled tooltips={desc} onChange={this.handleChange}
                                           value={this.props.userDetail.userInfo.loveValue}/>
                                     {this.props.userDetail.userInfo.loveValue ? <span
-                                        className="ant-rate-text">{desc[this.props.userDetail.userInfo.loveValue - 1]}</span> : ''}
+                                        className="ant-rate-text">{desc[this.props.userDetail.userInfo.loveValue - 1]}</span> : '0.0'}
 
                                 </Form.Item>
                                 <Form.Item label="用户邮箱：" hasFeedback {...formItemLayout}>
@@ -154,7 +189,7 @@ const CheckDetail = Form.create()(
                                     {getFieldDecorator('schoolName', {
                                         rules: [{required: true, message: '必填!'}],
                                     })(
-                                        <Tag color="#87d068">{this.props.userDetail.userInfo.schoolName}</Tag>
+                                        <Tag color="#87d068">{this.props.userDetail.userInfo.schoolName==null?"未填写":this.props.userDetail.userInfo.schoolName}</Tag>
                                     )}
                                 </Form.Item>
 
@@ -164,12 +199,11 @@ const CheckDetail = Form.create()(
                                     {getFieldDecorator('userCreatedTime')(
                                         <label>{this.timeFormat(this.props.userDetail.userInfo.userCreatedTime)}</label>
                                     )}
-                                </Form.Item><Form.Item label="学生证前面："
+                                </Form.Item>
+                                <Form.Item label="学生证前面："
                                                        hasFeedback
                                                        {...formItemLayout}>
-                                {getFieldDecorator('stuCardFront')(
-                                    <label>{this.props.userDetail.userInfo.stuCardFront}</label>
-                                )}
+                                    {itemsStuf}
                             </Form.Item>
 
                             </Col>
@@ -180,7 +214,7 @@ const CheckDetail = Form.create()(
                                     <Rate allowHalf disabled tooltips={desc} onChange={this.handleChange}
                                           value={this.props.userDetail.userInfo.sumGrade}/>
                                     {this.props.userDetail.userInfo.sumGrade ? <span
-                                        className="ant-rate-text">{desc[this.props.userDetail.userInfo.sumGrade - 1]}</span> : ''}
+                                        className="ant-rate-text">{desc[this.props.userDetail.userInfo.sumGrade - 1]}</span> : '0.0'}
                                 </Form.Item>
                                 <Form.Item label="用户号码：" hasFeedback {...formItemLayout}>
                                     {getFieldDecorator('phoneNum', {
@@ -219,9 +253,7 @@ const CheckDetail = Form.create()(
                                 <Form.Item label="学生证背面："
                                                        hasFeedback
                                                        {...formItemLayout}>
-                                {getFieldDecorator('stuCardBack')(
-                                    <label>{this.props.userDetail.userInfo.stuCardBack}</label>
-                                )}
+                                    {itemsStu}
                             </Form.Item>
 
                             </Col>
