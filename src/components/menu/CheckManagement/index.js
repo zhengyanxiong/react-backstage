@@ -12,7 +12,7 @@ import CheckComment from "../../../components/menu/CheckManagement/modal/checkCo
 import {_getUserById} from "../../../api/user";
 import {_updateUser} from "../../../api/user";*/
 import {
-    Form, Input, Modal, Icon, Cascader, Button, Table,Tag,message
+    Form, Input, Modal, Icon, Cascader, Button, Table,Tag,message,Row,Col
 } from 'antd';
 
 const FormItem = Form.Item;
@@ -48,6 +48,7 @@ class Index extends React.Component {
                         orderNum: "",
                         stuCardFront: "",
                         stuCardBack: "",
+                        creatTime: "",
                     }],
                 commentedList: [
                     {
@@ -268,7 +269,7 @@ class Index extends React.Component {
     };
     //获取table行的记录以及行主键
     handleRecord = (record, rowkey) => {
-        console.log("userId：" + record.userId)
+        console.log("userId：" + record.userId);
         this.setState({
             record: record,
             rowkey: rowkey,
@@ -290,23 +291,37 @@ class Index extends React.Component {
             console.log('page：', page);
             console.log('limit：', limit);
             var data = {
-                state:2,
+                state:1,
                 page: page,
                 limit: limit
             };
             var username = this.props.form.getFieldValue("username");
+            var studentId = this.props.form.getFieldValue("studentId");
+            var phoneNum = this.props.form.getFieldValue("phoneNum");
+            var idCard = this.props.form.getFieldValue("idCard");
+            var email = this.props.form.getFieldValue("email");
+
             if (this.isNull(limit)) {
                 if (!this.isNull(username)) {
-                    console.log("userName不为空:", username)
+                    //console.log("userName不为空:", username)
                     data = {
-                        state:2,
+                        state:1,
                         username: username,
+                        studentId:studentId,
+                        phoneNum:phoneNum,
+                        idCard:idCard,
+                        email:email,
                         page: this.state.page,
                         limit: this.state.limit
                     }
                 } else {
                     data = {
-                        state:2,
+                        state:1,
+                        studentId:studentId,
+                        phoneNum:phoneNum,
+                        idCard:idCard,
+                        email:email,
+
                         page: this.state.page,
                         limit: this.state.limit
                     }
@@ -314,8 +329,13 @@ class Index extends React.Component {
             } else {
                 if (!this.isNull(username)) {
                     data = {
-                        state:2,
+                        state:1,
                         username: username,
+                        studentId:studentId,
+                        phoneNum:phoneNum,
+                        idCard:idCard,
+                        email:email,
+
                         page: page,
                         limit: limit
                     }
@@ -451,9 +471,18 @@ class Index extends React.Component {
         const _this = this;
         const showDeleteConfirm = this.showDeleteConfirm;
         const formItemLayout = {
-            labelCol: {span: 8},
-            wrapperCol: {span: 7}
+            labelCol: {span: 12},
+            wrapperCol: {span:12}
         };
+        const formItemLayout1 = {
+            labelCol: {span: 7},
+            wrapperCol: {span: 16}
+        };
+        const formItemLayout2 = {
+            labelCol: {span: 4},
+            wrapperCol: {span: 16}
+        };
+
         const {getFieldDecorator} = _this.props.form;
         //选择框
         const {loading, selectedRowKeys} = this.state;
@@ -489,6 +518,16 @@ class Index extends React.Component {
         }, {
             title: '邮箱',
             dataIndex: 'email',
+        }, {
+            title: '学校',
+            dataIndex: 'schoolName',
+            render(schoolName) {
+                if (schoolName == null) {
+                    return <Tag color="red">未认证学校</Tag>
+                } else {
+                    return <label style={{fontSize: "12px"}}>{schoolName}</label>
+                }
+            }
         }, {
             title: '用户状态',
             dataIndex: 'userState',
@@ -545,19 +584,57 @@ class Index extends React.Component {
                 <div style={{padding: 24, background: '#fff', minHeight: 360}}>
                     <div style={{margin: "-11px 0px -13px 0px", width: "auto"}}>
                         <Form>
-                            <FormItem label="用户名称："
-                                      {...formItemLayout} style={{width: "710px"}}
-                            >
-                                {getFieldDecorator('username')(
-                                    <Input placeholder="请输入..."/>
-                                )}
-                                <Button type="primary" className="btn" onClick={this.getUserByName}>
-                                    <Icon type="search"/>查询
-                                </Button>
-                               {/* <Button type="primary" htmlType="submit" icon="user-add"
-                                        onClick={this.showSubmitConfirm}
-                                        style={{margin: "4px 120px", position: "absolute"}}>添加</Button>*/}
-                            </FormItem>
+                            <Row>
+                                <Col span={10} style={{textAlign: 'left'}}>
+                                    <FormItem label="用户名称："
+                                              {...formItemLayout}
+                                    >
+                                        {getFieldDecorator('username')(
+                                            <Input placeholder="请输入..."/>
+                                        )}
+                                    </FormItem>
+                                    <FormItem label="身份证号："
+                                              {...formItemLayout}
+                                    >
+                                        {getFieldDecorator('idCard')(
+                                            <Input placeholder="请输入..."/>
+                                        )}
+                                    </FormItem>
+                                </Col>
+                                <Col span={7} style={{textAlign: 'left'}}>
+                                    <FormItem label="手机号："
+                                              {...formItemLayout1}
+                                    >
+                                        {getFieldDecorator('phoneNum')(
+                                            <Input placeholder="请输入..."/>
+                                        )}
+                                    </FormItem>
+                                    <FormItem label="邮箱："
+                                              {...formItemLayout1}
+                                    >
+                                        {getFieldDecorator('email')(
+                                            <Input placeholder="请输入..."/>
+                                        )}
+                                    </FormItem>
+
+                                </Col>
+                                <Col span={7} style={{textAlign: 'left'}}>
+                                    <FormItem label="学号："
+                                              {...formItemLayout2}
+                                    >
+                                        {getFieldDecorator('studentId')(
+                                            <Input placeholder="学号"/>
+                                        )}
+
+                                    </FormItem>
+                                    <FormItem>
+                                        <Button type="primary" className="btn" onClick={this.getUserByName}>
+                                            <Icon type="search"/>查询
+                                        </Button>
+                                    </FormItem>
+
+                                </Col>
+                            </Row>
                             <div style={{float: "left", margin: "-59px 0"}}>
                                 <Button
                                     icon="usergroup-delete" type="danger"
@@ -587,16 +664,7 @@ class Index extends React.Component {
                                  userDetail={_this.state.userDetail}
                                  toOrderOne={_this.toOrderOne}
                     />
-                   {/* <SubmitUser title="新增管理员" visible={_this.state.submitUserVisible}
-                                 onOk={_this.handleSubmitUser} onCancel={_this.handleCancel}
-                                 wrappedComponentRef={(form) => this.formSubUserRef = form}
-                                 formSubUserRef={_this.formSubUserRef}/>
-                    <UpdateUser title="修改管理员" visible={_this.state.updateUserVisible}
-                                 onOk={_this.handleUpdateUser} onCancel={_this.handleCancel}
-                                 userDetail={_this.state.userDetail}
-                                 wrappedComponentRef={(form) => this.formUpUserRef = form}
-                                 formUpUserRef={_this.formUpUserRef}/>*/}
-                    <Table
+                     <Table
                         className="ant-table-thead ant-table-tbody" rowSelection={rowSelection}
                         dataSource={this.state.tData} bordered
                         scroll={{x: true}}

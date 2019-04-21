@@ -1,5 +1,5 @@
 import React from 'react'
-import {Icon, Badge, Dropdown, Menu, Modal,Tag} from 'antd'
+import {Icon, Badge, Dropdown, Menu, Modal,Tag,Button} from 'antd'
 import {isAuthenticated, clearName,clearToken} from "../../util/Cookie"
 import {Link, withRouter} from 'react-router-dom'
 import PropTypes from 'prop-types'
@@ -30,7 +30,8 @@ class HeaderBar extends React.Component {
             adminName:''
         },
         isOk:"true",
-        key:1
+        key:1,
+        footer:null
     };
 
     toggle = () => {
@@ -42,6 +43,12 @@ class HeaderBar extends React.Component {
         const res = await _updateAdCheck(data);
         if (res=='Y'){
             this.setState({
+                footer:[
+                    <Button key="back" onClick={this.handleCancel}>取消</Button>,
+                    <Button key="submit" type="primary" onClick={this.handleOk}>
+                        确定
+                    </Button>,
+                ],
                 key:2
             })
         }
@@ -61,7 +68,7 @@ class HeaderBar extends React.Component {
         this.context.router.history.push("/");
     };
     toSpringAdmin=()=>{
-       window.location.href='http://localhost:8769/login'
+       window.location.href='http://192.168.43.254:8769/login'
     };
     //modal取消事件通用
     handleCancel = () => {
@@ -87,7 +94,7 @@ class HeaderBar extends React.Component {
             } else {
                 // console.log("formEndUpRef:", this.formUpAdminRef);
                 var suDetail = this.childUpSu.getUpItemsValueSu();
-                console.log("aaa",getAdmin());
+                //console.log("aaa",getAdmin());
                 var data = {
                     adminId:1,
                     adminPassword: suDetail.password
@@ -155,6 +162,8 @@ class HeaderBar extends React.Component {
                           formUpSuRef={this.formUpSuRef}
                           isOk={this.state.isOk}
                           key={this.state.key}
+                          footer={this.state.footer}
+                          handleOkOne={this.handleOkOne}
                 />
 
             </div>

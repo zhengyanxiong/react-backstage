@@ -74,7 +74,7 @@ class Index extends React.Component {
 
     async deleteActiveById(data) {
         const res = await _deleteActiveById(data);
-        console.log(res);
+       // console.log(res);
         const tData = this.state.tData;
         tData.splice(this.state.rowkey, 1);//获取索引，后面的 1 是删除几行
         this.setState({tData: tData});
@@ -161,7 +161,7 @@ class Index extends React.Component {
     async updateActive(data) {
         //console.log('res表单数据: ', data);
         const res = await _updateActive(data);
-        console.log(res);
+      //  console.log(res);
         this.setState({
             updateActiveVisible: false
         });
@@ -179,7 +179,7 @@ class Index extends React.Component {
 
     async deleteActiveByIds(data) {
         const res = await _deleteActiveByIds(data);
-        console.log(res);
+      //  console.log(res);
         const tData = this.state.tData;
         //console.log("aaaa", this.state.selectedRowKeys);
         for (var i = 0; i < this.state.selectedRowKeys.length; i++) {
@@ -238,7 +238,7 @@ class Index extends React.Component {
     };
     //获取table行的记录以及行主键
     handleRecord = (record, rowkey) => {
-        console.log("activeId：" + record.activeId)
+       // console.log("activeId：" + record.activeId)
         this.setState({
             record: record,
             rowkey: rowkey,
@@ -248,16 +248,16 @@ class Index extends React.Component {
 
     // checkbox状态
     onSelectChanges = (selectedRowKeys) => {
-        console.log('selectedRowKeys changed: ', selectedRowKeys);
+       // console.log('selectedRowKeys changed: ', selectedRowKeys);
         this.setState({selectedRowKeys: selectedRowKeys});
-        console.log('stateSelectedRowKeys: ', this.state.selectedRowKeys)
+      //  console.log('stateSelectedRowKeys: ', this.state.selectedRowKeys)
         //return selectedRowKeys
     };
 
     getActiveByName = (page, limit) => {
         if (!this.isNull(this.state.tData)) {
-            console.log('page：', page);
-            console.log('limit：', limit);
+          //  console.log('page：', page);
+           // console.log('limit：', limit);
             var data = {
                 params: {
                     page: page,
@@ -267,7 +267,7 @@ class Index extends React.Component {
             var activeName = this.props.form.getFieldValue("activeName");
             if (this.isNull(limit)) {
                 if (!this.isNull(activeName)) {
-                    console.log("activeName不为空:", activeName)
+                 //   console.log("activeName不为空:", activeName)
                     data = {
                         params: {
                             activeName: activeName,
@@ -294,7 +294,7 @@ class Index extends React.Component {
                     }
                 }
             }
-            console.log("传的data参数:", data)
+            //console.log("传的data参数:", data)
             this.getActiveListInPage(data);
         } else {
             Modal.error({
@@ -396,9 +396,9 @@ class Index extends React.Component {
                 this.setState({
                     publishActiveVisible: false
                 });
-                console.log("formPubActiveRef", this.formPubActiveRef);
+                //console.log("formPubActiveRef", this.formPubActiveRef);
                 var activeInfo = this.childPub.getPubItemsValue();
-                console.log(this.childPub.getPubItemsValue());
+                //console.log(this.childPub.getPubItemsValue());
                 var data = {
                     activeName: activeInfo.activeName,
                     activeStartTime: activeInfo.activeStartTime,
@@ -414,7 +414,7 @@ class Index extends React.Component {
     };
     //更新点击事件
     handleUpdateActive = (e) => {
-        console.log("更新点击事件", this.formUpActiveRef.props.form);
+        //console.log("更新点击事件", this.formUpActiveRef.props.form);
         const form = this.formUpActiveRef.props.form;
         //调用子组件的自定义方法getItemsValue。注意：通过this.formRef 才能拿到数据
         form.validateFields({force: true}, (err, values) => {
@@ -424,11 +424,11 @@ class Index extends React.Component {
                 this.setState({
                     updateActiveVisible: false
                 });
-                console.log("formEndUpRef:", this.formUpActiveRef);
+                //console.log("formEndUpRef:", this.formUpActiveRef);
                 var activeInfo = this.childUp.getUpItemsValue();
                 var url = this.childUp.getUpPicUrl();
-                console.log("this.childUp.getUpItemsValue():", this.childUp.getUpItemsValue());
-                console.log("this.childUp.getUPPicUrl():", this.childUp.getUpPicUrl());
+                //console.log("this.childUp.getUpItemsValue():", this.childUp.getUpItemsValue());
+                //console.log("this.childUp.getUPPicUrl():", this.childUp.getUpPicUrl());
                 var data = {
                     activeId: this.state.record.activeId,
                     activeName: activeInfo.activeName,
@@ -437,7 +437,7 @@ class Index extends React.Component {
                     activeEndTime: activeInfo.activeEndTime,
                     activePictrueUrl: url
                 };
-                console.log('修改表单数据: ', data);
+                //console.log('修改表单数据: ', data);
                 this.updateActive(data);
             }
             form.resetFields();
@@ -447,19 +447,19 @@ class Index extends React.Component {
     //批量删
     startDelete = () => {
         var _this = this;
-        console.log("ffffffff", _this.state.selectedRowKeys);
+        //console.log("ffffffff", _this.state.selectedRowKeys);
         var idList = [];
-        console.log('selectedRowKeys:', _this.state.selectedRowKeys);
+       // console.log('selectedRowKeys:', _this.state.selectedRowKeys);
         const selectedRowKeys = _this.state.selectedRowKeys;
         for (var i = 0; i < selectedRowKeys.length; i++) {
             var selectedRowKey = selectedRowKeys[i];
-            console.log('selectedRowKeys[i]:', selectedRowKeys[i]);
+            //console.log('selectedRowKeys[i]:', selectedRowKeys[i]);
             idList.push(_this.state.tData[selectedRowKey].activeId);
         }
         /*var data = {
             idList:idList
         }*/
-        console.log("idList：", idList);
+     //   console.log("idList：", idList);
         // console.log("data：", data);
 
         _this.deleteActiveByIds(idList);
@@ -475,9 +475,9 @@ class Index extends React.Component {
         return new Date(+new Date(dateee) + 8 * 3600 * 1000).toISOString().replace(/T/g, ' ').replace(/\.[\d]{3}Z/, '')
     };
 handleSwitch=(checked)=>{
-    console.log('checked:',checked);
+  //  console.log('checked:',checked);
     var checkedState = checked ? 1 : 0;
-    console.log("state:",checkedState);
+    //console.log("state:",checkedState);
     if(checked){
         const _this=this;
         confirm({
@@ -649,7 +649,7 @@ handleClick=()=>{
             total: _this.state.count,
             showSizeChanger: true,
             onShowSizeChange(current, pageSize) {
-                console.log('Current: ', current, '; PageSize: ', pageSize)
+                //console.log('Current: ', current, '; PageSize: ', pageSize)
                 _this.getActiveByName(current, pageSize);
                 _this.setState({
                     selectedRowKeys: []

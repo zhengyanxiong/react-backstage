@@ -109,8 +109,8 @@ ul, ol { list-style: none; }
   line-height: 2em;
 }
 .btn{
-  margin: 4px -97px 0 0;
-  float: right
+  margin: 4px 0px 0 13px;
+  float: left;
 }
 .ant-upload-select-picture-card i {
   font-size: 32px;

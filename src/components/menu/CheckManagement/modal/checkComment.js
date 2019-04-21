@@ -88,7 +88,7 @@ const CheckComment = Form.create()(
                                             <List.Item.Meta
                                                 avatar={<Avatar src={item.avatar} />}
                                                 title={<Tag color="#2db7f5">{item.username}</Tag>}
-                                                description={item.username+"在"+item.commentExpand1+"这个时间，针对已买订单订单号为"+item.orderNum+"的评论描述如下："}
+                                                description={item.username+"在"+item.creatTime+"这个时间，针对已买订单订单号为"+item.orderNum+"的评论描述如下："}
                                             />
                                             {item.comment}
                                         </Skeleton>

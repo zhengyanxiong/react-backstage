@@ -5,7 +5,7 @@ import {_getOrderAllInfoById} from "../../../api/order";
 import OrderDetail from "../../menu/OrderManagement/modal/orderDetail";
 
 import {
-    Form, Input, Modal, Icon, Cascader, Button, Table, Tag, Select,message
+    Form, Input, Modal, Icon, Cascader, Button, Table, Tag, Select, message, Row, Col
 } from 'antd';
 
 const FormItem = Form.Item;
@@ -18,6 +18,7 @@ class Index extends Component {
         super(props);
         this.state = {
             tData: [],
+            classList: [],
             count: 0,
             page: 1,
             limit: 10,
@@ -44,8 +45,8 @@ class Index extends Component {
                     serviceNum: 0,
                     descriptionNum: 0,
                     damageNum: 0,
-                    commentCreatedTime:"",
-                    headImag:""
+                    commentCreatedTime: "",
+                    headImag: ""
                 },
                 goodsList: [{
                     goodsId: 0,
@@ -68,12 +69,12 @@ class Index extends Component {
                 }]
 
             },
-            commentList:[{
+            commentList: [{
                 comment: "",
                 serviceNum: 0,
                 descriptionNum: 0,
                 damageNum: 0,
-                commentCreatedTime:""
+                commentCreatedTime: ""
             }],
             index: '',
             visible: false,
@@ -111,7 +112,7 @@ class Index extends Component {
                 }
             });
             localStorage.removeItem("userSellId");
-        }  else if (!this.isNull(orderNum)) {
+        } else if (!this.isNull(orderNum)) {
             this.getOrderListInPage({
                 params: {
                     orderNum: orderNum,
@@ -147,7 +148,8 @@ class Index extends Component {
             count: res.count,
             page: res.page,
             limit: res.limit,
-            orderLoading: false
+            orderLoading: false,
+            classList: res.classList
         })
         /*localStorage.setItem('username',res.data.data.name)
           this.props.history.push({pathname:'/home'});*/
@@ -159,12 +161,12 @@ class Index extends Component {
         console.log("list返回数据：", res);
         this.setState({
             orderDetail: res,
-            commentList:[{
+            commentList: [{
                 comment: res.orders.comment,
                 serviceNum: res.orders.serviceNum,
                 descriptionNum: res.orders.descriptionNum,
                 damageNum: res.orders.damageNum,
-                commentCreatedTime:res.orders.commentCreatedTime
+                commentCreatedTime: res.orders.commentCreatedTime
             }]
         })
     }
@@ -187,10 +189,10 @@ class Index extends Component {
             orderDetailVisible: false
         })
     };
-    orderToComment=()=>{
+    orderToComment = () => {
         if (this.state.orderDetail.orders.comment == null) {
             message.warning('用户还没有对此订单发表评价');
-        }else {
+        } else {
             this.setState({
                 orderDetailVisible: false,
                 orderCommentVisible: true
@@ -225,6 +227,7 @@ class Index extends Component {
             };
             var orderNum = this.props.form.getFieldValue("orderNum");
             var orderState = this.props.form.getFieldValue("orderState");
+            var goodClassNum = this.props.form.getFieldValue("goodClassNum");
             if (this.isNull(limit)) {
                 if (!this.isNull(this.state.userId)) {
                     if (!this.isNull(orderNum)) {
@@ -234,6 +237,7 @@ class Index extends Component {
                                     params: {
                                         userId: this.state.userId,
                                         orderNum: orderNum,
+                                        goodClassNum: goodClassNum,
                                         page: this.state.page,
                                         limit: this.state.limit
                                     }
@@ -244,6 +248,7 @@ class Index extends Component {
                                         orderState: orderState,
                                         userId: this.state.userId,
                                         orderNum: orderNum,
+                                        goodClassNum: goodClassNum,
                                         page: this.state.page,
                                         limit: this.state.limit
                                     }
@@ -255,6 +260,7 @@ class Index extends Component {
                                 params: {
                                     userId: this.state.userId,
                                     orderNum: orderNum,
+                                    goodClassNum: goodClassNum,
                                     page: this.state.page,
                                     limit: this.state.limit
                                 }
@@ -267,6 +273,7 @@ class Index extends Component {
                                 data = {
                                     params: {
                                         userId: this.state.userId,
+                                        goodClassNum: goodClassNum,
                                         page: this.state.page,
                                         limit: this.state.limit
                                     }
@@ -276,6 +283,7 @@ class Index extends Component {
                                     params: {
                                         orderState: orderState,
                                         userId: this.state.userId,
+                                        goodClassNum: goodClassNum,
                                         page: this.state.page,
                                         limit: this.state.limit
                                     }
@@ -286,6 +294,7 @@ class Index extends Component {
                             data = {
                                 params: {
                                     userId: this.state.userId,
+                                    goodClassNum: goodClassNum,
                                     page: this.state.page,
                                     limit: this.state.limit
                                 }
@@ -300,6 +309,7 @@ class Index extends Component {
                                 data = {
                                     params: {
                                         orderNum: orderNum,
+                                        goodClassNum: goodClassNum,
                                         page: this.state.page,
                                         limit: this.state.limit
                                     }
@@ -309,6 +319,7 @@ class Index extends Component {
                                     params: {
                                         orderState: orderState,
                                         orderNum: orderNum,
+                                        goodClassNum: goodClassNum,
                                         page: this.state.page,
                                         limit: this.state.limit
                                     }
@@ -319,6 +330,7 @@ class Index extends Component {
                             data = {
                                 params: {
                                     orderNum: orderNum,
+                                    goodClassNum: goodClassNum,
                                     page: this.state.page,
                                     limit: this.state.limit
                                 }
@@ -330,6 +342,7 @@ class Index extends Component {
                             if (orderState == 5) {
                                 data = {
                                     params: {
+                                        goodClassNum: goodClassNum,
                                         page: this.state.page,
                                         limit: this.state.limit
                                     }
@@ -338,6 +351,7 @@ class Index extends Component {
                                 data = {
                                     params: {
                                         orderState: orderState,
+                                        goodClassNum: goodClassNum,
                                         page: this.state.page,
                                         limit: this.state.limit
                                     }
@@ -347,6 +361,7 @@ class Index extends Component {
                         } else {
                             data = {
                                 params: {
+                                    goodClassNum: goodClassNum,
                                     page: this.state.page,
                                     limit: this.state.limit
                                 }
@@ -360,6 +375,7 @@ class Index extends Component {
                 if (!this.isNull(orderNum)) {
                     data = {
                         params: {
+                            goodClassNum: goodClassNum,
                             orderNum: orderNum,
                             page: page,
                             limit: limit
@@ -381,8 +397,12 @@ class Index extends Component {
         const _this = this;
         const showDeleteConfirm = this.showDeleteConfirm;
         const formItemLayout = {
-            labelCol: {span: 8},
-            wrapperCol: {span: 7}
+            labelCol: {span: 12},
+            wrapperCol: {span: 9}
+        };
+        const formItemLayout1 = {
+            labelCol: {span: 6},
+            wrapperCol: {span: 15}
         };
         const {getFieldDecorator} = _this.props.form;
         //选择框
@@ -407,10 +427,10 @@ class Index extends Component {
             title: '店家',
             dataIndex: 'sellname',
             render(sellname) {
-                if (sellname==null){
+                if (sellname == null) {
                     return <Tag color="red">未设置昵称</Tag>
 
-                }else {
+                } else {
                     return <label style={{fontSize: "12px"}}>{sellname}</label>
 
                 }
@@ -419,9 +439,9 @@ class Index extends Component {
             title: '买家',
             dataIndex: 'username',
             render(username) {
-                if (username==null){
+                if (username == null) {
                     return <Tag color="red">未设置昵称</Tag>
-                }else {
+                } else {
                     return <label style={{fontSize: "12px"}}>{username}</label>
 
                 }
@@ -503,31 +523,53 @@ class Index extends Component {
                 <div style={{padding: 24, background: '#fff', minHeight: 360}}>
                     <div style={{margin: "-11px 0px -13px 0px", width: "auto"}}>
                         <Form>
-                            <FormItem label="订单号："
-                                      {...formItemLayout} style={{width: "710px"}}
-                            >
-                                {getFieldDecorator('orderNum')(
-                                    <Input placeholder="请输入..."/>
-                                )}
-                            </FormItem>
-                            <FormItem label="订单状态："{...formItemLayout} style={{
-                                width: "500px", float: "left",
-                                margin: "-64px 0px 9px 360px"
-                            }}>
-                                {getFieldDecorator('orderState')(
-                                    <Select placeholder="全部">
-                                        <Option value="5">全部</Option>
-                                        <Option value="0">待付款</Option>
-                                        <Option value="1">待收货</Option>
-                                        <Option value="2">待评价</Option>
-                                        <Option value="3">已完成</Option>
-                                        <Option value="4">已取消</Option>
-                                    </Select>
-                                )}
-                                <Button type="primary" className="btn" onClick={this.getOrderByName}>
-                                    <Icon type="search"/>查询
-                                </Button>
-                            </FormItem>
+                            <Row>
+                                <Col span={7} style={{textAlign: 'left'}}>
+                                    <FormItem label="订单号："
+                                              {...formItemLayout1}
+                                    >
+                                        {getFieldDecorator('orderNum')(
+                                            <Input placeholder="请输入..."/>
+                                        )}
+                                    </FormItem></Col>
+
+                                <Col span={7} style={{textAlign: 'left'}}>
+                                    <FormItem label="商品类别："{...formItemLayout1}>
+                                        {getFieldDecorator('goodClassNum')(
+                                            <Select placeholder="全部">
+                                                <Option value="">全部</Option>
+                                                {this.state.classList.map(it => (
+                                                    <Option key={it.goodClassNum} value={it.goodClassNum}>
+                                                        {it.goodClassName}
+                                                    </Option>
+                                                ))}
+                                            </Select>
+                                        )}
+                                    </FormItem></Col>
+                                <Col span={7} style={{textAlign: 'left'}}>
+                                    <FormItem label="订单状态："{...formItemLayout1} >
+                                        {getFieldDecorator('orderState')(
+                                            <Select placeholder="全部">
+                                                <Option value="5">全部</Option>
+                                                <Option value="0">待付款</Option>
+                                                <Option value="1">待收货</Option>
+                                                <Option value="2">待评价</Option>
+                                                <Option value="3">已完成</Option>
+                                                <Option value="4">已取消</Option>
+                                            </Select>
+                                        )}
+                                    </FormItem>
+                                </Col>
+                                <Col span={3} >
+                                <FormItem {...formItemLayout1} style={{
+                                    float: "left"
+                                }}>
+                                    <Button type="primary" className="btn" onClick={this.getOrderByName}>
+                                        <Icon type="search"/>查询
+                                    </Button>
+                                </FormItem>
+                                </Col>
+                            </Row>
                         </Form>
                     </div>
                     <OrderDetail title="订单详情" visible={_this.state.orderDetailVisible} loading={loading}

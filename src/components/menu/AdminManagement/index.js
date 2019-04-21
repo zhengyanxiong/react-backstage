@@ -55,7 +55,7 @@ class Index extends React.Component {
 
     async getAdminListInPage(data) {
         const res = await _getAdminListInPage(data);
-        console.log("list返回数据：", res);
+        //console.log("list返回数据：", res);
         this.setState({
             tData: res.list,
             count: res.count,
@@ -70,7 +70,7 @@ class Index extends React.Component {
 
     async deleteAdminById(data) {
         const res = await _deleteAdminById(data);
-        console.log(res);
+       // console.log(res);
         const tData = this.state.tData;
         tData.splice(this.state.rowkey, 1);//获取索引，后面的 1 是删除几行
         this.setState({tData: tData});
@@ -81,7 +81,7 @@ class Index extends React.Component {
     }
 
     async getAdminById(data) {
-        console.log("默认adminName:" + this.state.adminDetail.adminName);
+       // console.log("默认adminName:" + this.state.adminDetail.adminName);
         const res = await _getAdminById(data);
         this.setState({
             adminDetail: {
@@ -100,9 +100,9 @@ class Index extends React.Component {
     }
 
     async submitAdmin(data) {
-        console.log('res表单数据: ', data);
+        //console.log('res表单数据: ', data);
         const res = await _submitAdmin(data);
-        console.log(res);
+        //console.log(res);
         Modal.success({
             title: '管理员添加成功',
             content: '管理员类型：普通管理员',
@@ -118,7 +118,7 @@ class Index extends React.Component {
     async updateAdmin(data) {
         //console.log('res表单数据: ', data);
         const res = await _updateAdmin(data);
-        console.log(res);
+        //console.log(res);
         this.setState({
             updateAdminVisible: false
         });
@@ -183,7 +183,7 @@ class Index extends React.Component {
     };
     //获取table行的记录以及行主键
     handleRecord = (record, rowkey) => {
-        console.log("adminId：" + record.adminId)
+        //console.log("adminId：" + record.adminId)
         this.setState({
             record: record,
             rowkey: rowkey,
@@ -193,16 +193,16 @@ class Index extends React.Component {
 
     // checkbox状态
     onSelectChanges = (selectedRowKeys) => {
-        console.log('selectedRowKeys changed: ', selectedRowKeys);
+        //console.log('selectedRowKeys changed: ', selectedRowKeys);
         this.setState({selectedRowKeys: selectedRowKeys});
-        console.log('stateSelectedRowKeys: ', this.state.selectedRowKeys)
+        //console.log('stateSelectedRowKeys: ', this.state.selectedRowKeys)
         //return selectedRowKeys
     };
 
     getAdminByName = (page, limit) => {
         if (!this.isNull(this.state.tData)) {
-            console.log('page：', page);
-            console.log('limit：', limit);
+           // console.log('page：', page);
+            //console.log('limit：', limit);
             var data = {
                 params: {
                     page: page,
@@ -212,7 +212,7 @@ class Index extends React.Component {
             var adminName = this.props.form.getFieldValue("adminName");
             if (this.isNull(limit)) {
                 if (!this.isNull(adminName)) {
-                    console.log("adminName不为空:", adminName)
+                 //   console.log("adminName不为空:", adminName)
                     data = {
                         params: {
                             adminName: adminName,
@@ -239,7 +239,7 @@ class Index extends React.Component {
                     }
                 }
             }
-            console.log("传的data参数:", data)
+           // console.log("传的data参数:", data)
             this.getAdminListInPage(data);
         } else {
             Modal.error({
@@ -260,8 +260,8 @@ class Index extends React.Component {
             cancelText: '取消',
             //删除行
             onOk() {
-                console.log("recordId:" + _this.state.record.adminId);
-                console.log("rowkey:" + _this.state.rowkey);
+             //   console.log("recordId:" + _this.state.record.adminId);
+                //console.log("rowkey:" + _this.state.rowkey);
                 if (!_this.isNull(_this.state.record.adminId)) {
                     var data = {
                         params: {
@@ -273,21 +273,21 @@ class Index extends React.Component {
                 }
             },
             onCancel() {
-                console.log('取消');
+                //console.log('取消');
             },
         });
     };
     //详情点击事件
     handleAdminDetail = () => {
         if (!this.isNull(this.state.record.adminId)) {
-            console.log("recordId:" + this.state.record.adminId);
-            console.log("rowkey:" + this.state.rowkey);
+            //console.log("recordId:" + this.state.record.adminId);
+            //console.log("rowkey:" + this.state.rowkey);
             var data = {
                 params: {
                     adminId: this.state.record.adminId
                 }
             };
-            console.log('qqq' + data);
+            //console.log('qqq' + data);
             this.getAdminById(data);
         }
     };
@@ -328,7 +328,7 @@ class Index extends React.Component {
     //确认添加点击事件
     handleSubmitAdmin = (e) => {
         const form = this.formSubAdminRef.props.form;
-        console.log("formSubAdminRef", this.formSubAdminRef);
+        //console.log("formSubAdminRef", this.formSubAdminRef);
         //调用子组件的自定义方法getItemsValue。注意：通过this.formRef 才能拿到数据
         form.validateFields({force: true}, (err, values) => {
             if (err) {
@@ -337,14 +337,14 @@ class Index extends React.Component {
                 this.setState({
                     submitAdminVisible: false
                 });
-                console.log("formSubAdminRef", this.formSubAdminRef);
+                //console.log("formSubAdminRef", this.formSubAdminRef);
                 var adminInfo = this.childSub.getSubItemsValue();
-                console.log(this.childSub.getSubItemsValue());
+                //console.log(this.childSub.getSubItemsValue());
                 var data = {
                     adminName: adminInfo.adminName,
                     adminPassword: adminInfo.adminPassword,
                 };
-                console.log('表单数据: ', data);
+                //console.log('表单数据: ', data);
                 this.submitAdmin(data);
             }
             form.resetFields();
@@ -379,19 +379,19 @@ class Index extends React.Component {
     //批量删
     startDelete = () => {
         var _this = this;
-        console.log("ffffffff", _this.state.selectedRowKeys);
+        //console.log("ffffffff", _this.state.selectedRowKeys);
         var idList = [];
-        console.log('selectedRowKeys:', _this.state.selectedRowKeys);
+        //console.log('selectedRowKeys:', _this.state.selectedRowKeys);
         const selectedRowKeys = _this.state.selectedRowKeys;
         for (var i = 0; i < selectedRowKeys.length; i++) {
             var selectedRowKey = selectedRowKeys[i];
-            console.log('selectedRowKeys[i]:', selectedRowKeys[i]);
+            //console.log('selectedRowKeys[i]:', selectedRowKeys[i]);
             idList.push(_this.state.tData[selectedRowKey].adminId);
         }
         /*var data = {
             idList:idList
         }*/
-        console.log("idList：", idList);
+       // console.log("idList：", idList);
        // console.log("data：", data);
 
         _this.deleteAdminByIds(idList);

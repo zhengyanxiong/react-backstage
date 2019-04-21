@@ -1,16 +1,17 @@
 import React from "react";
-import {Form, Select, Modal,Tabs ,Input} from "antd";
+import {Form, Select, Modal,Tabs ,Input,Row,Col} from "antd";
 import {getAdmin} from "../../../util/Cookie"
+import Button from "antd/es/button/button";
 const FormItem = Form.Item;
 const {Option} = Select;
 const formItemLayout = {
     labelCol: {
-        xs: {span: 30},
+        xs: {span: 7},
         sm: {span: 6},
     },
     wrapperCol: {
-        xs: {span: 24},
-        sm: {span: 13},
+        xs: {span: 6},
+        sm: {span: 15},
     },
 };
 const UpdateSu = Form.create()(
@@ -48,10 +49,14 @@ const UpdateSu = Form.create()(
                     onCancel={onCancel}
                     onOk={onOk}
                     maskClosable={false}
+                    footer={this.props.footer}
                 >
-                    <Tabs defaultActiveKey="1" activeKey={this.props.key}>
-                        <TabPane tab="确认密码" key="1">
-                            <FormItem label="旧密码："
+                    <Tabs defaultActiveKey='1'>
+                        <TabPane tab="确认密码" key="1" disabled>
+                            <Form>
+                                <Row>
+                                    <Col span={15}>
+                                <FormItem label="旧密码："
                                 hasFeedback
                                 {...formItemLayout}>
                                 {getFieldDecorator('password', {
@@ -59,9 +64,17 @@ const UpdateSu = Form.create()(
                                 })(
                                     <Input name="password" type="text"/>
                                 )}
-                            </FormItem>
+
+                                </FormItem>
+                                    </Col>
+                                    <Col>
+                                <Button type="primary" style={{marginTop: "4px"}} onClick={this.props.handleOkOne}>下一步</Button>
+                                    </Col>
+                                </Row>
+                            </Form>
                         </TabPane>
-                        <TabPane tab="修改密码"  key="2">
+                        <TabPane tab="修改密码"  key="2" disabled>
+                            <Form>
                             <FormItem label="您的名称："
                                       hasFeedback
                                       {...formItemLayout}>
@@ -90,6 +103,7 @@ const UpdateSu = Form.create()(
                                     <Input name="passwordN" type="text"/>
                                 )}
                             </FormItem>
+                            </Form>
                         </TabPane>
                     </Tabs>
                 </Modal>

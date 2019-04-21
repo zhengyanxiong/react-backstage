@@ -67,7 +67,7 @@ const SetUpClass = Form.create()(
             var json={};
             json['vals']=vals;
             json['parv']=values.className;
-            console.log(json);
+            //console.log(json);
             return json;
         };
         getClassChildInputValue=(e)=>{

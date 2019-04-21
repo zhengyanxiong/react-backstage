@@ -5,7 +5,7 @@ import {_updateGoods} from "../../../api/goods";
 import {_getAllInfoById} from "../../../api/goods";
 import GoodsDetail from "../../menu/GoodsManagement/modal/goodsDetail";
 import {
-    Form, Input, Modal, Icon, Cascader, Button, Table, Tag, Select
+    Form, Input, Modal, Icon, Cascader, Button, Table, Tag, Select, Row, Col
 } from 'antd';
 
 const FormItem = Form.Item;
@@ -17,6 +17,7 @@ class Index extends Component {
         super(props);
         this.state = {
             tData: [],
+            classList:[],
             count: 0,
             page: 1,
             limit: 10,
@@ -83,13 +84,14 @@ class Index extends Component {
 
     async getGoodsListInPage(data) {
         const res = await _getGoodsListInPage(data);
-        console.log("list返回数据：", res);
+      //  console.log("list返回数据：", res);
         this.setState({
             tData: res.list,
             count: res.count,
             page: res.page,
             limit: res.limit,
-            goodsLoading: false
+            goodsLoading: false,
+            classList:res.classList
         })
     }
 
@@ -113,14 +115,14 @@ class Index extends Component {
         const res = await _getAllInfoById(data);
         //console.log("list返回数据：", res);
 
-        if(!this.isNull(res.goods.goodImge)){
+        if (!this.isNull(res.goods.goodImge)) {
             let str = res.goods.goodImge.split(",");
-            console.log("str:", str);
+           // console.log("str:", str);
             this.setState({
                 goodsDetail: res,
                 goodImge: str
             });
-        }else {
+        } else {
             this.setState({
                 goodsDetail: res,
                 goodImge: []
@@ -129,10 +131,21 @@ class Index extends Component {
 
     }
 
-
+    unique=(arr)=>{
+        var hash=[];
+        for (var i = 0; i < arr.length; i++) {
+            for (var j = i+1; j < arr.length; j++) {
+                if(arr[i]===arr[j]){
+                    ++i;
+                }
+            }
+            hash.push(arr[i]);
+        }
+        return hash;
+    };
     //获取table行的记录以及行主键
     handleRecord = (record, rowkey) => {
-        console.log("goodsId：" + record.goodsId);
+        //console.log("goodsId：" + record.goodsId);
         this.setState({
             record: record,
             rowkey: rowkey,
@@ -148,8 +161,8 @@ class Index extends Component {
     };
     getGoodsByName = (page, limit) => {
         if (!this.isNull(this.state.tData)) {
-            console.log('page：', page);
-            console.log('limit：', limit);
+           // console.log('page：', page);
+           // console.log('limit：', limit);
             var data = {
                 params: {
                     page: page,
@@ -157,6 +170,8 @@ class Index extends Component {
                 }
             };
             var goodsName = this.props.form.getFieldValue("goodsName");
+            var goodsNum = this.props.form.getFieldValue("goodsNum");
+            var goodClassNum = this.props.form.getFieldValue("goodClassNum");
             var goodsState = this.props.form.getFieldValue("goodsState");
             if (this.isNull(limit)) {
                 if (!this.isNull(this.state.userId)) {
@@ -167,6 +182,8 @@ class Index extends Component {
                                     params: {
                                         userId: this.state.userId,
                                         goodsName: goodsName,
+                                        goodsNum: goodsNum,
+                                        goodClassNum: goodClassNum,
                                         page: this.state.page,
                                         limit: this.state.limit
                                     }
@@ -177,6 +194,8 @@ class Index extends Component {
                                         userId: this.state.userId,
                                         goodsState: goodsState,
                                         goodsName: goodsName,
+                                        goodsNum: goodsNum,
+                                        goodClassNum: goodClassNum,
                                         page: this.state.page,
                                         limit: this.state.limit
                                     }
@@ -188,6 +207,8 @@ class Index extends Component {
                                 params: {
                                     userId: this.state.userId,
                                     goodsName: goodsName,
+                                    goodsNum: goodsNum,
+                                    goodClassNum: goodClassNum,
                                     page: this.state.page,
                                     limit: this.state.limit
                                 }
@@ -200,6 +221,8 @@ class Index extends Component {
                                 data = {
                                     params: {
                                         userId: this.state.userId,
+                                        goodsNum: goodsNum,
+                                        goodClassNum: goodClassNum,
                                         page: this.state.page,
                                         limit: this.state.limit
                                     }
@@ -208,6 +231,8 @@ class Index extends Component {
                                 data = {
                                     params: {
                                         userId: this.state.userId,
+                                        goodsNum: goodsNum,
+                                        goodClassNum: goodClassNum,
                                         goodsState: goodsState,
                                         page: this.state.page,
                                         limit: this.state.limit
@@ -218,6 +243,8 @@ class Index extends Component {
                             data = {
                                 params: {
                                     userId: this.state.userId,
+                                    goodsNum: goodsNum,
+                                    goodClassNum: goodClassNum,
                                     page: this.state.page,
                                     limit: this.state.limit
                                 }
@@ -232,6 +259,8 @@ class Index extends Component {
                                 params: {
                                     goodsState: goodsState,
                                     goodsName: goodsName,
+                                    goodsNum: goodsNum,
+                                    goodClassNum: goodClassNum,
                                     page: this.state.page,
                                     limit: this.state.limit
                                 }
@@ -240,6 +269,8 @@ class Index extends Component {
                             data = {
                                 params: {
                                     goodsName: goodsName,
+                                    goodsNum: goodsNum,
+                                    goodClassNum: goodClassNum,
                                     page: this.state.page,
                                     limit: this.state.limit
                                 }
@@ -251,6 +282,8 @@ class Index extends Component {
                             data = {
                                 params: {
                                     goodsState: goodsState,
+                                    goodsNum: goodsNum,
+                                    goodClassNum: goodClassNum,
                                     page: this.state.page,
                                     limit: this.state.limit
                                 }
@@ -258,6 +291,8 @@ class Index extends Component {
                         } else {
                             data = {
                                 params: {
+                                    goodsNum: goodsNum,
+                                    goodClassNum: goodClassNum,
                                     page: this.state.page,
                                     limit: this.state.limit
                                 }
@@ -272,13 +307,15 @@ class Index extends Component {
                     data = {
                         params: {
                             goodsName: goodsName,
+                            goodsNum: goodsNum,
+                            goodClassNum: goodClassNum,
                             page: page,
                             limit: limit
                         }
                     }
                 }
             }
-            console.log("传的data参数:", data);
+           // console.log("传的data参数:", data);
             this.getGoodsListInPage(data);
         } else {
             Modal.error({
@@ -296,15 +333,15 @@ class Index extends Component {
             okType: 'danger',
             cancelText: '取消',
             onOk() {
-                if ( that.state.record.goodsState!=3){
+                if (that.state.record.goodsState != 3) {
                     var data = {
                         goodsId: that.state.record.goodsId,
                         goodsState: 3,
-                        goods_stock:0
+                        goods_stock: 0
                     };
                     //  console.log('修改表单数据: ', data);
                     that.updateGoods(data);
-                }else {
+                } else {
                     Modal.error({
                         title: '失败！',
                         content: '商品已经被下架了!',
@@ -346,8 +383,16 @@ class Index extends Component {
         const _this = this;
         const showDeleteConfirm = this.showDeleteConfirm;
         const formItemLayout = {
-            labelCol: {span: 8},
-            wrapperCol: {span: 7}
+            labelCol: {span: 12},
+            wrapperCol: {span: 10}
+        };
+        const formItemLayout1 = {
+            labelCol: {span: 6},
+            wrapperCol: {span: 16}
+        };
+        const formItemLayout2 = {
+            labelCol: {span: 6},
+            wrapperCol: {span: 16}
         };
         const {getFieldDecorator} = _this.props.form;
         //选择框
@@ -443,38 +488,70 @@ class Index extends Component {
                 })
             }
         };
-
-        return (
+           return (
             <div>
                 <CustomBreadcrumb arr={["闲置管理"]}/>
                 <div style={{padding: 24, background: '#fff', minHeight: 360}}>
                     <div style={{margin: "-11px 0px -13px 0px", width: "auto"}}>
                         <Form>
-                            <FormItem label="商品名称："
-                                      {...formItemLayout} style={{width: "710px"}}
-                            >
-                                {getFieldDecorator('goodsName')(
-                                    <Input placeholder="请输入..."/>
-                                )}
+                            <Row>
+                                <Col span={9} style={{textAlign: 'left'}}>
 
-                            </FormItem>
-                            <FormItem label="商品状态："{...formItemLayout} style={{
-                                width: "500px", float: "left",
-                                margin: "-64px 0px 9px 360px"
-                            }}>
-                                {getFieldDecorator('goodsState')(
-                                    <Select placeholder="全部">
-                                        <Option value="0">全部</Option>
-                                        <Option value="1">已上架</Option>
-                                        <Option value="2">已卖出</Option>
-                                        <Option value="3">已下架</Option>
-                                        <Option value="4">活动中</Option>
-                                    </Select>
-                                )}
-                                <Button type="primary" className="btn" onClick={this.getGoodsByName}>
-                                    <Icon type="search"/>查询
-                                </Button>
-                            </FormItem>
+                                    <FormItem label="商品名称："
+                                              {...formItemLayout}
+                                    >
+                                        {getFieldDecorator('goodsName')(
+                                            <Input placeholder="请输入..."/>
+                                        )}
+
+                                    </FormItem>
+                                    <FormItem label="商品类别："{...formItemLayout} style={{
+                                }}>
+                                    {getFieldDecorator('goodClassNum')(
+                                        <Select placeholder="全部">
+                                            <Option value="">全部</Option>
+                                            {this.state.classList.map(it => (
+                                                <Option key={it.goodClassNum} value={it.goodClassNum}>
+                                                    {it.goodClassName}
+                                                </Option>
+                                            ))}
+                                        </Select>
+                                    )}
+                                </FormItem>
+                                </Col>
+
+                                <Col span={6} style={{textAlign: 'left'}}>
+                                    <FormItem label="商品编号："
+                                              {...formItemLayout1}
+                                    >
+                                        {getFieldDecorator('goodsNum')(
+                                            <Input placeholder="请输入..."/>
+                                        )}
+
+                                    </FormItem>
+                                    <FormItem {...formItemLayout2} style={{
+                                        float: "left"
+                                    }}>
+                                        <Button type="primary" className="btn" onClick={this.getGoodsByName}>
+                                            <Icon type="search"/>查询
+                                        </Button>
+                                    </FormItem>
+                                </Col>
+                                <Col span={6} style={{textAlign: 'left'}}>
+                                    <FormItem label="商品状态："{...formItemLayout1} style={{
+                                    }}>
+                                        {getFieldDecorator('goodsState')(
+                                            <Select placeholder="全部">
+                                                <Option value="">全部</Option>
+                                                <Option value="1">已上架</Option>
+                                                <Option value="2">已卖出</Option>
+                                                <Option value="3">已下架</Option>
+                                                <Option value="4">活动中</Option>
+                                            </Select>
+                                        )}
+                                    </FormItem>
+                                </Col>
+                            </Row>
                             <div style={{float: "left", margin: "-59px 0"}}>
                                 <Button
                                     icon="usergroup-delete" type="danger"

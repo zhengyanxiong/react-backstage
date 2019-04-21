@@ -51,3 +51,22 @@ export const _getUserAllByUserId = (data) => {
 export const _updatePersonal = (data) => {
     return instance.post("/memberservice/member/updatePersonal",data)
 };
+
+/**
+ * 用户销售额排名
+ * @param data
+ * @returns {AxiosPromise<any>}
+ * @private
+ */
+export const _getUserAmountRank = (data) => {
+    return instance.post("/memberservice/member/getUserAmountRank",data)
+};
+/**
+ * 用户销售量统计
+ * @param data
+ * @returns {AxiosPromise<any>}
+ * @private
+ */
+export const _getDistributeOfUserAndSales = (data) => {
+    return instance.post("/memberservice/member/getDistributeOfUserAndSales",data)
+};
