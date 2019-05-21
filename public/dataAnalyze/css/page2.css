@@ -1,0 +1,260 @@
+img {
+    display: block;
+}
+
+.box-one img {
+    width: 90%;
+    margin: 40px auto;
+}
+
+.box-two img, .box-three img {
+    width: 90%;
+    margin: 20px auto;
+}
+
+.box-three img {
+    margin: 20px auto;
+}
+
+.box-three {
+    margin-bottom: 0px;
+}
+
+.box-bottom-left {
+    width: 57%;
+    float: left;
+    margin-top: 20px;
+    border-bottom-right-radius: 0px;
+    border-top-right-radius: 0px;
+}
+
+.box-bottom-left .containers {
+    margin: 40px 0;
+}
+
+.item-left {
+    width: 30%;
+    padding-top: 20px;
+    float: left;
+}
+
+.item-left .item-title {
+    margin: 0 auto;
+    margin-left: 15px;
+    margin-right: 15px;
+    margin-top: 10px;
+}
+
+.item-left img {
+    width: 86%;
+    margin: 0 auto;
+}
+
+.item-right {
+    width: 40%;
+    float: right;
+    padding-left: 15px;
+    border-left: 1px solid #525A77;
+}
+
+.item-right img {
+    width: 88%;
+    margin: 0 auto;
+}
+
+.box-bottom-right {
+    width: 42.6%;
+    float: right;
+    margin-top: 20px;
+    border-left: none;
+    border-top-left-radius: 0px;
+    border-bottom-left-radius: 0px;
+}
+
+.box-bottom-right img {
+    width: 96%;
+    margin: 40px auto;
+}
+
+.glye-img {
+    position: relative;
+    width: auto !important;
+}
+
+@-webkit-keyframes mapping {
+    0% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-5px);
+    }
+    100% {
+        transform: translateY(0);
+    }
+}
+
+@-moz-keyframes mapping {
+    0% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-5px);
+    }
+    100% {
+        transform: translateY(0);
+    }
+}
+
+@keyframes mapping {
+    0% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-5px);
+    }
+    100% {
+        transform: translateY(0);
+    }
+}
+
+.glye-img img {
+    width: auto;
+    height: auto;
+    /*animation: mapping 1s linear infinite;*/
+}
+
+.glye-img img:before {
+    width: 53px;
+    height: 99px;
+
+}
+
+.glye-img div {
+    width: 5px;
+    height: 5px;
+    margin-left: 49.67%;
+    margin-top: -40px;
+    border-radius: 50%;
+    background: #1c801f;
+}
+
+.ratio {
+    margin-top: 15px;
+}
+
+.rotio-tp {
+    position: relative;
+}
+
+.rotio-tp-rt {
+    position: absolute;
+    right: 0;
+}
+
+.rotio-bd {
+    position: relative;
+    background-color: #162a49;
+    height: 36px;
+    margin-top: 10px;
+}
+
+.rotio-bd-ct {
+    position: absolute;
+    left: 50%;
+    width: 120px;
+    height: 120px;
+    margin-left: -60px;
+    background-color: #0a1537;
+    border-radius: 100px;
+    top: 50%;
+    z-index: 10;
+    margin-top: -60px;
+}
+
+.rotio-bd-ct img {
+    display: block;
+    margin: auto;
+    margin-top: 6px;
+}
+
+.rotio-bd-lt {
+    float: left;
+    width: calc(55% - 37px);
+    border-radius: 4px;
+    height: 36px;
+    overflow: hidden;
+    position: relative;
+    border: 1px solid #348CB5;
+}
+
+@keyframes progress-bar-stripes-lt {
+    from {
+        background-position: 0px 0
+    }
+    to {
+        background-position: 60px 0
+    }
+}
+
+@keyframes progress-bar-stripes {
+    from {
+        background-position: 60px 0
+    }
+    to {
+        background-position: 0 0
+    }
+}
+
+.rotio-bd-lt p {
+    width: 30%;
+    height: 36px;
+    background: -webkit-linear-gradient(left, #0515ff, #3474b5); /* Safari 5.1 - 6.0 */
+    background: linear-gradient(to right, #0515ff, #3474b5);
+    background-color: #3389B5;
+   /* background-image: linear-gradient(45deg,rgba(255,255,255,.15) 25%,transparent 25%,transparent 50%,rgba(255,255,255,.15) 50%,rgba(255,255,255,.15) 75%,transparent 75%,transparent);*/
+    animation: progress-bar-stripes-lt 3s linear infinite;
+    background-size: 60px 40px;
+}
+
+.rotio-bd-rt {
+    float: right;
+    height: 36px;
+    border-radius: 0 4px 4px 0;
+    width: calc(50% - 58px);
+    position: relative;
+    border: 1px solid #d1524c;
+}
+
+.rotio-bd-rt p {
+    position: absolute;
+    right: 0;
+    top: 0;
+    height: 36px;
+    width: 37%;
+    background: -webkit-linear-gradient(left, #d16f64, #d1485d); /* Safari 5.1 - 6.0 */
+    background: linear-gradient(to right, #d16f64, #d1485d);
+    background-color: #D1524C;
+    /*background-image: linear-gradient(45deg,rgba(255,255,255,.15) 25%,transparent 25%,transparent 50%,rgba(255,255,255,.15) 50%,rgba(255,255,255,.15) 75%,transparent 75%,transparent);*/
+    animation: progress-bar-stripes 3s linear infinite;
+    background-size: 60px 40px;
+}
+
+.rotio-bd-lt span {
+    position: absolute;
+    left: 32%;
+    right: 0;
+    top: 0;
+    display: block;
+    font-size: 13px;
+    line-height: 36px;
+}
+.rotio-bd-rt span {
+    position: absolute;
+    left: 9%;
+    right: 0;
+    font-size: 13px;
+    top: 0;
+    display: block;
+    line-height: 36px;
+}
+

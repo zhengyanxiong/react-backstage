@@ -1,5 +1,5 @@
 import React from "react";
-import {Form, Select, Modal, Rate, Row, Col, Tag,Input,Statistic,Icon,List} from "antd";
+import {Form, Select, Modal, Spin,Rate, Row, Col, Tag,Input,Statistic,Icon,List} from "antd";
 import Button from "antd/es/button/button";
 import Zmage from 'react-zmage'
 const FormItem = Form.Item;
@@ -73,7 +73,7 @@ const GoodsDetail = Form.create()(
         };
         render() {
             const {
-                visible, onCancel, form
+                visible, onCancel, form,loading
             } = this.props;
             const {getFieldDecorator} = form;
             var items=[];
@@ -95,7 +95,9 @@ const GoodsDetail = Form.create()(
                     maskClosable={false}
                     width="79%"
                 >
-                    <div style={{height: "78px"}}>
+                    <Spin tip="加载中.." spinning={loading}>
+
+                <div style={{height: "78px"}}>
                         <Button type="primary" style={{margin:"14px 10px 0px 26px"}} onClick={this.props.handleToSelledOrder}>查看已卖宝贝信息</Button>
                         <div style={{float:"right",width:"190px",margin: "-15px 0 0 0"}}>
                             <Statistic style={{float: "left",margin: "0 12px 0 0"}}title="总共件数" value={this.props.goodsDetail.allCount} prefix={<Icon type="like" />} />
@@ -228,6 +230,7 @@ const GoodsDetail = Form.create()(
 
 
                     </Form>
+                    </Spin>
                 </Modal>
             );
         }

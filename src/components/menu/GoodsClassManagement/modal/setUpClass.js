@@ -1,5 +1,5 @@
 import React from "react";
-import {Form, Select, Input, Modal,Button,Icon  } from "antd";
+import {Form, Select, Input, Modal,Button,Icon ,Spin } from "antd";
 
 const FormItem = Form.Item
 const {Option} = Select;
@@ -84,7 +84,7 @@ const SetUpClass = Form.create()(
             return goodsClassList;
         };
         render() {
-            const {visible, onCancel, onOk, form} = this.props;
+            const {visible, onCancel, onOk, form,loading} = this.props;
             const {getFieldDecorator,getFieldValue } = form;
             getFieldDecorator('keys', { initialValue: [] });
             const keys = getFieldValue('keys');
@@ -121,6 +121,8 @@ const SetUpClass = Form.create()(
                     onOk={onOk}
                     maskClosable={false}
                 >
+                    <Spin tip="加载中.." spinning={loading}>
+
                     <Form>
                         <Form.Item label="父类名称："
                                    hasFeedback
@@ -145,6 +147,7 @@ const SetUpClass = Form.create()(
                             </Button>
                         </Form.Item>
                     </Form>
+                    </Spin>
                 </Modal>
             );
         }

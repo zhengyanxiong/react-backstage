@@ -2,6 +2,7 @@ import React from "react";
 import {Form, Select, Modal, Rate, Row, Col, Tag} from "antd";
 import Button from "antd/es/button/button";
 import Zmage from 'react-zmage'
+import Spin from "antd/es/spin/index";
 const FormItem = Form.Item;
 const desc = ['1.0', '2.0', '3.0', '4.0', '5.0'];
 const {Option} = Select;
@@ -40,7 +41,12 @@ const CheckDetail = Form.create()(
         componentDidMount() {
             //console.log("dsfasogi", this.state)
         }
-
+        isNull = (charts) => {
+            if (charts == null || charts == "" || charts == "undefined" || charts === undefined) {
+                return true
+            } else
+                return false
+        };
         timeFormat = (time) => {
             var dateee = new Date(time).toJSON();
             return new Date(+new Date(dateee) + 8 * 3600 * 1000).toISOString().replace(/T/g, ' ').replace(/\.[\d]{3}Z/, '')
@@ -48,7 +54,7 @@ const CheckDetail = Form.create()(
         };
         render() {
             const {
-                visible, onCancel, form
+                visible, onCancel, form,loading
             } = this.props;
             const {getFieldDecorator} = form;
 
@@ -95,6 +101,8 @@ const CheckDetail = Form.create()(
                 }}
                 />)
             }
+
+
             return (
                 <Modal
                     visible={visible}
@@ -105,6 +113,8 @@ const CheckDetail = Form.create()(
                     maskClosable={false}
                     width="85%"
                 >
+                    <Spin tip="加载中.." spinning={loading}>
+
                     <div style={{height: "50px", marginBottom: "20px"}}>
                          {itemsHeadImg}
 
@@ -161,9 +171,10 @@ const CheckDetail = Form.create()(
                                         rules: [{required: true, message: '必填!'}],
                                     })(
                                         <Select disabled={true}>
-                                            <Option value="1">未审核</Option>
-                                            <Option value="2">审核正常</Option>
-                                            <Option value="3">停用</Option>
+                                            <Option value="1">未认证</Option>
+                                            <Option value="2">已认证</Option>
+                                            <Option value="3">已停用</Option>
+                                            <Option value="4">待审核</Option>
                                         </Select>
                                     )}
                                 </Form.Item>
@@ -223,26 +234,25 @@ const CheckDetail = Form.create()(
                                         <Tag color="geekblue">{this.props.userDetail.userInfo.phoneNum}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</Tag>
                                     )}
                                 </Form.Item>
-
-                            <Form.Item label="收货地址：" hasFeedback  {...formItemLayout1}>
-                                    {getFieldDecorator('phoneNum', {
-                                        initialValue: this.props.receiptPlacelist[0].addressName,
+                                <Form.Item label="收货地址：" hasFeedback  {...formItemLayout1}>
+                                    {getFieldDecorator('addressName', {
+                                        initialValue: this.isNull(this.props.receiptPlacelist)?<Tag color="red">还没有收获地址</Tag>:this.props.receiptPlacelist[0].addressName,
                                         rules: [{required: true, message: '必填!'}]
                                     })(
-                                        <Select
-                                            style={{fontSize:"11px"}}
-                                            placeholder="请选择"
-                                        >
-                                            {this.props.receiptPlacelist.map(it => (
-                                                <Option key={it.receiptId} value={it.receiptId}>
-                                                    {it.addressName}
-                                                </Option>
-                                            ))}
-                                        </Select>
+
+                                        this.isNull(this.props.receiptPlacelist)?<Tag color="red" style={{padding: "0 20px"}}>还没有收获地址</Tag>:
+                                            <Select
+                                                style={{fontSize:"11px"}}
+                                                placeholder="请选择"
+                                            >
+                                                {this.props.receiptPlacelist.map(it => (
+                                                    <Option key={it.receiptId} value={it.receiptId}>
+                                                        {it.addressName}
+                                                    </Option>
+                                                ))}
+                                            </Select>
                                     )}
                                 </Form.Item>
-
-
                                 <Form.Item label="上次修改时间："
                                            hasFeedback
                                            {...formItemLayout}>
@@ -255,11 +265,10 @@ const CheckDetail = Form.create()(
                                                        {...formItemLayout}>
                                     {itemsStu}
                             </Form.Item>
-
                             </Col>
                         </Row>
-
                     </Form>
+                    </Spin>
                 </Modal>
             );
         }

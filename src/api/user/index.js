@@ -70,3 +70,39 @@ export const _getUserAmountRank = (data) => {
 export const _getDistributeOfUserAndSales = (data) => {
     return instance.post("/memberservice/member/getDistributeOfUserAndSales",data)
 };
+/**
+ * 举报详情
+ * @param data
+ * @returns {AxiosPromise<any>}
+ * @private
+ */
+export const _getUserComplaintById = (data) => {
+    return instance.get("/memberservice/member/getUserComplaintById",data)
+};
+/**
+ * 举报分页
+ * @param data
+ * @returns {AxiosPromise<any>}
+ * @private
+ */
+export const _getUserComplaintListInPage = (data) => {
+    return instance.post("/memberservice/member/getUserComplaintListInPage",data)
+};
+/**
+ * 管理员处理投诉举报事件
+ * @param data
+ * @returns {AxiosPromise<any>}
+ * @private
+ */
+export const _updateUserCompById = (data) => {
+    return instance.post("/memberservice/member/updateUserCompById",data)
+};
+/**
+ * 合计举报事件未处理条数
+ * @param data
+ * @returns {AxiosPromise<any>}
+ * @private
+ */
+export const _getUserCompCount = (data) => {
+    return instance.get("/memberservice/member/getUserCompCount",data)
+};

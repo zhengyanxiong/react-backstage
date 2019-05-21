@@ -2,6 +2,7 @@ import React from "react";
 import {Form, Select, Modal, Rate, Row, Col, Tag} from "antd";
 import Button from "antd/es/button/button";
 import Zmage from 'react-zmage'
+import Spin from "antd/es/spin/index";
 const FormItem = Form.Item;
 const desc = ['1.0', '2.0', '3.0', '4.0', '5.0'];
 const {Option} = Select;
@@ -40,7 +41,12 @@ const UserDetail = Form.create()(
         componentDidMount() {
             //console.log("dsfasogi", this.state)
         }
-
+        isNull = (charts) => {
+            if (charts == null || charts == "" || charts == "undefined" || charts === undefined) {
+                return true
+            } else
+                return false
+        };
         timeFormat = (time) => {
             var dateee = new Date(time).toJSON();
             return new Date(+new Date(dateee) + 8 * 3600 * 1000).toISOString().replace(/T/g, ' ').replace(/\.[\d]{3}Z/, '')
@@ -48,7 +54,7 @@ const UserDetail = Form.create()(
         };
         render() {
             const {
-                visible, onCancel, form
+                visible, onCancel, form,loading
             } = this.props;
             const {getFieldDecorator} = form;
 
@@ -105,6 +111,8 @@ const UserDetail = Form.create()(
                     maskClosable={false}
                     width="85%"
                 >
+                    <Spin tip="加载中.." spinning={loading}>
+
                     <div style={{height: "50px", marginBottom: "20px"}}>
                         {itemsHeadImg}
                         <Tag color="#2db7f5"
@@ -117,8 +125,8 @@ const UserDetail = Form.create()(
                             共买{this.props.userDetail.userBuyCount}件,
                         </label>
                         <Button type="primary" ghost style={{margin:"0px 10px 0 80px"}} onClick={this.props.handleToComment}>查看评论</Button>
-                        <Button type="dashed" style={{margin:"8px"}} onClick={this.props.handleToOrder}>查看已买订单</Button>
-                        <Button type="dashed" onClick={this.props.handleToSellOrder}>查看已卖订单</Button>
+                        <Button type="dashed" style={{margin:"8px"}} onClick={this.props.handleToOrder}>查看买到管理</Button>
+                        <Button type="dashed" onClick={this.props.handleToSellOrder}>查看卖出管理</Button>
                     </div>
                     <Form>
                         <Row>
@@ -163,9 +171,10 @@ const UserDetail = Form.create()(
                                         rules: [{required: true, message: '必填!'}],
                                     })(
                                         <Select disabled={true}>
-                                            <Option value="1">未审核</Option>
-                                            <Option value="2">审核正常</Option>
-                                            <Option value="3">停用</Option>
+                                            <Option value="1">未认证</Option>
+                                            <Option value="2">已认证</Option>
+                                            <Option value="3">已停用</Option>
+                                            <Option value="4">待审核</Option>
                                         </Select>
                                     )}
                                 </Form.Item>
@@ -227,10 +236,12 @@ const UserDetail = Form.create()(
                                 </Form.Item>
 
                             <Form.Item label="收货地址：" hasFeedback  {...formItemLayout1}>
-                                    {getFieldDecorator('phoneNum', {
-                                        initialValue: this.props.receiptPlacelist[0].addressName==null?<Tag color="red">还没有收获地址</Tag>:this.props.receiptPlacelist[0].addressName,
+                                    {getFieldDecorator('addressName', {
+                                        initialValue: this.isNull(this.props.receiptPlacelist)?<Tag color="red">还没有收获地址</Tag>:this.props.receiptPlacelist[0].addressName,
                                         rules: [{required: true, message: '必填!'}]
                                     })(
+
+                                            this.isNull(this.props.receiptPlacelist)?<Tag color="red" style={{padding: "0 20px"}}>还没有收获地址</Tag>:
                                         <Select
                                             style={{fontSize:"11px"}}
                                             placeholder="请选择"
@@ -264,6 +275,7 @@ const UserDetail = Form.create()(
                         </Row>
 
                     </Form>
+                    </Spin>
                 </Modal>
             );
         }

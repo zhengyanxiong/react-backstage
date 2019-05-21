@@ -1,0 +1,80 @@
+.jqbar {
+    position: relative;
+    top: 100px;
+    left: -28px;
+}
+
+.jqbar.vertical {
+    text-align: center;
+    display: inline-block;
+}
+
+.jqbar.vertical span {
+    display: block;
+    font-size: 11px;
+    font-weight: bold;
+}
+
+.jqbar.vertical .bar-percent {
+    font-size: 11px;
+    font-weight: bold;
+    position: absolute;
+    height: 20px;
+    margin-bottom: 5px;
+    width: 100%;
+}
+
+.jqbar.vertical .bar-level-wrapper {
+    position: relative;
+    display: inline-block;
+    overflow: hidden;
+}
+
+
+.jqbar.vertical .bar-level {
+    position: absolute;
+}
+
+/*horizontal*/
+.jqbar.horizontal span {
+    display: inline-block;
+    margin-left: 5px;
+    font-size: 11px;
+    font-weight: bold;
+    border-radius: 10px;
+}
+
+.jqbar.horizontal .bar-level-wrapper {
+    width: 100%;
+    display: inline;
+}
+
+
+.jqbar.horizontal .move-lt {
+    background-image: linear-gradient(45deg,rgba(255,255,255,.15) 25%,transparent 25%,transparent 50%,rgba(255,255,255,.15) 50%,rgba(255,255,255,.15) 75%,transparent 75%,transparent);
+    animation: progress-bar-stripes-lt 3s linear infinite;
+    background-size: 40px 40px;
+}
+
+.jqbar.horizontal .bar-percent {
+    font-size: 11px;
+    font-weight: bold;
+    height: 20px;
+    margin-bottom: 2px;
+    padding-left: 9px;
+}
+
+.jqbar.horizontal .bar-label {
+    text-align: right;
+    width: 146px;
+}
+
+@keyframes progress-bar-stripes-lt {
+    from {
+        background-position: 2px 0
+    }
+    to {
+        background-position: 40px 0
+    }
+}
+

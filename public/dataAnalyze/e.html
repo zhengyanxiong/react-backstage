@@ -1,0 +1,1213 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="renderer" content="webkit|ie-comp|ie-stand">
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+    <title>重庆交通大学校园拍拍智慧运营平台</title>
+    <link rel="stylesheet" type="text/css" href="css/common.css">
+    <link rel="stylesheet" type="text/css" href="css/dialog.css">
+    <script type="text/javascript" src="http://map.cqjtu.edu.cn/mapstatic/js/jquery.js"></script>
+    <link rel="stylesheet" href="http://map.cqjtu.edu.cn/mapstatic/js/fancybox/source/jquery.fancybox.css?v=2.1.4"
+          type="text/css" media="screen">
+    <script type="text/javascript" src="http://map.cqjtu.edu.cn/mapstatic/ol2/ol2.js"></script>
+    <script type="text/javascript" src="http://map.cqjtu.edu.cn/mapstatic/js/util.js"></script>
+    <script type="text/javascript" src="http://map.cqjtu.edu.cn/mapstatic/js/layer/layer.js"></script>
+    <link rel="stylesheet" href="http://map.cqjtu.edu.cn/mapstatic/js/layer/skin/layer.css"
+          id="layui_layer_skinlayercss" style="">
+
+    <link rel="stylesheet" href="css/style.css" type="text/css"/>
+    <link rel="stylesheet" type="text/css" href="css/page3.css"/>
+    <link rel="stylesheet" type="text/css" href="css/3d-map.css"/>
+    <link rel="stylesheet" href="css/jquery.hotspot.css">
+    <link rel="stylesheet" type="text/css" href="http://apps.bdimg.com/libs/bootstrap/3.3.4/css/bootstrap.css">
+    <script type="text/javascript" src="js/modernizr.custom.49511.js"></script>
+    <script type="text/javascript" src="js/jquery.hotspot.min.js"></script>
+
+    <script type="text/javascript">
+
+        setInterval(function () {
+            var nowDate = new Date();
+            var month = nowDate.getMonth() + 1;
+            var nowTime = nowDate.getHours() + ":" + nowDate.getMinutes() + ":" + nowDate.getSeconds();
+            var nowWeek = getWeek(nowDate.getDay());
+
+            $("#nowYear").text(nowDate.getFullYear());
+            $("#nowMonth").text(month);
+            $("#nowDate").text(nowDate.getDate());
+            $("#nowTime").text(nowTime);
+            $("#nowWeek").text(nowWeek);
+        }, 1000);
+
+        function getWeek(week) {
+            switch (week) {
+                case 0:
+                    return "日";
+                    break;
+                case 1:
+                    return "一";
+                    break;
+                case 2:
+                    return "二";
+                    break;
+                case 3:
+                    return "三";
+                    break;
+                case 4:
+                    return "四";
+                    break;
+                case 5:
+                    return "五";
+                    break;
+                case 6:
+                    return "六";
+                    break;
+            }
+        }
+
+        /******根据项目修改以下几项配置参数*********/
+        var serverHost = "http://map.cqjtu.edu.cn/";//服务器地址，最后需要"/"
+        var cameraPointid = 313//全景、漫游点标注一级类别编号;
+        var tileType = 'png';
+        /******根据项目修改以下几项配置参数*********/
+        var zoneid = 1008;//地图显示区域编号
+        var to3DZoneid = 1008;
+        var to2DZoneid = 1011;
+        var mapCoinfg = null;
+        var parentMarkerConfigMap = new HashMap();
+        var markerLayerMap = new HashMap();
+        var map;
+        var transparentVector;
+        var selectControl;
+        var popup;
+        var popupHtml;
+        var label_num = 0;
+        var boo = 1;
+        //var canUse=document.getElementsByTagName("body")[0].style;
+
+        OpenLayers.IMAGE_RELOAD_ATTEMPTS = 3;
+        OpenLayers.Util.onImageLoadErrorColor = "transparent";
+        /*  window.onload = function () {
+              $("#OpenLayers_Map_2_OpenLayers_Container").css({"top": "-20px"});
+          };*/
+        $(function () {
+            //  $('#map-wrap').hotSpot();
+            //alert("a");
+            //   $("#OpenLayers_Layer_TMS_4").find("img").css("opacity","0.5");
+            /* if(typeof canUse.animation!="undefined"||typeof canUse.WebkitAnimation!="undefined"){
+                 boo=1;/!*支持动画*!/
+             }else{
+                 boo=0;/!*不支持动画*!/
+             }*/
+            initData();
+            //全景选中效果
+            $('.cut-tool-qj').click(function () {
+                $(this).toggleClass('active');
+                $(this).find('span').toggleClass('active');
+                if ($(this).hasClass('active')) {
+                    showMarkerLayer(cameraPointid, true);
+                } else {
+                    showMarkerLayer(cameraPointid, false);
+                }
+            });
+        });
+        /**
+         * 获取地图配置信息
+         */
+        util.ajax(serverHost + "map3D_getMapConfig?zoneid=" + zoneid, false, function (json) {
+            mapCoinfg = json;
+        });
+
+        /**
+         * 地图放大
+         */
+        var zoomIn = function () {
+            map.zoomIn();
+            //alert("c");
+            // $("#OpenLayers_Map_2_OpenLayers_Container").css({"top": "-20px"});
+
+        };
+        /**
+         * 地图缩小
+         */
+        var zoomOut = function () {
+            map.zoomOut();
+            //$("#OpenLayers_Layer_TMS_4").find("img").css("opacity", "0.5");
+
+        };
+        /**
+         * 面图元格式化，把返回的大楼data坐标数据格式化，geometry.coor
+         */
+        var fomartPolygon = function (geometry) {
+            var newStr = geometry.replace('[[', '((').replace(']]', '))').replace(/\],\[/g, '-').replace(/\[/g, '').replace(/\,/g, ' ').replace(/\-/g, ',');
+            return "POLYGON" + newStr;
+        };
+
+        var gidArray = [
+            {
+                gid: 1008007010,
+                gridNum:413,
+                usualNum:218,
+                regNum:299,
+                goodsHot:"服装箱包",
+                name: "知园小区--女寝",
+                boy:"13%",
+                girl:"87%",
+                student:"79%",
+                teacher:"11%",
+                floor:"8层",
+                img:"image/girlCloth.png",
+                main:"学生公寓,一般用于女生",
+                coordinate: {lon: 106.56370279563006, lat: 29.48543267400724}
+            }, {
+                gid: 1008007212,
+                gridNum:568,
+                usualNum:324,
+                regNum:478,
+                goodsHot:"数码竞技",
+                boy:"78%",
+                girl:"22%",
+                student:"76%",
+                teacher:"9%",
+                name:"知园小区--男寝",
+                floor:"20层",
+                main:"学生公寓,一般用于男生",
+                img:"image/game.png",
+                coordinate: {lon: 106.5651747556692, lat: 29.485496598536695}
+            }, {
+                gid: 1008007411,
+                gridNum:156,
+                usualNum:118,
+                regNum:63,
+                goodsHot:"体育建材",
+                boy:"72%",
+                girl:"38%",
+                student:"68%",
+                teacher:"24%",
+                name:"知园小区运动中心",
+                floor:"1层",
+                main:"运动中心，用于学生课外活动",
+                img:"image/ball.png",
+                coordinate: {lon: 106.56722620093326, lat: 29.48596255393814}
+            }, {
+                gid: 1008007251,
+                gridNum:779,
+                usualNum:497,
+                regNum:411,
+                goodsHot:"服装箱包",
+                boy:"58%",
+                girl:"42%",
+                student:"78%",
+                teacher:"9%",
+                name:"慧园小区--学生区",
+                floor:"14层",
+                main:"学生公寓",
+                img:"image/cloth.png",
+                coordinate: {lon: 106.56979157419856, lat: 29.487073665836505}
+            }, {
+                gid: 1008007413,
+                gridNum:135,
+                usualNum:130,
+                regNum:58,
+                goodsHot:"艺术文玩",
+                boy:"69%",
+                girl:"31%",
+                student:"16%",
+                teacher:"76%",
+                name:"慧园小区--教职工区",
+                floor:"5层",
+                main:"教职工家属楼",
+                img:"image/art.png",
+                coordinate: {lon: 106.56864686300379, lat: 29.486618697045394}
+            }, {
+                gid: 100800702,
+                gridNum:275,
+                usualNum:135,
+                regNum:113,
+                goodsHot:"文学小说",
+                boy:"67%",
+                girl:"33%",
+                student:"78%",
+                teacher:"9%",
+                name:"教学楼",
+                floor:"6层",
+                main:"师生日常教学",
+                img:"image/book2.png",
+                coordinate: {lon: 106.5660307127761, lat: 29.48746557898589}
+            }, {
+                gid: 100800712,
+                gridNum:362,
+                usualNum:241,
+                regNum:198,
+                goodsHot:"文学作品",
+                boy:"47%",
+                girl:"53%",
+                student:"64%",
+                teacher:"31%",
+                img:"image/book3.png",
+                name:"图书馆",
+                floor:"7层",
+                main:"馆藏图书、师生图书借阅",
+                coordinate: {lon: 106.56682976413147, lat: 29.48704659475989}
+            }, {
+                gid: 1008007224,
+                gridNum:463,
+                usualNum:217,
+                regNum:201,
+                goodsHot:"服装箱包",
+                boy:"61%",
+                girl:"39%",
+                student:"68%",
+                teacher:"8%",
+                name:"菁园小区",
+                floor:"7层",
+                img:"image/cloth2.png",
+                main:"学生公寓",
+                coordinate: {lon: 106.56673381854189, lat: 29.48824388126936}
+            }, {
+                gid: 100800734,
+                gridNum:329,
+                usualNum:304,
+                regNum:176,
+                goodsHot:"食品生鲜",
+                boy:"63%",
+                girl:"37%",
+                student:"76%",
+                teacher:"12%",
+                name:"师生食堂区",
+                floor:"1或2层",
+                img:"image/food.png",
+                main:"为全体师生与教职工提供餐饮服务",
+                coordinate: {lon: 106.56724417899957, lat: 29.487518967796426}
+            }, {
+                gid: 100800703,
+                name:"语音教学楼",
+                gridNum:145,
+                usualNum:132,
+                regNum:52,
+                goodsHot:"文学作品",
+                boy:"62%",
+                girl:"38%",
+                student:"18%",
+                teacher:"78%",
+                img:"image/book4.png",
+                floor:"11层",
+                main:"信息学院教师办公楼与实验楼",
+                coordinate: {lon: 106.56884082303789, lat: 29.488711535073925}
+            }, {
+                gid: 100800715,
+                gridNum:253,
+                usualNum:235,
+                regNum:46,
+                goodsHot:"艺术文玩",
+                boy:"54%",
+                girl:"36%",
+                student:"21%",
+                teacher:"62%",
+                img:"image/art1.png",
+                name:"办公区",
+                floor:"6层",
+                main:"教职工日常办公",
+                coordinate: {lon: 106.56938347432737, lat: 29.48776821973916}
+            }, {
+                gid: 100800709,
+                gridNum:310,
+                usualNum:202,
+                regNum:104,
+                goodsHot:"文本小说",
+                boy:"76%",
+                girl:"24%",
+                student:"83%",
+                teacher:"10%",
+                img:"image/book5.png",
+                name:"港航、交运、桥梁、航运教学区",
+                floor:"5层",
+                main:"师生日常教学",
+                coordinate: {lon: 106.57103149853268, lat: 29.488610489438564}
+            }, {
+                gid: 100800724,
+                name:"雅园小区",
+                gridNum:464,
+                usualNum:276,
+                regNum:165,
+                goodsHot:"服装箱包",
+                boy:"66%",
+                girl:"34%",
+                student:"79%",
+                teacher:"7%",
+                img:"image/cloth3.png",
+                floor:"7层",
+                main:"学生公寓",
+                coordinate: {lon: 106.57276084233153, lat: 29.48896883773749}
+            }
+        ];
+
+        function overlay_getTileURL(bounds) {
+            var res = this.map.getResolution();
+            var x = Math.round((bounds.left - this.maxExtent.left) / (res * this.tileSize.w));
+            var y = Math.round((bounds.bottom - this.maxExtent.bottom) / (res * this.tileSize.h));
+            var z = this.map.getZoom();
+            if (x >= 0 && y >= 0) {
+
+                //return "http://map.cqjtu.edu.cn/data/"+zoneid+"/pc/" + z + "/" + x + "/" + y + "." + this.type;
+                return serverHost + "data/" + zoneid + "/pc/" + z + "/" + x + "/" + y + "." + this.type;
+            } else {
+                return "http://map.cqjtu.edu.cn/mapstatic/3d/img/none.png";
+            }
+        }
+
+        var centerLonLat = new OpenLayers.LonLat(Number(106.56758564853614), Number(29.487246449798356));
+
+        function initMap() {
+            var maxResolution = Number(mapCoinfg.maxResolution);
+            var mapBounds = new OpenLayers.Bounds(Number(mapCoinfg.leftBottomLon), Number(mapCoinfg.leftBottomLat), Number(mapCoinfg.rightTopLon), Number(mapCoinfg.rightTopLat));
+            var mapMinZoom = Number(mapCoinfg.minZoom);
+            var mapMaxZoom = Number(mapCoinfg.maxZoom);
+            var defaultZoom = Number(mapCoinfg.defaultZoom);
+            var numZoomLevels = mapMaxZoom - mapMinZoom + 1;
+            var options = {
+                controls: [],
+                maxExtent: mapBounds,
+                maxResolution: maxResolution,
+                numZoomLevels: numZoomLevels,
+                theme: ''
+            };
+            //  console.log("mapCoinfg.centerLon", mapCoinfg.centerLon)
+            //console.log("Number(mapCoinfg.centerLon)", Number(mapCoinfg.centerLon))
+            //console.log("centerLonLat", centerLonLat);
+
+            map = new OpenLayers.Map('map-wrap', options);
+            var layer = new OpenLayers.Layer.TMS("TMS Layer", "", {
+                url: '',
+                serviceVersion: '.',
+                layername: '.',
+                alpha: true,
+                type: tileType,
+                getURL: overlay_getTileURL
+            });
+            map.addLayer(layer);
+            map.zoomToExtent(mapBounds);
+            map.addControl(new OpenLayers.Control.TouchNavigation({dragPanOptions: {enableKinetic: true}}));
+            map.addControl(new OpenLayers.Control.MouseDefaults());
+            map.addControl(new OpenLayers.Control.KeyboardDefaults());
+            map.setCenter(centerLonLat, defaultZoom);
+
+            transparentVector = new OpenLayers.Layer.Vector('大楼轮廓', {
+                styleMap: new OpenLayers.StyleMap({
+                    "default": new OpenLayers.Style({
+                        cursor: 'pointer',
+                        title: '${tooltip}',
+                        strokeWidth: 0,
+                        fillOpacity: 0
+                    }),
+                    "select": new OpenLayers.Style({}),
+                    "temporary": new OpenLayers.Style({
+                        fillColor: "#ffffff",
+                        fillOpacity: 0.4,
+                        strokeColor: "#fac807",
+                        strokeWidth: 1
+                    })
+                })
+            });
+            //大楼透明图层,坐标
+            //所有教学楼等透明层图标显示，
+            util.ajax(serverHost + "map3D_getTransparentPolygons?zoneid=" + zoneid, false, function (transparentData) {
+                label_num = transparentData.geometry.length;
+                for (var i = 0; i < transparentData.geometry.length; i++) {
+                    var transparentFeaure = new OpenLayers.Feature.Vector(
+                        OpenLayers.Geometry.fromWKT(fomartPolygon(transparentData.geometry[i].coordinates)),
+                        {
+                            tooltip: transparentData.geometry[i].name,
+                            gid: transparentData.geometry[i].polygonid,
+                            coordinate: transparentData.geometry[i].coordinate
+                        }
+                    );
+                    transparentVector.addFeatures(transparentFeaure);
+                    var lonlat = new OpenLayers.LonLat(eval(transparentData.geometry[i].coordinate)[0], eval(transparentData.geometry[i].coordinate)[1]);
+                    //每个大楼黄色的标签显示隐藏：label_popup_i
+                    var labelPopup = new OpenLayers.Popup.LabelFramedCloud('label_popup_' + i, lonlat, null, transparentData.geometry[i].name, null, false, null, 'tr');
+                    map.addPopup(labelPopup);
+                    $("#label_popup_" + i).hide();
+                }
+                /* for (var i = 20; i < 30; i++) {
+                     $("#label_popup_" + i).show();
+                 }*/
+            });
+
+
+            var report = function (e) {
+                OpenLayers.Console.log(e.type, e.feature.id);
+            };
+            //  console.log("e.type",e.type);
+            //大楼数据数组
+            var layers = [transparentVector];
+            //大楼坐标可视化layers
+            markerLayerMap.each(function (k, v) {
+                layers.push(v);
+            });
+            var highlightControl = new OpenLayers.Control.SelectFeature(layers, {
+                hover: true,//大楼透明层悬浮
+                highlightOnly: true,//false表示悬浮就会出现pop框
+                renderIntent: "temporary",//透明层临时渲染
+                eventListeners: {
+                    beforefeaturehighlighted: report,
+                    featurehightlighted: report,
+                    featureunhightlighted: report
+                }
+            });
+            //透明层点击事件pop框
+            selectControl = new OpenLayers.Control.SelectFeature(layers, {clickout: false});
+
+            function onPopupClose(evt) {
+                selectControl.unselectAll();
+            }
+
+            //大楼透明层点击事件请求数据详情框
+            transparentVector.events.on({
+                featureselected: function (e) {
+                    hightlightFeature = e.feature;
+                    if (popup != null) {
+                        map.removePopup(popup);
+                        popup.destroy();
+                        popup = null;
+                    }
+                    //  console.log("getCenterLonLat", hightlightFeature.geometry.getBounds().getCenterLonLat())
+                    //根据大楼gid获取该大楼数据信息
+                    util.ajax(serverHost + "map3D_getTransparentPolygonById?gid=" + hightlightFeature.attributes.gid, true, function (json) {
+                        popup = new OpenLayers.Popup.CSSFramedCloud(
+                            'g_' + hightlightFeature.attributes.gid,
+                            hightlightFeature.geometry.getBounds().getCenterLonLat(),
+                            new OpenLayers.Size(420, 420),
+                            getPopupBody(json, 'Polygon'),
+                            null,
+                            true,
+                            onPopupClose,
+                            'tr'
+                        );
+                        hightlightFeature.popup = popup;
+                        popup.hightlightFeature = hightlightFeature;
+                        map.addPopup(popup);
+                        $('.top1-right').height($('.top1-left').height());
+                    });
+                },
+                featureunselected: function (e) {
+                    if (popup != null) {
+                        map.removePopup(popup);
+                        popup.destroy();
+                        popup = null;
+                    }
+                }
+            });
+
+
+            $("#OpenLayers_Map_2_OpenLayers_Container").css({"top": "-20px"});
+            $("#OpenLayers_Map_2_OpenLayers_Container").css({"left": "0px"});
+
+            map.addLayers(layers);//坐标视图
+            map.addControl(highlightControl);//透明层高亮显示
+            map.addControl(selectControl);//pop框
+            highlightControl.activate();//可执行状态
+            selectControl.activate();
+            map.events.register("click", map, function (e) {
+                $('.search-result-box').hide();
+                $('.search-pop-initial').hide();
+                $('.ft-nav>li').removeClass('bottom');
+                $('.ft-popup-box').hide();
+            });
+             var maptick = map;
+               setInterval(function () {
+                   var centerLonLat1;
+                  //var _interval;
+                   var counterTimes = RandomNumBoth(0,gidArray.length-1);
+                   centerLonLat1 = new OpenLayers.LonLat(Number(gidArray[counterTimes].coordinate.lon), Number(gidArray[counterTimes].coordinate.lat));
+                   maptick.setCenter(centerLonLat1, Number(2));
+                   maptick.zoomIn();
+                   setTimeout(function () {
+
+                       //console.log("gidArray[counterTimes].gid", gidArray[counterTimes].gid);
+                       //console.log("gidArray[counterTimes].coordinate", gidArray[counterTimes].coordinate);
+                       getBuildingByGid(onPopupClose, gidArray[counterTimes].gid, gidArray[counterTimes].coordinate,gidArray[counterTimes]);
+                   }, 500);
+                   /*  _interval = setInterval(scoreCounter, 5500);
+                 function scoreCounter() {
+                       counterTimes++;
+                       if (counterTimes < gidArray.length) {
+                           centerLonLat1 = new OpenLayers.LonLat(Number(gidArray[counterTimes].coordinate.lon), Number(gidArray[counterTimes].coordinate.lat));
+                           maptick.setCenter(centerLonLat1, Number(mapCoinfg.defaultZoom));
+                           maptick.zoomIn();
+                           setTimeout(function () {
+                              // console.log("gidArray[counterTimes].gid", gidArray[counterTimes].gid);
+                              // console.log("gidArray[counterTimes].coordinate", gidArray[counterTimes].coordinate);
+                               getBuildingByGid(onPopupClose, gidArray[counterTimes].gid, gidArray[counterTimes].coordinate);
+
+                               }, 500);
+                          // console.log("_flashTimes=>" + counterTimes);
+                       } else {
+                           counterTimes = 0;
+                           clearInterval(_interval);
+                       }
+                   }*/
+
+               }, 8500);
+        }
+
+        //var centermap=map;
+        //var centerLonLat11 = new OpenLayers.LonLat(Number(106.569077), Number(29.487735));
+
+        function testTimeOut() {
+            console.log("mapCoinfg", mapCoinfg)
+            map.setCenter(centerLonLat, Number(2));
+            console.log("map", map);
+
+//            setTimeout(function () {
+            map.zoomOut();
+            //getBuildingByGid(onPopupClose,9999);
+//            }, 500);
+        }
+
+        /**
+         * 根据大楼gid获取该大楼数据信息
+         */
+        function getBuildingByGid(onPopupClose, gid, lonLat,gidArray) {
+            //console.log("map", map)
+            $(".olPopup").animate({bottom:'250px'});
+            showOrHideLable(true);
+            setTimeout(function () { util.ajax(serverHost + "map3D_getTransparentPolygonById?gid=" + gid, true, function (json) {
+                popup = new OpenLayers.Popup.CSSFramedCloud(
+                    'g_' + gid,
+                    {lon: lonLat.lon, lat: lonLat.lat},
+                    new OpenLayers.Size(420, 420),
+                    getPopupBody(gidArray, 'Polygon',1),
+                    null,
+                    true,
+                    onPopupClose,
+                    'tr'
+                );
+                map.addPopup(popup);
+                }, 500);
+
+                $('.top1-right').height($('.top1-left').height());
+                setTimeout(function () {
+                    if (popup != null) {
+                        map.removePopup(popup);
+                        popup.destroy();
+                        popup = null;
+                    }
+                    setTimeout(function () {
+                        showOrHideLable(false);
+                        setTimeout(function () {
+                            testTimeOut();
+                        }, 500);
+
+                    }, 500);
+
+
+                }, 6000);
+
+            });
+        }
+
+        /**
+         * 拼接弹框图片
+         */
+        function getImageHtml(images) {
+            if (images.length > 0) {
+                var tempImgs = "";
+                $.each(images, function (n, v) {
+                    tempImgs += "{href:'" + v.path + "',title:'" + v.name + "'},";
+                });
+                var imgsHtml = '<a onclick="goFancyBox([' + util.deleteLastStr("http://map.cqjtu.edu.cn" + tempImgs) + '])" href="javascript:void(0)" >' +
+                    '<img src="' + images[0].path + '" /></a>';
+                return imgsHtml;
+            } else {
+                return "<a onclick=\"goFancyBox([{href:'http://map.cqjtu.edu.cn/mapstatic/3d/img/logo.jpg',title:''}])\" href=\"javascript:void(0)\" >" +
+                    "<img src=\"http://map.cqjtu.edu.cn/mapstatic/3d/img/logo.jpg\" /></a>";
+            }
+        }
+
+        /**
+         * 拼接楼内有
+         */
+        function getPopupBody(json, type,state) {
+            var popupInfo = '<div class="building" ><div class="building_t">' + json.name;
+            popupInfo += '</div>' + getPopupHtml(json, type,state) + '</div>';
+            return popupInfo;
+        }
+
+        function getDeptHtml(depts) {
+            var tempDepts = "";
+            $.each(depts, function (n, v) {
+                tempDepts += "<a href=\"javascript:void(0)\" onclick=\"showPopupDetail('" + v.organizationid + "','Dept')\">" + v.name + "</a>、";
+            });
+            return '注册人数：' + '<span style="float: left;font-family: fzzyjt;width: auto">1546</span>' + '人';
+        }
+
+        //获得弹出框HTML
+        function getPopupHtml(d, type,state) {
+            var popupHtml = '<div class="dialog-box1">' +
+                '<div class="dialog-top1">' +
+                '<div class="top1-left container-top-left">';
+
+            if (state==1){
+                popupHtml +='<p class="top1-abstract over " style="line-height: 27px;">网格人口：' +
+                '<span style="cursor: pointer;font-family: fzzyjt;width: auto">' + d.gridNum + '</span>' + '人' +
+                '</p>';
+            popupHtml += '<p class="top1-indoor" style="line-height: 20px;">常驻人口：' + '<span style="float: left;font-family: fzzyjt;width: auto">'+d.usualNum+'</span>' + '人' + '</p>';
+            popupHtml += '<p class="top1-indoor" style="line-height: 30px;">注册人数：' + '<span style="float: left;font-family: fzzyjt;width: auto">'+d.regNum+'</span>' + '人' + '</p>';
+            popupHtml += '<p class="top1-indoor" style="line-height: 20px;">热卖闲置：' + '<span style="float: left;font-family: fzzyjt;width: auto;font-size: 20px;">'+d.goodsHot+'</span>' + '</p>';
+            popupHtml += '<p class="top1-indoor" style="line-height: 30px;">男性：' + '<span style="font-size: 22px;float: left;font-family: fzzyjt;width: auto">'+d.boy+'</span>女性：<span style="font-size: 22px;float: left;font-family: fzzyjt;width: auto">'+d.girl+'</span>' + '</p>';
+            popupHtml += '<p class="top1-indoor" style="line-height: 30px;margin: -8px -70px 2px 0px;">学生占比：' + '<span style="font-size: 22px;float: left;font-family: fzzyjt;width: auto">'+d.student+'</span>教职工占比：<span style="font-size: 22px;float: left;font-family: fzzyjt;width: auto">'+d.teacher+'</span>' + '</p>';
+
+                popupHtml += '<p class="top1-indoor" style="line-height: 30px;">建筑层数：' + '<span style="float: left;font-family: fzzyjt;width: auto;font-size: 20px;">'+d.floor+'</span>' + '</p>';
+                popupHtml += '<p class="top1-indoor" style="line-height: 20px;margin: -6px -80px 10px 0px;">主要用途：' + '<span style="float: left;font-family: fzzyjt;width: auto;font-size: 15px;">'+d.main+'</span>' + '</p>';
+            }else {
+                var strs= new Array(); //定义一数组
+                var res= new Array(); //定义一数组
+                strs=d.content.split("：");
+                res=strs[1].split(" ");
+                popupHtml +='<p class="top1-abstract over " style="line-height: 27px;">网格人口：' +
+                    '<span style="cursor: pointer;font-family: fzzyjt;width: auto">674</span>' + '人' +
+                    '</p>';
+                popupHtml += '<p class="top1-indoor" style="line-height: 20px;">常驻人口：' + '<span style="float: left;font-family: fzzyjt;width: auto">352</span>' + '人' + '</p>';
+                popupHtml += '<p class="top1-indoor" style="line-height: 30px;">注册人数：' + '<span style="float: left;font-family: fzzyjt;width: auto">431</span>' + '人' + '</p>';
+                popupHtml += '<p class="top1-indoor" style="line-height: 20px;">热卖闲置：' + '<span style="float: left;font-family: fzzyjt;width: auto;font-size: 20px;">文学小说</span>' + '</p>';
+                popupHtml += '<p class="top1-indoor" style="line-height: 30px;">男性：' + '<span style="font-size: 22px;float: left;font-family: fzzyjt;width: auto">56%</span>女性：<span style="font-size: 22px;float: left;font-family: fzzyjt;width: auto">44%</span>' + '</p>';
+                popupHtml += '<p class="top1-indoor" style="line-height: 30px;margin: -8px -70px 2px 0px;">学生占比：' + '<span style="font-size: 22px;float: left;font-family: fzzyjt;width: auto">76%</span>教职工占比：<span style="font-size: 22px;float: left;font-family: fzzyjt;width: auto">24%</span>' + '</p>';
+
+                popupHtml += '<p class="top1-indoor" style="line-height: 30px;">建筑层数：' + '<span style="float: left;font-family: fzzyjt;width: auto;font-size: 20px;">'+res[0]+'</span>' + '</p>';
+                popupHtml += '<p class="top1-indoor" style="line-height: 20px;margin: -6px -70px 10px 0px;">主要用途：' + '<span style="float: left;font-family: fzzyjt;width: auto;font-size: 15px;">'+strs[2]+'</span>' + '</p>';
+            }
+             popupHtml += '</div>' +
+                '<div class="top1-right"><img style="background:white;border-radius: 2px;height: 152px;width:152px;opacity: 1;margin-top: 5px;" src='+d.img+'/>' +
+                '</div>' +
+                '</div>';
+            popupHtml += '</div>';
+            return popupHtml;
+        }
+
+        function to2D(id) {
+            util.fowardUrl(serverHost + 'map?to3DZoneid=' + to3DZoneid + '&to2DZoneid=' + to2DZoneid + '&to2dPolygonid=' + id);
+        }
+
+        /**
+         * 显示隐藏标注图层
+         */
+        function showMarkerLayer(cid, b) {
+            markerLayerMap.get(cid).setVisibility(b);
+        }
+
+        /**
+         * 创建弹框
+         */
+        function createPopup(id, lonlat, popupHtml) {
+            map.setCenter(lonlat, map.getZoom());
+            if (popup != null) {
+                map.removePopup(popup);
+                popup.destroy();
+                popup = null;
+                selectControl.unselectAll();
+            }
+            popup = new OpenLayers.Popup.CSSFramedCloud(id, lonlat, null, popupHtml,
+                null, true, function (e) {
+                    this.hide();
+                    selectControl.unselectAll();
+                }, 'tr');
+            map.addPopup(popup);
+            $('.top1-right').height($('.top1-left').height());
+        }
+
+        /*垂直淡入*/
+        function actionIn(obj, actionName, time, speed) {
+            $(obj).show();
+            if (boo == 1) $(obj).css({
+                "animation": actionName + " " + time + "s" + " " + speed,
+                "animation-fill-mode": "forwards"
+            });
+        }
+
+        /*   $('#action_translateY').click(function(){
+               actionIn("#box_action_translateY",'action_translateY',1,"");
+           })
+   */
+
+        /*垂直淡出*/
+        /*obj,actionName,speed都是 string,time(秒)是int类型*/
+        function actionOut(obj, actionName, time, speed) {
+            if (boo == 1) {
+                $(obj).css({"animation": actionName + " " + time + "s" + " " + speed});
+                var setInt_obj = setInterval(function () {
+                    $(obj).hide();
+                    clearInterval(setInt_obj);
+                }, time * 1000);
+            } else $(obj).hide();
+        }
+
+        $('#action_translateYOut').click(function () {
+            actionOut("#box_action_translateYOut", 'action_translateYOut', 1, "");
+        })
+
+        /**
+         * 弹框详情
+         */
+        function showPopupDetail(id, type) {
+            if (type == 'Dept') {
+                util.ajax(serverHost + "map3D_getDepartmentById?oid=" + id, true, function (json) {
+                    var lonlat = new OpenLayers.LonLat(eval(json.coordinate)[0], eval(json.coordinate)[1]);
+                    createPopup('d_' + json.organizationid, lonlat, getPopupBody(json, 'Dept'));
+                });
+            } else if (type == 'Polygon') {
+                util.ajax(serverHost + "map3D_getTransparentPolygonById?gid=" + id, true, function (json) {
+                    var lonlat = new OpenLayers.LonLat(eval(json.coordinate)[0], eval(json.coordinate)[1]);
+                    createPopup('g_' + json.polygonid, lonlat, getPopupBody(json, 'Polygon'));
+                });
+            } else if (type == 'Point') {
+                util.ajax(serverHost + "map3D_getPointById?gid=" + id, true, function (json) {
+                    var lonlat = new OpenLayers.LonLat(eval(json.coordinate)[0], eval(json.coordinate)[1]);
+                    createPopup('point_' + json.pointid, lonlat, getPopupBody(json, 'Point'));
+                });
+            } else {
+
+            }
+        }
+
+        /**
+         * 路径规划
+         */
+        function searchStart(keywords) {
+            $('.start-result').show();
+            $('.end-result').hide();
+            $('.start-result').children().remove();
+            util.ajax(serverHost + 'map3D_search?keywords=' + encodeURI(keywords) + '&zoneid=' + zoneid, true, function (d) {
+                $.each(d.result, function (i, v) {
+                    var oli = '<li onclick="getStartValue(\'' + v.name + '\',\'' + v.coordinate + '\')"><i class="add-search-btn"></i><span>' + v.name + '</span></li>';
+                    $(oli).appendTo($('.start-result'));
+                })
+            });
+        }
+
+        function searchEnd(keywords) {
+            $('.start-result').hide();
+            $('.end-result').show();
+            $('.end-result').children().remove();
+            util.ajax(serverHost + 'map3D_search?keywords=' + encodeURI(keywords) + '&zoneid=' + zoneid, true, function (d) {
+                $.each(d.result, function (i, v) {
+                    var oli = '<li onclick="getEndValue(\'' + v.name + '\',\'' + v.coordinate + '\')"><i class="add-search-btn"></i><span>' + v.name + '</span></li>';
+                    $(oli).appendTo($('.end-result'));
+                })
+            });
+        }
+
+        function getStartValue(name, coordinate) {
+            $('#start-add').val(name);
+            $('#startCoordinate').val(coordinate);
+            $('.start-result').hide();
+            $('.start-result').children().remove();
+        }
+
+        function getEndValue(name, coordinate) {
+            $('#end-add').val(name);
+            $('#endCoordinate').val(coordinate);
+            $('.end-result').hide();
+            $('.end-result').children().remove();
+
+        }
+
+        function searchRoad() {
+            if (!util.isNotEmpty($("#startCoordinate").val())) {
+                layer.msg('请选择起点', function () {
+                    searchStart($("#start-add").val());
+                });
+                return false;
+            }
+            if (!util.isNotEmpty($("#endCoordinate").val())) {
+                layer.msg('请选择终点', function () {
+                    searchEnd($("#end-add").val());
+                });
+                return false;
+            }
+            showLoad();
+            var startCoordinate = $("#startCoordinate").val().replace("[", "").replace("]", "") + ",";
+            var endCoordinate = $("#endCoordinate").val().replace("[", "").replace("]", "") + ",";
+            var key = zoneid + "-" + zoneid + "00";
+            var url = serverHost + "appMap_searchRoad?start=" + startCoordinate + key + "&end=" + endCoordinate + key + "&roadType=0";
+            util.ajax(url, true, function (d) {
+                if (d.status) {
+                    if (d.routes.length > 0) {
+                        drawRoad(d.routes[0].linePoints, d.routes[0].distance, $("#startCoordinate").val(), $("#endCoordinate").val())
+                    }
+                }
+                closeLoad();
+            });
+            return false;
+        }
+
+        var roadLayer = null;
+        var startPointLayer = null;
+        var endPointLayer = null;
+
+        //清楚路径
+        function clearRoad() {
+            if (roadLayer != null) {
+                map.removeLayer(roadLayer);
+                map.removeLayer(startPointLayer);
+                map.removeLayer(endPointLayer);
+                roadLayer = null;
+                startPointLayer = null;
+                endPointLayer = null;
+            }
+        }
+
+        function drawRoad(roadData, distance, startCoordinate, endCoordinate) {
+            var lineString = "";
+            for (var i = 0; i < roadData.length; i++) {
+                if (roadData[i][0] != 0 || roadData[i][1] != 0) {
+                    lineString += (roadData[i][0] + " " + roadData[i][1] + ",");
+                }
+            }
+            if (lineString.length > 0) {
+                lineString = "LINESTRING(" + startCoordinate.replace(',', ' ').replace('[', '').replace(']', '') + "," + lineString.substring(0, lineString.length - 1) + ',' + endCoordinate.replace(',', ' ').replace('[', '').replace(']', '') + ")";
+                if (roadLayer != null) {
+                    map.removeLayer(roadLayer);
+                    map.removeLayer(startPointLayer);
+                    map.removeLayer(endPointLayer);
+                    roadLayer = null;
+                    startPointLayer = null;
+                    endPointLayer = null;
+                }
+                roadLayer = new OpenLayers.Layer.Vector('最优路径', {
+                    styleMap: new OpenLayers.StyleMap({
+                        "default": new OpenLayers.Style({
+                            strokeWidth: 7,
+                            strokeOpacity: 0.7,
+                            strokeLinecap: 'round',
+                            strokeColor: '#ff0000'
+                        })
+                    })
+                });
+                var roadFeaure = new OpenLayers.Feature.Vector(
+                    OpenLayers.Geometry.fromWKT(lineString)
+                )
+                roadLayer.addFeatures(roadFeaure);
+                map.addLayer(roadLayer);
+
+                var markerStyle = new OpenLayers.StyleMap({
+                    "default": new OpenLayers.Style({
+                        externalGraphic: '${img}',
+                        cursor: 'pointer',
+                        graphicWidth: 33,
+                        graphicHeight: 33,
+                        graphicYOffset: -33
+                    }),
+                    "select": new OpenLayers.Style({}),
+                    "temporary": new OpenLayers.Style({
+                        fillOpacity: '0.9',
+                        graphicWidth: 33,
+                        graphicHeight: 33,
+                        graphicYOffset: -33
+                    })
+                });
+                startPointLayer = new OpenLayers.Layer.Vector('起点', {
+                    styleMap: markerStyle
+                });
+                var startPointFeaure = new OpenLayers.Feature.Vector(
+                    new OpenLayers.Geometry.Point(eval(startCoordinate)[0], eval(startCoordinate)[1]), {
+                        img: 'http://map.cqjtu.edu.cn/mapstatic/3d/img/start.png',
+                        gid: 'p-start'
+                    }
+                );
+                endPointLayer = new OpenLayers.Layer.Vector('终点', {
+                    styleMap: markerStyle
+                });
+                var endPointFeaure = new OpenLayers.Feature.Vector(
+                    new OpenLayers.Geometry.Point(eval(endCoordinate)[0], eval(endCoordinate)[1]), {
+                        img: 'http://map.cqjtu.edu.cn/mapstatic/3d/img/end.png',
+                        gid: 'p-end'
+                    }
+                );
+                startPointLayer.addFeatures(startPointFeaure);
+                endPointLayer.addFeatures(endPointFeaure);
+                map.addLayer(startPointLayer);
+                map.addLayer(endPointLayer);
+                layer.msg("步行约" + distance + "米到达目的地");
+            } else {
+                layer.msg("没有合适的路径");
+            }
+        }
+
+        /**
+         * 显示隐藏标签
+         */
+        function showOrHideLable(b) {
+            if (label_num != 0) {
+                if (b) {
+                    for (var i = 0; i < label_num; i++) {
+                        $("#label_popup_" + i).show();
+                    }
+                } else {
+                    for (var i = 0; i < label_num; i++) {
+                        $("#label_popup_" + i).hide();
+                    }
+                }
+            }
+        }
+
+
+        /**
+         * 初始化公共服务标注选择框
+         */
+        function initMarkerCheckbox() {
+            parentMarkerConfigMap.each(function (k, v) {
+                if (k != cameraPointid) {
+                    var markerCheckbox = '<p class="labelbox" onclick="check_label(this)">' +
+                        '<i class="chebox-bg"></i>' + v.name +
+                        '<input id="depot" type="checkbox" name="map-label" value="' + v.categoryid + '"/>' +
+                        '</p>';
+                    $(markerCheckbox).appendTo('#labelform');
+                }
+            });
+        }
+
+        //选中标签
+        function check_label(obj) {
+            $(obj).find('.chebox-bg').toggleClass('ip_checked');
+            var oinp = $(obj).find('input[type="checkbox"]');
+            if (oinp.attr('checked')) {
+                oinp.removeAttr('checked', 'checked');
+                if (oinp.val() == 'bq') {
+                    showOrHideLable(false);
+                } else {
+                    showMarkerLayer(oinp.val(), false);
+                }
+            }
+            else {
+                oinp.attr('checked', 'checked');
+                if (oinp.val() == 'bq') {
+                    showOrHideLable(true);
+                } else {
+                    showMarkerLayer(oinp.val(), true);
+                }
+            }
+        }
+
+
+        /**
+         * 初始化页面所有数据
+         */
+        function initData() {
+            initMarkerCheckbox();
+            initMap();
+        }
+
+        function searchDept_ajax(otxt) {
+            $.ajax({
+                type: 'get',
+                url: serverHost + "map_getDepartmentsByPid?oid=" + otxt,
+                dataType: 'json',
+                success: function (msg) {
+                    if (msg.status) {
+                        var oul = $('.search-result-box').find('ul');
+                        oul.children().remove();
+                        $.each(msg.depts, function (i, item) {
+                            $('<li class="search-result" onclick="showPopupDetail(\'' + item.organizationid + '\',\'Dept\')">' + item.name + '</li>').appendTo(oul);
+                        })
+                    }
+                }
+            });
+        }
+
+        var searchForm = function () {
+            search_ajax($("#keywords").val());
+            return false;
+        }
+
+        //实时检索功能：向后台请求检索结果
+        function search_ajax(otxt) {
+            var key = encodeURI(otxt);
+            $.ajax({
+                type: 'get',
+                url: serverHost + 'map3D_search?keywords=' + key + '&zoneid=' + zoneid,
+                dataType: 'json',
+                success: function (msg) {
+                    if (msg.status) {
+                        var oul = $('.search-result-box').find('ul');
+                        oul.children().remove();
+                        $.each(msg.result, function (i, item) {
+                            if (item.type == 'Dept') {
+                                $('<li class="search-result" onclick="showPopupDetail(\'' + item.id + '\',\'Dept\')">' + item.name + '</li>').appendTo(oul);
+                            } else if (item.type == 'Polygon') {
+                                $('<li class="search-result" onclick="showPopupDetail(\'' + item.id + '\',\'Polygon\')">' + item.name + '</li>').appendTo(oul);
+                            } else if (item.type == 'Point') {
+
+                            } else {
+
+                            }
+                        })
+
+                    }
+                }
+            });
+        }
+
+        /**
+         * 图片幻灯片
+         */
+        function goFancyBox(dataObj) {
+            $.fancybox.open(dataObj);
+        }
+
+        /**
+         * 弹出框
+         */
+        function goIframeFacyBox(url) {
+            $.fancybox.open({
+                href: url,
+                type: 'iframe',
+                padding: 5,
+                width: 450,
+                height: 350
+            });
+        }
+
+        /**
+         * 详情弹出框
+         */
+        function contentPopup(title, content, time) {
+            var popup_details = '<div class="popup-box"><div class="popup-box-shadow"></div>' +
+                '<div class="popup-ctns"><i class="close-btn"></i><h2>' + title +
+                '</h2><p class="popup-ctns-time">发布时间：' + time +
+                '</p><div class="popup-ctns-article">' + content +
+                '</div></div></div>';
+            $(popup_details).appendTo($('body'));
+            var owidth = $('.popup-box').width() * 0.6;
+            oheight = $('.popup-box').height() * 0.7;
+            ow = -owidth / 2;
+            oh = -oheight / 2;
+            $('.popup-ctns').css({
+                'width': owidth,
+                'height': oheight - 20,
+                'position': 'fixed',
+                'top': '50%',
+                'left': '50%',
+                'margin-left': ow,
+                'margin-top': oh
+            });
+            if (title.length <= 0) {
+                $('.popup-ctns h2').remove();
+            }
+            if (time.length <= 0) {
+                $('.popup-ctns-time').remove();
+            }
+            $('.close-btn').click(function () {
+                $('.popup-box').remove();
+            })
+        }
+
+        /**
+         * 全景弹出框
+         * @param {Object} url
+         */
+        function cameraPopup(url) {
+            $('.ft-roam-box').show();
+            var owidth = document.body.clientWidth * .8;
+            oheight = document.body.clientHeight * .8;
+            ow = -owidth / 2;
+            oh = -oheight / 2;
+            $('.ft-roam').css({
+                'width': owidth,
+                'height': oheight,
+                'position': 'fixed',
+                'top': '50%',
+                'left': '50%',
+                'margin-left': ow,
+                'margin-top': oh,
+                'border': '3px solid #fdf9f9',
+                'background': '#fff'
+            });
+            $('.ft-roam').find('iframe').attr('src', url);
+        }
+
+        var loading;
+        var showLoad = function () {
+            layer.load(1);
+        }
+        var closeLoad = function () {
+            layer.closeAll('loading');
+        }
+
+        function RandomNumBoth(Min, Max) {
+            var Range = Max - Min;
+            var Rand = Math.random();
+            var num = Min + Math.round(Rand * Range); //四舍五入
+            return num;
+        }
+    </script>
+</head>
+<body onselectstart="return false">
+<!--头部-->
+<div class="header">
+    <div class="logo">
+        <img src="image/tree.png" style="display: inline-block;">
+        <p id="hall_name" class="project-name">重庆交通大学校园拍拍智慧运营平台</p>
+    </div>
+    <div class="date">
+        <span id="nowYear">2018</span>年<span id="nowMonth">9</span>月<span id="nowDate">26</span>日 <span id="nowTime">10:44:32</span>
+        星期<span id="nowWeek">二</span>
+    </div>
+</div>
+<div class="clearfix"></div>
+</div>
+
+<!--地图右侧下方浮动的放大缩小工具栏-->
+<div class="content" style="padding:4px 15px;">
+    <div class="container-top">
+        <div class="container-top-left">
+            <P>重庆交通大学（南岸校区） 网格常驻人口<span style="width: auto" id="resident">13426</span>人</P>
+            <P style="margin-left: 15px;">流动人口<span style="width: auto" id="realtime">6728</span>人</P>
+        </div>
+        <div class="container-top-page">
+            <a id="three_01" href="businessAnalyze.html">01</a>
+            <a id="three_02" href="businessManagement.html">02</a>
+            <a class="current" href="e.html">网格周边闲置分析</a>
+        </div>
+        <div class="clearfix"></div>
+    </div>
+
+    <!--地图部分-->
+    <div id="map-wrap" class="olMap">
+        <div id="cqjt-img" style="padding: 11px;position: absolute;z-index: 100000">
+            <img style="width: 105px;" src="image/cqjt.png"/>
+        </div>
+    </div>
+
+    <!--可视化漫游弹出框-->
+    <div class="ft-roam-box">
+        <div class="ft-roam bor-3">
+            <i class="ft-roam-close"></i>
+            <iframe allowtransparency="true" width="100%" height="100%" frameborder="no" scrolling="no" src=""></iframe>
+        </div>
+    </div>
+</div>
+<script type="text/javascript" src="http://map.cqjtu.edu.cn/mapstatic/3d/js/head.js"></script>
+<script type="text/javascript"
+        src="http://map.cqjtu.edu.cn/mapstatic/js/fancybox/lib/jquery.mousewheel-3.0.6.pack.js"></script>
+<script type="text/javascript"
+        src="http://map.cqjtu.edu.cn/mapstatic/js/fancybox/source/jquery.fancybox.js?v=2.1.4"></script>
+<script type="text/javascript"
+        src="http://map.cqjtu.edu.cn/mapstatic/js/fancybox/source/helpers/jquery.fancybox-media.js?v=1.0.5"></script>
+<script src="js/classie.js"></script>
+<script src="js/modalEffects.js"></script>
+
+<!--
+<div >
+
+    <script src="http://s4.cnzz.com/z_stat.php?id=1259966222&amp;web_id=1259966222" language="JavaScript"></script>
+    <script src="http://c.cnzz.com/core.php?web_id=1259966222&amp;t=z" charset="utf-8" type="text/javascript"></script>
+    <a href="https://www.cnzz.com/stat/website.php?web_id=1259966222" target="_blank" title="站长统计">站长统计</a>
+
+</div>
+-->
+
+
+</body>
+</html>

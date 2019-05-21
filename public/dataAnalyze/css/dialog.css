@@ -1,0 +1,272 @@
+body,div,dl,dt,dd,ul,ol,li,h1,h2,h3,h4,h5,h6,pre,form,fieldset,input,textarea,button,p,blockquote,th,td,img{
+    margin:0;
+    padding:0;
+    border: 0;
+    outline: 0;
+}
+html{
+    font:12px Microsoft YaHei;
+    color: #2d2d2d;
+}
+ol,ul,li{
+    list-style:none
+}
+.dialog-box1{
+    width: 99%;
+    height: 100%;
+    overflow: hidden;
+}
+.dialog-top1{
+    overflow: hidden;
+}
+.top1-left{
+    float: left;
+    width: 61%;
+}
+.top1-right{
+    height: auto !important;
+    float: left;
+    min-height: 100px;
+    position: relative;
+}
+.top1-left>p{
+    font-size: 14px;
+}
+.top1-left>p:last-child{
+    border: 0 none;
+}
+.top1-abstract{
+    padding: 0 10px;
+    height: 32px;
+    line-height: 32px;
+}
+.top1-abstract span{
+    cursor: pointer;
+    font-size: 14px;
+}
+.top1-indoor{
+    padding: 3px 10px;
+    line-height: 24px;
+}
+.top1-right>a{
+    display: block;
+    width: 86px;
+    height: 80px;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    margin: -40px 0 0 -43px;
+    border-radius: 6px;
+    -webkit-border-radius: 6px;
+    -ms-border-radius: 6px;
+    -moz-border-radius: 6px;
+}
+.top1-right>a img{
+    width: 100%;
+    height: 100%;
+}
+.dialog-tab1{
+    height: 40px;
+    border-bottom:1px solid #e0e0e0;
+    overflow: hidden;
+}
+.dialog-tab1 li{
+    height: 24px;
+    float: left;
+    padding-left: 28px;
+    margin: 8px 20px 0 24px;
+    font-size: 14px;
+    line-height: 24px;
+    cursor: pointer;
+}
+.tab1-study{
+    background: url(http://map.cqjtu.edu.cn/mapstatic/3d/img/dialog1.png) no-repeat;
+    background-position: 0 -39px;
+}
+.tab1-dynamic{
+    background: url(http://map.cqjtu.edu.cn/mapstatic/3d/img/dialog1.png) no-repeat;
+    background-position: 0 -77px;
+}
+.tab1-activity{
+    background: url(http://map.cqjtu.edu.cn/mapstatic/3d/img/dialog1.png) no-repeat;
+    background-position: 0 -115px;
+}
+.tab1-study span.active{
+    text-decoration: underline;
+    color: #ef5b70;
+}
+.tab1-dynamic span.active{
+    text-decoration: underline;
+    color: #85c65d;
+}
+.tab1-activity span.active{
+    text-decoration: underline;
+    color: #b176e2;
+}
+.dialog-details1-box{
+    /*position: relative;	*/
+}
+.dialog-details1{
+    /*position: absolute;
+    left: 0;
+    top: 0;*/
+    overflow: hidden;
+    padding: 10px;
+    border-bottom:1px solid #e0e0e0;
+    display: none;
+}
+.details1-ctns{
+    width: 285px;
+    max-height: 155px;
+    overflow: hidden;
+}
+.details1-ctns-list{
+    width: 248px;
+    height: 44px;
+    padding: 0 27px 0 8px;
+    margin-bottom: 5px;
+    border:1px solid #e0e0e0;
+    border-radius: 6px;
+    -webkit-border-radius: 6px;
+    -ms-border-radius: 6px;
+    -moz-border-radius: 6px;
+    position: relative;
+}
+.details1-ctns-list>p{
+    height: 22px;
+    line-height: 22px;
+    font-size: 12px;
+    color: #616161;
+}
+.details1-title{
+    display: block;
+    width: 175px;
+    font-size: 14px;
+    color: #4a4a4a;
+    float: left;
+    margin-right: 3px;
+}
+.dialog-icon1{
+    display: block;
+    width: 6px;
+    height: 12px;
+    position: absolute;
+    top: 15px;
+    right: 9px;
+    background: url(http://map.cqjtu.edu.cn/mapstatic/3d/img/dialog1.png) no-repeat;
+    background-position: 0 -153px;
+}
+.dialog-paging{
+    width: 145px;
+    height: 22px;
+    margin: 9px auto 0 auto;
+    overflow: hidden;
+}
+.dialog-paging li{
+    width: 24px;
+    height: 20px;
+    border: 1px solid #b5b5b5;
+    float: left;
+    text-align: center;
+    line-height: 20px;
+    margin-left: 10px;
+    cursor: pointer;
+}
+.dialog-paging li a{
+    text-decoration: none;
+    color: #7b7b7b;
+}
+.dialog-btn{
+    height: 31px;
+    overflow: hidden;
+    margin: 10px 0;
+}
+.dialog-btn li{
+    width: 110px;
+    height: 100%;
+    float: left;
+    color: #fff;
+    font-size: 14px;
+    text-align: center;
+    line-height: 27px;
+    letter-spacing: 1px;
+    cursor: pointer;
+}
+.dialog-btn1{
+    background: url(http://map.cqjtu.edu.cn/mapstatic/3d/img/dialog-btn.png) no-repeat;
+    background-position: 0 0;
+    margin: 0 40px 0 20px;
+}
+.dialog-btn2{
+    background: url(http://map.cqjtu.edu.cn/mapstatic/3d/img/dialog-btn.png) no-repeat;
+    background-position: 0 -55px;
+}
+.popup-box{
+    width: 100%;
+    height: 100%;
+    position: fixed;
+    left: 0;
+    top: 0;
+    z-index: 1000;
+}
+.popup-box-shadow{
+    width: 100%;
+    height: 100%;
+    background: #000;
+    opacity: 0.5;
+    filter: alpha(opacity = 50);
+}
+.popup-ctns{
+    background: #fff;
+    border-radius: 6px;
+    -webkit-border-radius: 6px;
+    -ms-border-radius: 6px;
+    -moz-border-radius: 6px;
+    position: relative;
+    padding-bottom: 20px;
+}
+.close-btn{
+    display: block;
+    width: 25px;
+    height: 25px;
+    position: absolute;
+    background: url(http://map.cqjtu.edu.cn/mapstatic/3d/img/dialog1.png) no-repeat;
+    background-position: 0 0;
+    right: 8px;
+    top: 8px;
+    cursor: pointer;
+}
+.popup-ctns h2,.popup-ctns p,.popup-ctns div{
+    width: 80%;
+    margin: 0 auto;
+}
+.popup-ctns h2{
+    height: 30px;
+    margin: 30px auto 5px auto;
+    line-height: 30px;
+    text-align: center;
+    font-size: 18px;
+    color: #1f1f1f;
+}
+.popup-ctns .popup-ctns-time{
+    color: #bcbcbc;
+    text-align: center;
+    height: 24px;
+    line-height: 24px;
+    margin-bottom: 5px;
+}
+.popup-ctns-article{
+    text-indent: 2em;
+    line-height: 22px;
+}
+.over{
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+.bor-1{
+    border-radius: 6px;
+    -webkit-border-radius: 6px;
+    -ms-border-radius: 6px;
+    -moz-border-radius: 6px;
+}

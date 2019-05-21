@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>厅内业务办理分析</title>
+    <link rel="stylesheet" href="css/style.css?v=20181101" type="text/css"/>
+    <link rel="stylesheet" type="text/css" href="css/page2.css?v=20181108"/>
+    <!--<link rel="stylesheet" type="text/css" href="css/bootstrap.min.css"/>-->
+
+    <script src="js/echarts.js"></script>
+    <script src="js/echarts-liquidfill.js"></script>
+    <script src="js/dark.js"></script>
+    <script type="text/javascript"
+            src="http://api.map.baidu.com/api?v=2.0&ak=d1qH9yvet1BNoYt3wk8BrHUg7ScdSuxn"></script>
+    <script type="text/javascript" src="http://api.map.baidu.com/library/Heatmap/2.0/src/Heatmap_min.js"></script>
+
+    <script src="js/jquery-3.3.1.min.js"></script>
+    <script src="js/template.js"></script>
+
+    <script>
+        setInterval(function () {
+            var nowDate = new Date();
+            var month = nowDate.getMonth() + 1;
+            var nowTime = nowDate.getHours() + ":" + nowDate.getMinutes() + ":" + nowDate.getSeconds();
+            var nowWeek = getWeek(nowDate.getDay());
+
+            $("#nowYear").text(nowDate.getFullYear());
+            $("#nowMonth").text(month);
+            $("#nowDate").text(nowDate.getDate());
+            $("#nowTime").text(nowTime);
+            $("#nowWeek").text(nowWeek);
+        }, 1000);
+
+        function getWeek(week) {
+            switch (week) {
+                case 0:
+                    return "日";
+                    break;
+                case 1:
+                    return "一";
+                    break;
+                case 2:
+                    return "二";
+                    break;
+                case 3:
+                    return "三";
+                    break;
+                case 4:
+                    return "四";
+                    break;
+                case 5:
+                    return "五";
+                    break;
+                case 6:
+                    return "六";
+                    break;
+            }
+        }
+
+        //解码
+        function uncode(str) {
+            return str.replace(/&#(x)?([^&]{1,5});?/g, function (a, b, c) {
+                return String.fromCharCode(parseInt(c, b ? 16 : 10));
+            });
+        }
+
+    </script>
+
+</head>
+<body>
+<div class="header">
+    <div class="logo">
+        <img src="image/tree.png" style="display: inline-block;">
+        <p id="hall_name" class="project-name">重庆交通大学校园拍拍智慧运营平台</p>
+    </div>
+    <div class="date">
+        <span id="nowYear">2018</span>年<span id="nowMonth">9</span>月<span id="nowDate">26</span>日 <span id="nowTime">10:44:32</span>
+        星期<span id="nowWeek">二</span></div>
+    <div class="clearfix"></div>
+</div>
+<div class="content" style="padding:0 20px;"    >
+    <div class="container-top">
+        <div class="container-top-left">
+            <div v-for="(item, index) in lineUpList">
+            <P>重庆交通大学总注册数<span id="today_num" style="width: auto" :class="{marquee_top:animate}"></span>人</P>
+            </div>
+            <!--<script src="js/vue.min.js"></script>
+            <script>
+
+            </script>-->
+        </div>
+        <div class="container-top-page">
+            <a id="two_01" href="businessAnalyze.html">01</a>
+            <a class="current" href="businessManagement.html">资源数据统计</a>
+            <a id="two_03" href="e.html">03</a>
+        </div>
+        <div class="clearfix"></div>
+    </div>
+    <div class="box" style="width: 100%;">
+        <div class="box-one boxbg" style="float: left; width: 57%;height: 460px;background-size: 100% 100%;">
+            <div class="box-title"style="position: absolute;z-index: 10;width: 160px;padding: 5px;margin: 6px;border-radius: 7px; background: #0915329e;">
+                <div class="tips"style=" margin-right: 13px;height: 27px;"></div>
+                <span class="title"> 重庆交通大学情况</span>
+            </div>
+                <!--<img src=" image/page3-chart1.png" alt=""/>-->
+                <div id="hotMap" style="width: 100%;height: 459px;border-radius: 6px;"></div>
+            <!--热力图js--->
+            <script type="text/javascript" src=" js/hotMap.js?v=20181105"></script>
+
+
+            <!--<div id = "glyw" style="width: 100%;height: 379px;margin: 40px auto;">
+                <img class=" glye-img show-img" style=" position: absolute; margin: 4% 7%;" src="image/1-2.png" alt=""/>
+                <img class=" glye-img show-img" style=" position: absolute; margin: 0% 13%;" src="image/0-1.png" alt="\"/>
+                <img class=" glye-img show-img" style=" position: absolute; margin: 8% 23%;" src="image/1-1.png" alt="\"/>
+                <img class=" glye-img show-img" style=" position: absolute; margin: 8% 33%;" src="image/2-1.png" alt="\"/>
+                <img class=" glye-img show-img" style=" position: absolute; margin: 17% 13%;" src="image/3-1.png" alt="\"/>
+                <img class=" glye-img show-img" style=" position: absolute; margin: 16% 34%;" src="image/4-1.png" alt="\"/>
+                <img class=" glye-img show-img" style=" position: absolute; margin: 15% 26%;" src="image/5-1.png" alt="\"/>
+                <img class=" glye-img show-img" style=" position: absolute; margin: 17% 43%;" src="image/6-1.png" alt="\"/>
+                <img class=" glye-img show-img" style=" position: absolute; margin: 6% 43%;" src="image/7-1.png" alt="\"/>
+                <img class=" glye-img show-img" style=" position: absolute; margin: 11% 5%;" src="image/8-1.png" alt="\"/>
+                <img class=" glye-img show-img" style=" position: absolute; margin: 3% 36%;" src="image/9-1.png" alt="\"/>
+                <img class=" glye-img show-img" style=" position: absolute; margin: 11% 46%;" src="image/10-1.png" alt="\"/>
+                <img class=" glye-img show-img" style=" position: absolute; margin: 14% 19%;" src="image/11-1.png" alt="\"/>
+                <img class=" glye-img show-img" style=" position: absolute; margin: 12% 31%;" src="image/12-1.png" alt="\"/>
+                <img class=" glye-img show-img" style=" position: absolute; margin: 2% 1%;" src="image/13-1.png" alt="\"/>
+                <img class=" glye-img show-img" style=" position: absolute; margin: 8% 14%;" src="image/14-1.png" alt="\"/>
+
+            </div>-->
+           <!-- <img src="image/img-page2-img1.png" alt=""/>-->
+         </div>
+
+        <div style="width: 41.8%; float: right;">
+            <div class="box-two boxbg">
+                <div class="box-title">
+                    <div class="tips"></div>
+                    <span class="title"> 用户消费能力</span>
+                </div>
+                <div class="line"></div>
+                <!--<img src="image/page2-chart2.png" alt=""  />-->
+                <div id="taocan" style="width: 100%; height: 180px;"></div>
+            </div>
+            <div class="box-three boxbg">
+                <div class="box-title">
+                    <div class="tips"></div>
+                    <span class="title">驻留统计</span>
+                </div>
+                <div class="line"></div>
+                <!--<img src="image/page2-chart3.png" alt=""  />-->
+                <div id="KLLFX" style="width: 100%;height: 159px"></div>
+
+            </div>
+        </div>
+        <div class="clearfix"></div>
+    </div>
+
+
+    <div class="box-bottom-left boxbg">
+        <div class="box-title">
+            <div class="tips"></div>
+            <span class="title"> 用户分析</span>
+        </div>
+        <div class="line"></div>
+        <div class="containers">
+            <div class="item-left">
+                <p class="item-title">年龄 </p>
+                <!--<img src="image/page2-chart4.png" />-->
+                <div id="ageChart" style="width: 37%;height: 120px;position: absolute;margin: -28px 17px;"></div>
+                <div class="clearfix"></div>
+            </div>
+            <div class="item-right">
+                <!--<img src="image/page2-chart5.png" alt=""  />-->
+                <!--<div id="sexpre" style="width: 100%;height: 100px;"></div>-->
+                <div class="ratio" style="width: 100%;margin-top: -7px;margin-left: -8px;">
+                    <div class="rotio-tp">
+                        <span>男</span>
+                        <span class="rotio-tp-rt">女</span>
+                    </div>
+                    <div class="rotio-bd">
+                        <div class="rotio-bd-lt">
+                            <p></p>
+                            <!--<p id="rotion_gb_lt" style="position: absolute;background:url(mapp/bigScreenShow/image/test1.jpg);height: 36px;width: 22px;margin-top: -36px;background-size: 20px 36px"></p>-->
+                            <!--<p id="rotion_gb_lt" style="position: absolute;height: 36px;width: 22px;margin-top: -36px"></p>-->
+                            <span>64%</span>
+                        </div>
+                        <div class="rotio-bd-ct">
+                            <img src="image/img-page2-sex.png" />
+                        </div>
+                        <div class="rotio-bd-rt">
+                            <p></p>
+                            <span>36%</span>
+                        </div>
+                        <div style="clear: both;"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="clearfix"></div>
+        </div>
+    </div>
+
+    <div class="box-bottom-right boxbg">
+        <div class="box-title">
+            <div class="tips"></div>
+            <span class="title">流量吞吐量分析</span>
+        </div>
+        <div class="line"></div>
+        <!--<img src="image/page2-chart6.png" alt=""  />-->
+        <div id="liuliangtunlv" style="width: 100%;height: 155px"></div>
+    </div>
+</div>
+
+</body>
+
+<script src="js/businessManagement.js?v=20181114"></script>
+</html>

@@ -30,6 +30,7 @@ class Index extends React.Component {
             rowkey: 0,
             selectedRowKeys: [],
             loading: false,
+            detailLoading:false,
             userDetail: {
                 commentList: [
                     {
@@ -97,7 +98,8 @@ class Index extends React.Component {
                 goodsActiveCount: 0
             },
             receiptPlacelist: [
-                {receiptId: 0,
+                {
+                    receiptId: 0,
                     userId: 0,
                     addressName: "",
                     addressState:""
@@ -115,7 +117,7 @@ class Index extends React.Component {
 
     componentDidMount() {
         this.getMemberListInPage({
-            state:1,
+            state:4,
             page: 1,
             limit: 10
         })
@@ -136,7 +138,7 @@ class Index extends React.Component {
         const res = await _updatePersonal(data);
         console.log("list返回数据：", res);
         this.getMemberListInPage({
-            state:1,
+            state:4,
             page: this.state.page,
             limit: 10
         });
@@ -181,6 +183,7 @@ class Index extends React.Component {
                     receiptId:0
                 }],
                 userDetail:res,
+                detailLoading:false
             });
         }else {
             this.setState({
@@ -204,11 +207,12 @@ class Index extends React.Component {
                      schoolName: res.schoolName,
                  }*/
                 userDetail:res,
-                receiptPlacelist:res.receiptPlacelist
+                receiptPlacelist:res.receiptPlacelist,
+                detailLoading:false
             });
 
         }
-        console.log("user:",this.state.userDetail)
+       // console.log("user:",this.state.userDetail)
     }
     handleToOrder=()=>{
         /*localStorage.setItem("userDetailVisible","false");*/
@@ -287,11 +291,14 @@ class Index extends React.Component {
 
 
     getUserByName = (page, limit) => {
+        this.setState({
+            checkLoading:true
+        });
         if (!this.isNull(this.state.tData)) {
             console.log('page：', page);
             console.log('limit：', limit);
             var data = {
-                state:1,
+                state:4,
                 page: page,
                 limit: limit
             };
@@ -305,7 +312,7 @@ class Index extends React.Component {
                 if (!this.isNull(username)) {
                     //console.log("userName不为空:", username)
                     data = {
-                        state:1,
+                        state:4,
                         username: username,
                         studentId:studentId,
                         phoneNum:phoneNum,
@@ -316,7 +323,7 @@ class Index extends React.Component {
                     }
                 } else {
                     data = {
-                        state:1,
+                        state:4,
                         studentId:studentId,
                         phoneNum:phoneNum,
                         idCard:idCard,
@@ -329,7 +336,7 @@ class Index extends React.Component {
             } else {
                 if (!this.isNull(username)) {
                     data = {
-                        state:1,
+                        state:4,
                         username: username,
                         studentId:studentId,
                         phoneNum:phoneNum,
@@ -363,7 +370,8 @@ class Index extends React.Component {
                 }
             };
             this.setState({
-                userDetailVisible:true
+                userDetailVisible:true,
+                detailLoading:true
             });
             //console.log('qqq' + data);
             this.getUserAllByUserId(data);
@@ -533,7 +541,7 @@ class Index extends React.Component {
             dataIndex: 'userState',
             align:'center',
             render(userState) {
-                return <Tag color="orange">未审核</Tag>
+                return <Tag color="red">待审核</Tag>
             }
         }, {
             title: '操作',
@@ -649,7 +657,7 @@ class Index extends React.Component {
                             </div>
                         </Form>
                     </div>
-                    <CheckDetail title="用户详情" visible={_this.state.userDetailVisible} loading={loading}
+                    <CheckDetail title="用户详情" visible={_this.state.userDetailVisible} loading={_this.state.detailLoading}
                                 onCancel={_this.handleCancel} onOk={_this.handleCancel}
                                 wrappedComponentRef={(form) => this.formRef = form}
                                 userDetail={_this.state.userDetail}

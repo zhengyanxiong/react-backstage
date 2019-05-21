@@ -574,8 +574,8 @@ handleClick=()=>{
         const _this = this;
         const showDeleteConfirm = this.showDeleteConfirm;
         const formItemLayout = {
-            labelCol: {span: 8},
-            wrapperCol: {span: 7}
+            labelCol: {span: 5},
+            wrapperCol: {span: 5}
         };
         const {getFieldDecorator} = _this.props.form;
         //选择框
@@ -682,12 +682,12 @@ handleClick=()=>{
                     <div style={{margin: "-11px 0px -13px 0px", width: "auto"}}>
                         <Form>
                             <FormItem label="活动名称："
-                                      {...formItemLayout} style={{width: "710px"}}
+                                      {...formItemLayout}
                             >
                                 {getFieldDecorator('activeName')(
                                     <Input placeholder="请输入..."/>
                                 )}
-                                <Button type="primary" className="btn" onClick={this.getActiveByName}>
+                                <Button type="primary" style={{margin: "-36px 0 0 250px"}} className="btn" onClick={this.getActiveByName}>
                                     <Icon type="search"/>查询
                                 </Button>
                                 <Button type="primary" htmlType="submit" icon="notification"

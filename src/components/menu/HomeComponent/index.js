@@ -6,6 +6,7 @@ import {_getActiveCount} from '../../../api/active'
 import {_getOrderCount} from '../../../api/order'
 import {_getUserAmountRank} from '../../../api/user'
 import {_getDistributeOfUserAndSales} from '../../../api/user'
+import {_getUserCompCount} from '../../../api/user'
 import 'echarts/map/js/china';
 import BaseComponent from '../../Utils/BaseComponent';
 import Panel from '../../Utils/Panel';
@@ -33,6 +34,7 @@ class Index extends BaseComponent {
             countState: 0,
             activeCount: 0,
             orderCount: 0,
+            userCompCount: 0,
             homeLoading: true,
             userAmountRankList: [{
                 schoolName: '',
@@ -51,12 +53,13 @@ class Index extends BaseComponent {
     }
 
     componentDidMount() {
-        this.getUserByUserState({params: {"userState": 1}});
+        this.getUserByUserState({params: {"userState": 4}});
         this.getActiveCount();
         this.getUser({params: {"userState": 2}});
         this.getOrderCount();
         this.getUserAmountRank();
         this.getDistributeOfUserAndSales();
+        this.getUserCompCount();
     }
 
     async getUser(data) {
@@ -64,6 +67,13 @@ class Index extends BaseComponent {
         // console.log("返回数据count：", res);
         this.setState({
             count: res
+        })
+    }
+    async getUserCompCount(data) {
+        const res = await _getUserCompCount(data);
+        // console.log("返回数据count：", res);
+        this.setState({
+            userCompCount: res
         })
     }
 
@@ -118,8 +128,20 @@ class Index extends BaseComponent {
         const {from} = this.props.location.state || {from: {pathname: '/index/checkUserManagement'}};
         this.props.history.push(from)
     };
+     clickUser = () => {
+        const {from} = this.props.location.state || {from: {pathname: '/index/userManagement'}};
+        this.props.history.push(from)
+    };
+    clickOrder = () => {
+        const {from} = this.props.location.state || {from: {pathname: '/index/orderManagement'}};
+        this.props.history.push(from)
+    };
     clickActive = () => {
         const {from} = this.props.location.state || {from: {pathname: '/index/activeManagement'}};
+        this.props.history.push(from)
+    };
+    clickComp = () => {
+        const {from} = this.props.location.state || {from: {pathname: '/index/complaintManagement'}};
         this.props.history.push(from)
     };
     testSpans = (i) => {
@@ -208,7 +230,7 @@ class Index extends BaseComponent {
                     <Spin spinning={this.state.homeLoading}>
                     <Content>
                         <Row gutter={20}>
-                            <Col md={6} onClick={this.clickUserNo}>
+                            <Col md={5} onClick={this.clickUserNo} style={{width: "20%",paddingLeft:"10px",paddingRight:"2px"}}>
                                 <Panel className="qq" header={false} cover>
                                     <Icon1 type="aliwangwang" antd/>
 
@@ -221,7 +243,18 @@ class Index extends BaseComponent {
                                     <h5 className="text-muted">未读消息</h5>
                                 </Panel>
                             </Col>
-                            <Col md={6}>
+                            <Col md={5} onClick={this.clickComp} style={{width: "20%",paddingLeft:"10px",paddingRight:"2px"}}>
+                                <Panel className="comp" header={false} cover>
+                                    <Icon1 type="exclamation-circle" antd/>
+                                    <Badge dot={this.state.show} style={{marginTop: 10}}>
+                                        <h2>
+                                            <b>{this.state.userCompCount}</b>
+                                        </h2>
+                                    </Badge>
+                                    <h5 className="text-muted">投诉与举报</h5>
+                                </Panel>
+                            </Col>
+                            <Col md={5} onClick={this.clickUser} style={{width: "20%",paddingLeft:"10px",paddingRight:"2px"}}>
                                 <Panel className="wechat" header={false} cover>
                                     <Icon1 type="user" antd/>
                                     <h2>
@@ -230,7 +263,7 @@ class Index extends BaseComponent {
                                     <h5 className="text-muted">已注册</h5>
                                 </Panel>
                             </Col>
-                            <Col md={6}>
+                            <Col md={5} onClick={this.clickOrder} style={{width: "20%",paddingLeft:"10px",paddingRight:"2px"}}>
                                 <Panel className="skype" header={false} cover>
                                     <Icon1 type="rise" antd/>
                                     <h2>
@@ -239,7 +272,7 @@ class Index extends BaseComponent {
                                     <h5 className="text-muted">成交量</h5>
                                 </Panel>
                             </Col>
-                            <Col md={6} onClick={this.clickActive}>
+                            <Col md={5} onClick={this.clickActive}  style={{width: "20%",paddingLeft:"10px",paddingRight:"10px"}}>
                                 <Panel className="github" header={false} cover>
                                     <Icon1 type="sound" antd/>
                                     <Badge dot={this.state.show} style={{marginTop: 10}}>

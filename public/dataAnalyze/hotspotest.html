@@ -1,0 +1,93 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>jQuery热点幻灯片 - 站长素材</title>
+
+    <style type="text/css">
+        *{margin:0;padding:0;list-style-type:none;}
+        a,img{border:0;}
+        h2{font-size:14px;font-weight:400;}
+        body{font:12px/180% Arial, Helvetica, sans-serif, "新宋体";color:#333;}
+    </style>
+    <link rel="stylesheet" href="css/jquery.hotspot.css">
+
+    <script type="text/javascript" src="js/jquery-3.3.1.min.js"></script>
+    <script type="text/javascript" src="js/modernizr.custom.49511.js"></script>
+    <script type="text/javascript" src="js/jquery.hotspot.min.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function($){
+            //demo01
+            $('#container1').hotSpot();
+            //demo02
+            var _pop2 = $('#container2').hotSpot({
+                slideshow : false,
+                triggerBy : 'click',
+                autoHide : false
+            });
+            $('#image2').on('click',function(event){
+                _pop2.hideCurrentPop();
+            });
+
+        });
+    </script>
+</head>
+<body>
+
+<div class="container" id="container1">
+
+    <h2>例如自动延时幻灯片，时暂停悬停</h2>
+
+    <div class="popover right pop1" data-easein="cardInRight" data-easeout="cardOutRight" id="pop1">
+        <div class="arrow"></div>
+        <div class="popover-inner">
+            <h3 class="popover-title">只要你喜欢，嵌入图像</h3>
+            <div class="popover-content">
+                <img src="http://www.17sucai.com/preview/1/2013-08-01/jiaoben818/images/flower_small.jpg" alt="small" />
+                <p>这里的HTML内容。更改通过CSS的位置和大小。</p>
+                <p>访问我的投资组合</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="popover top pop2" data-easein="cardInTop" data-easeout="cardOutTop" id="pop2">
+        <div class="arrow"></div>
+        <div class="popover-inner">
+            <h3 class="popover-title"><a href="http://www.17sucai.com/">请访问我的个人资料</a></h3>
+            <div class="popover-content">
+                <p>但是，他们是一脸的主要政策。我们有很好的狮子。我们玩了很多超过混凝土门廊。</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="popover left pop3" data-easein="cardInLeft" data-easeout="cardOutLeft" id="pop3">
+        <div class="arrow"></div>
+        <div class="popover-inner">
+            <h3 class="popover-title">Popover标题</h3>
+            <div class="popover-content">
+                <p>但是，他们是一脸的主要政策。我们有很好的狮子。我们玩了很多超过混凝土门廊。</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="popover bottom pop4" data-easein="cardInBottom" data-easeout="cardOutBottom" id="pop4">
+        <div class="arrow"></div>
+        <div class="popover-inner">
+            <h3 class="popover-title">然而，另一个标题</h3>
+            <div class="popover-content">
+                <p>但是，他们是一脸的主要政策。我们有很好的狮子。我们玩了很多超过混凝土门廊。</p>
+            </div>
+        </div>
+    </div>
+
+    <img src="http://www.17sucai.com/preview/1/2013-08-01/jiaoben818/images/arrow1.png" alt="info" class="info-icon info-icon1" data-target="pop1"  />
+    <img src="http://www.17sucai.com/preview/1/2013-08-01/jiaoben818/images/arrow1.png" alt="info" class="info-icon info-icon2" data-target="pop2"  />
+    <img src="http://www.17sucai.com/preview/1/2013-08-01/jiaoben818/images/arrow1.png" alt="info" class="info-icon info-icon3" data-target="pop3"  />
+    <img src="http://www.17sucai.com/preview/1/2013-08-01/jiaoben818/images/arrow1.png" alt="info" class="info-icon info-icon4" data-target="pop4"  />
+    <img src="http://www.17sucai.com/preview/1/2013-08-01/jiaoben818/images/flower.jpg" alt="" class="largeimage">
+</div>
+
+
+
+</body>
+</html>

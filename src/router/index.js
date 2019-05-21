@@ -11,6 +11,7 @@ import ActiveManagement from '@/components/menu/ActiveManagement/index.js'
 import ActiveEnterManagement from '@/components/menu/ActiveEnterManagement/index.js'
 import OrderManagement from '@/components/menu/OrderManagement/index.js'
 import AboutManagement from '@/components/menu/AboutManagement/index.js'
+import ComplaintManagement from '@/components/menu/ComplaintManagement/index.js'
 
 //路由表
 export const main = [
@@ -28,6 +29,7 @@ export const main = [
             {path: '/index/activeManagement', name:'活动管理', component: ActiveManagement},
             {path: '/index/activeEnterManagement', name:'活动报名', component: ActiveEnterManagement},
             {path: '/index/orderManagement', name:'订单管理', component: OrderManagement},
+            {path: '/index/complaintManagement', name:'举报投诉', component: ComplaintManagement},
             {path: '/index/aboutManagement', name:'关于', component: AboutManagement},
         ]
     },

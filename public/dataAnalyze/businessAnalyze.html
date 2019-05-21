@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>当前业务办理分析</title>
+    <link rel="stylesheet" href="css/style.css?v=20181101" type="text/css"/>
+    <link rel="stylesheet" href="css/jqbar.css?v=20181106" type="text/css"/>
+
+    <script src="js/echarts.js"></script>
+    <script src="js/dark.js"></script>
+
+    <script src="js/jquery-3.3.1.min.js"></script>
+    <script src="js/template.js"></script>
+    <script src="js/digitalScroll.js"></script>
+    <script src="js/jqbar.js?v=20181106"></script>
+
+    <script>
+
+        setInterval(function () {
+            var nowDate = new Date();
+            var month = nowDate.getMonth() + 1;
+            var nowTime = nowDate.getHours() + ":" + nowDate.getMinutes() + ":" + nowDate.getSeconds();
+            var nowWeek = getWeek(nowDate.getDay());
+
+            $("#nowYear").text(nowDate.getFullYear());
+            $("#nowMonth").text(month);
+            $("#nowDate").text(nowDate.getDate());
+            $("#nowTime").text(nowTime);
+            $("#nowWeek").text(nowWeek);
+        }, 1000);
+
+        function getWeek(week) {
+            switch (week) {
+                case 0:
+                    return "日";
+                    break;
+                case 1:
+                    return "一";
+                    break;
+                case 2:
+                    return "二";
+                    break;
+                case 3:
+                    return "三";
+                    break;
+                case 4:
+                    return "四";
+                    break;
+                case 5:
+                    return "五";
+                    break;
+                case 6:
+                    return "六";
+                    break;
+            }
+        }
+    </script>
+</head>
+<body>
+<div class="header">
+    <div class="logo">
+        <img src="image/tree.png" style="display: inline-block;">
+        <p class="project-name" id="hall_name">重庆交通大学校园拍拍智慧运营平台</p>
+    </div>
+    <div class="date">
+        <span id="nowYear">2019</span>年<span id="nowMonth">4</span>月<span id="nowDate">23</span>日 <span id="nowTime">10:44:32</span>
+        星期<span id="nowWeek">二</span>
+    </div>
+    <div class="clearfix"></div>
+</div>
+<div class="content" style="padding:0 20px;">
+    <div class="container-top">
+        <div class="container-top-left">
+            <div v-for="(item, index) in marqueeList">
+                <P>平台用户<span :class="{marquee_top:animate}">{{item.number}}</span>人</P>
+                <P>当前在线<span :class="{marquee_top:animate}">{{item.people}}</span>人</P>
+                <P>当前交易<span :class="{marquee_top:animate}">{{item.time}}</span>单</P>
+            </div>
+        </div>
+        <script src="js/vue.min.js"></script>
+        <script>
+            new Vue({
+                el: ".container-top-left",
+                data: {
+                    animate: false,
+                    marqueeList: [
+                        {
+                            number: 18,
+                            people: 10,
+                            time: 3
+                        },
+                        {
+                            number: 26,
+                            people: 20,
+                            time: 16
+                        },
+                        {
+                            number: 33,
+                            people: 22,
+                            time: 20
+                        },
+                        {
+                            number: 67,
+                            people: 61,
+                            time: 48
+                        },
+                        {
+                            number: 79,
+                            people: 70,
+                            time: 65
+                        },
+                        {
+                            number: 101,
+                            people: 98,
+                            time: 79
+                        },
+                        {
+                            number: 1000,
+                            people: 980,
+                            time: 115
+                        }
+                    ]
+                },
+                created: function () {
+                    setInterval(this.showMarquee, 3000*5)
+                },
+                methods: {
+                    showMarquee: function () {
+                        this.animate = true;
+                        setTimeout(()=>{
+                            this.marqueeList.push(this.marqueeList[0]);
+                        this.marqueeList.shift();
+                        this.animate = false;
+                    },500)},
+                }
+            });
+        </script>
+        <div class="container-top-page">
+            <a class="current" href="businessAnalyze.html">总体运营指标</a>
+
+            <a id = 'one_02' href="businessManagement.html">02</a>
+            <a id ="one_03" href="e.html">03</a>
+        </div>
+        <div class="clearfix"></div>
+    </div>
+    <div class="box" style="width: 100%;">
+        <div class="box-one boxbg" style="float: left; width: 57%;">
+            <div class="box-title">
+                <div class="tips"></div>
+                <span class="title"> 总体销售业绩</span>
+                <div class="clearfix"></div>
+            </div>
+            <img src="image/charts.png" style="position: absolute;width: 250px; margin: -8px 495px;">
+            <div id="businessAnalyze" style="width: 99%; height: 417px"></div>
+        </div>
+
+        <div style="width: 42%; float: right;">
+            <div class="box-two boxbg" id="test1">
+                <div class="box-title">
+                    <div class="tips"></div>
+                    <span class="title"> 每日用户留存率</span>
+                </div>
+                <div class="line"></div>
+                <div id="businessHandleRatio" style="width: 98%; height: 145px"></div>
+            </div>
+            <div class="box-three boxbg" style="height: 38%;">
+                <div class="box-title">
+                    <div class="tips"></div>
+                    <span class="title">当前下单情况</span>
+                </div>
+                <div class="line"></div>
+                <div class="tablelist">
+                    <ul class="load_handleBusiness">
+                        <script id="handleBusiness" type="text/html">
+                            {{each infos as info i}}
+                            <li>
+                                <div class="cardscon">
+                                        <span id="time">{{info.RETURNTIME}}</span>
+                                        <span id="tel">{{info.PHNOENUM}}</span>
+                                        {{if info.GOODS_NAME.length <130}}
+                                        <span id="item">{{info.GOODS_NAME}}</span>
+                                        {{else}}
+                                        <span id="item" style="font-size: 8px;">{{info.GOODS_NAME}}</span>
+                                        {{/if}}
+                                </div>
+                            </li>
+                            {{/each}}
+                        </script>
+
+                    </ul>
+                </div>
+
+            </div>
+        </div>
+        <div class="clearfix"></div>
+    </div>
+
+    <div class="box-bottom boxbg">
+        <div class="box-title">
+            <div class="tips"></div>
+            <span class="title"> 闲置欢迎程度分析</span>
+        </div>
+        <div class="line"></div>
+        <div class="container">
+            <div class="import-business">
+                <p class="item-title">重点品类 </p>
+                <ul class="load_importantBusiness" style="display: table; margin-top: 44px;width: calc(100% - 152px);   ">
+                    <script id="importantBusiness" type="text/html">
+                        {{each infos.IMPORTANT_BUSINESS_LIST as info i}}
+                        <li><p>{{info.PACKAGECLASS}}</p>
+                            <p class="much">
+                            <p id="lis{{i}}" style="display: none">{{info.ANALYSISNUMBER}}</p>
+                                <span class="t_num t_num{{i}}"></span>
+                            </p>
+                            <!--<p>{{info.RTION}} </p>-->
+                        </li>
+                        {{/each}}
+                    </script>
+
+                </ul>
+            </div>
+            <div class="hot-business">
+                <p class="item-title" style="border-bottom: 4px solid #0079d5; ">热卖闲置 </p>
+                <div class="hotchart">
+                    <div id="hotBusinessHandleRatio1" style="top: -16px;"></div>
+                    <div id="hotBusinessHandleRatio2" style="top: -16px;"></div>
+                    <div id="hotBusinessHandleRatio3" style="top: -16px;"></div>
+                    <div id="hotBusinessHandleRatio4" style="top: -16px;"></div>
+                    <div id="hotBusinessHandleRatio5" style="top: -16px;"></div>
+                    <!--<div id="hotBusinessHandleRatio" style="width: 72%; height: 130px;margin: -4px 152px;"></div>-->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="js/businessAnalyze.js?v=20181108"></script>
+</body>
+</html>

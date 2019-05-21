@@ -1,0 +1,45 @@
+body{-moz-user-select:none}
+#map-wrap{
+    position: absolute;
+    width: 98%;
+    height: 641px;
+    z-index: 0;
+    opacity: 0.6;
+    border: 1px solid #1045F5;
+    border-radius: 5px;
+    background: #ABD9E9;
+}
+/**浮云框**/
+
+/*清除闭合浮动*/
+.clearfix:after {DISPLAY: block; HEIGHT: 0px; VISIBILITY: hidden; CLEAR: both; CONTENT: "."}
+.clearfix {DISPLAY: inline-block}
+.clearfix {DISPLAY: block}
+/*常用浮动定义*/
+.fl {float:left}
+.fr {float:right}
+
+.building{
+
+    height:auto;
+    padding:0px;
+    margin:0;
+}
+.building_t{
+    /*width: 295px;*/
+    height: 39px;
+    margin: 0;
+    line-height: 43px;
+    color: #ABD9E9;
+    font-weight: bold;
+    font-size: 18px;
+    font-family: monospace;
+    padding-left: 10px;
+    border-bottom: 1px solid #1045F5;
+}
+.building_t a{
+    padding-left:10px;
+    color:#3d6dcc;
+    font-size: 12px;
+    font-weight: normal;
+}

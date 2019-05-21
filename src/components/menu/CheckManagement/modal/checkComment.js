@@ -74,7 +74,7 @@ const CheckComment = Form.create()(
                 >
                     <Tabs defaultActiveKey="2">
                         <TabPane tab={<span><Icon type="export" />用户发布评价</span>} key="2">
-                            {this.props.userDetail.commentList==0?(<div style={{height:"135px",marginLeft:"15px"}}><label>该用户还没有发布过评论哦</label></div>):(<List
+                            {this.props.userDetail.commentList=='null'?(<div style={{height:"135px",marginLeft:"15px"}}><label>该用户还没有发布过评论哦</label></div>):(<List
                                 itemLayout="vertical"
                                 size="large"
                                 dataSource={this.props.userDetail.commentList}

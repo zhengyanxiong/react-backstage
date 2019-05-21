@@ -1,4 +1,5 @@
 @import '../node_modules/antd/dist/antd.css';
+
 .App {
   text-align: center;
 }
@@ -66,10 +67,15 @@ ul, ol { list-style: none; }
 
 }
 
-.logo {
-  height: 32px;
-  background: rgba(255,255,255,.2);
-  margin: 16px;
+.logo33 {
+  height: 50px;
+  background: url('static/images/tree.png') no-repeat 0 0;
+  margin: 13px 0 10px 5px;;
+}
+
+.pat {
+  margin: 13px 0 0 46px;
+  width: 132px;
 }
 
 /*HeaderBar*/

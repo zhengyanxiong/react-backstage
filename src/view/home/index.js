@@ -5,7 +5,7 @@ import '../../App.css';
 import HeaderBar from "../../components/HeaderBar"
 import MainContent from "../../components/MainContent"
 import {isAuthenticated, isSupAdmin} from "../../util/Cookie"
-
+import imgURL from '../../static/images/pat.png';
 const {SubMenu} = Menu;
 const {Header, Content, Sider, Footer} = Layout;
 
@@ -25,9 +25,10 @@ class Index extends Component {
     };
 
     toggle = () => {
-        console.log("collapsed", this.state);
+       // console.log("collapsed", this.state);
         this.setState({
             collapsed: !this.state.collapsed,
+
         });
     };
 
@@ -41,14 +42,16 @@ class Index extends Component {
         let {routes} = this.props;
         let _this = this.state;
         return (
-            <Layout>
+            <Layout style={{ minHeight: '100vh' }}>
                 <Sider
                     trigger={null}
                     collapsible
                     collapsed={this.state.collapsed}
                     mode="inline"
                 >
-                    <div className="logo"/>
+                    <div className="logo33" style={{backgroundSize: this.state.collapsed===false ? "" : "34px",backgroundPosition:this.state.collapsed===false ? "" : "center"}}>
+                        <img className="pat" style={{display: this.state.collapsed===false ? "" : "none"}} src={imgURL}></img>
+                    </div>
                     <Menu theme="dark" defaultSelectedKeys={['1']} mode="inline">
                         <Menu.Item key="1">
                             <Link to="/index/homePage">
@@ -107,6 +110,12 @@ class Index extends Component {
                                 <span>订单管理</span>
                             </Link>
                         </Menu.Item>
+                        <Menu.Item key="18">
+                            <Link to="/index/complaintManagement">
+                                <Icon type="issues-close"/>
+                                <span>举报投诉</span>
+                            </Link>
+                        </Menu.Item>
                         {_this.adminType === "false" ? <Menu.Item key="3">
                             <Link to="/index/adminManagement"><Icon type="team"/><span>管理员管理</span></Link>
                         </Menu.Item> : ""}
@@ -124,7 +133,7 @@ class Index extends Component {
                         </Menu.Item>
                     </Menu>
                 </Sider>
-                <Layout>
+                <Layout >
                     <Header style={{background: '#fff', padding: 0}}>
                         <Icon
                             className="trigger"
@@ -133,7 +142,7 @@ class Index extends Component {
                         />
                         <HeaderBar/>
                     </Header>
-                    <Content>
+                    <Content style={{ margin: '0 16px'}}>
                         <MainContent routes={routes}/>
                     </Content>
                     <Footer style={{textAlign: 'center'}}>

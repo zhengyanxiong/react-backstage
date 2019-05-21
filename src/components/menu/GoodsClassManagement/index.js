@@ -31,6 +31,7 @@ class Index extends Component {
             rowkey: 0,
             selectedRowKeys: [],
             loading: false,
+            detailLoading:false,
             classList: {
                 goodsClassList: [{
                     classId: 0,
@@ -106,6 +107,7 @@ class Index extends Component {
     async getGoodsClassByClassId(data) {
         const res = await _getGoodsClassByClassId(data);
         this.setState({
+            detailLoading:false,
             goodsClassDetail: res
         });
         //console.log("goodsdetail", this.state.goodsClassDetail)
@@ -121,7 +123,7 @@ class Index extends Component {
     };
     cilckToInsert = () => {
         this.setState({
-            insertGoodsClassVisible: true
+            insertGoodsClassVisible: true,
         });
     };
     //获取子菜单元素数据等
@@ -197,6 +199,7 @@ class Index extends Component {
     };
     getGoodsClassById = (classId) => {
         this.setState({
+            detailLoading:true,
             setUpClassVisible: true
         });
         var data = {
@@ -247,6 +250,7 @@ class Index extends Component {
                         </Collapse>
 
                         <SetUpClass visible={_this.state.setUpClassVisible}
+                                    loading={_this.state.detailLoading}
                                     onCancel={_this.handleCancel}
                                     onOk={_this.handleOk}
                                     goodsClassDetail={_this.state.goodsClassDetail}

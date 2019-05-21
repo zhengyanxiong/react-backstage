@@ -25,6 +25,7 @@ class Index extends Component {
             record: 0,
             rowkey: 0,
             selectedRowKeys: [],
+            detailLoading:false,
             loading: false,
             orderDetail: {
                 orders: {
@@ -149,7 +150,7 @@ class Index extends Component {
             page: res.page,
             limit: res.limit,
             orderLoading: false,
-            classList: res.classList
+            classList: res.classList,
         })
         /*localStorage.setItem('username',res.data.data.name)
           this.props.history.push({pathname:'/home'});*/
@@ -161,6 +162,7 @@ class Index extends Component {
         console.log("list返回数据：", res);
         this.setState({
             orderDetail: res,
+            detailLoading:false,
             commentList: [{
                 comment: res.orders.comment,
                 serviceNum: res.orders.serviceNum,
@@ -173,14 +175,15 @@ class Index extends Component {
 
     handleOrderDetail = () => {
         this.setState({
-            orderDetailVisible: true
+            orderDetailVisible: true,
+            detailLoading:true
         });
         var data = {
             params: {
                 orderId: this.state.record.orderId
             }
         };
-        console.log(data);
+       // console.log(data);
         this.getOrderAllInfoById(data)
     };
 
@@ -216,6 +219,9 @@ class Index extends Component {
             return false
     };
     getOrderByName = (page, limit) => {
+        this.setState({
+            orderLoading:true
+        });
         if (!this.isNull(this.state.tData)) {
             console.log('page：', page);
             console.log('limit：', limit);
@@ -572,7 +578,7 @@ class Index extends Component {
                             </Row>
                         </Form>
                     </div>
-                    <OrderDetail title="订单详情" visible={_this.state.orderDetailVisible} loading={loading}
+                    <OrderDetail title="订单详情" visible={_this.state.orderDetailVisible} loading={_this.state.detailLoading}
                                  onCancel={_this.handleCancel} onOk={_this.handleCancel}
                                  wrappedComponentRef={(form) => this.formRef = form}
                                  orderDetail={_this.state.orderDetail}

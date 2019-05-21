@@ -1,5 +1,5 @@
 import React from "react";
-import {Form, Select, Modal, Rate, Row, Col, Tag,Input,Statistic,Icon,List,Skeleton,Avatar,Divider} from "antd";
+import {Form, Select, Modal, Rate, Row, Col, Tag,Spin,Input,Statistic,Icon,List,Skeleton,Avatar,Divider} from "antd";
 import Button from "antd/es/button/button";
 const IconText = ({ type, text }) => (
     <span>
@@ -80,7 +80,7 @@ const OrderDetail = Form.create()(
         };
         render() {
             const {
-                visible, onCancel, form
+                visible, onCancel, form,loading
             } = this.props;
             const {getFieldDecorator} = form;
 
@@ -94,6 +94,8 @@ const OrderDetail = Form.create()(
                     maskClosable={false}
                     width="79%"
                 >
+                    <Spin tip="加载中.." spinning={loading}>
+
                     <Form>
                         <Row>
                             <Col span={8} style={{textAlign: 'left'}}>
@@ -239,6 +241,7 @@ const OrderDetail = Form.create()(
                         </Form.Item>
 
                     </Form>
+                    </Spin>
                 </Modal>
             );
         }

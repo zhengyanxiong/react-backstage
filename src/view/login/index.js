@@ -60,7 +60,7 @@ constructor(props){
                 const _this = this;
                 _adminLogin(param).then((data) =>{
                     console.log(data);
-                    message.success("登录成功！",2).then(()=>{
+                    message.success("登录成功！即将跳转首页...",2).then(()=>{
                         _this.setState({
                             loading:false
                         });

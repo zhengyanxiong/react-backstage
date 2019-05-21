@@ -16,6 +16,7 @@ class Index extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            detailLoading:false,
             tData: [],
             classList:[],
             count: 0,
@@ -119,11 +120,13 @@ class Index extends Component {
             let str = res.goods.goodImge.split(",");
            // console.log("str:", str);
             this.setState({
+                detailLoading:false,
                 goodsDetail: res,
                 goodImge: str
             });
         } else {
             this.setState({
+                detailLoading:false,
                 goodsDetail: res,
                 goodImge: []
             });
@@ -160,6 +163,9 @@ class Index extends Component {
             return false
     };
     getGoodsByName = (page, limit) => {
+        this.setState({
+            goodsLoading:true
+        })
         if (!this.isNull(this.state.tData)) {
            // console.log('page：', page);
            // console.log('limit：', limit);
@@ -356,7 +362,8 @@ class Index extends Component {
     handleGoodsDetail = () => {
         this.setState({
             goodsId: this.state.record.goodsId,
-            goodsDetailVisible: true
+            goodsDetailVisible: true,
+            detailLoading:true
         });
         var data = {
             params: {
@@ -418,6 +425,7 @@ class Index extends Component {
             dataIndex: 'goodsName',
         }, {
             title: '商品类别',
+            width: 100,
             dataIndex: 'goodClassName',
         }, {
             title: '商品单价',
@@ -566,7 +574,7 @@ class Index extends Component {
                             </div>
                         </Form>
                     </div>
-                    <GoodsDetail title="商品详情" visible={_this.state.goodsDetailVisible} loading={loading}
+                    <GoodsDetail title="商品详情" visible={_this.state.goodsDetailVisible} loading={this.state.detailLoading}
                                  onCancel={_this.handleCancel} onOk={_this.handleCancel}
                                  wrappedComponentRef={(form) => this.formRef = form}
                                  goodsDetail={_this.state.goodsDetail}

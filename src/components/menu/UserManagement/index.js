@@ -9,7 +9,7 @@ import {_updatePersonal} from "../../../api/user";
 import {_getUserAllByUserId} from "../../../api/user";
 
 import {
-    Form, Input, Modal, Icon, Cascader, Button, Table, Tag, message, Row, Col,Select
+    Form, Input, Modal, Icon, Cascader, Button, Table, Tag, message, Row, Col,Select,Spin
 } from 'antd';
 
 const FormItem = Form.Item;
@@ -26,6 +26,8 @@ class Index extends React.Component {
             record: [{
                 userId: 0
             }],
+            detailLoading:false,
+            commentLoading:false,
             rowkey: 0,
             selectedRowKeys: [],
             loading: false,
@@ -120,11 +122,33 @@ class Index extends React.Component {
     }
 
     componentDidMount() {
-        this.getMemberListInPage({
-            state: 2,
-            page: 1,
-            limit: 10
-        })
+       var userComId= localStorage.getItem("userComId");
+       var userComedId= localStorage.getItem("userComedId");
+       if (!this.isNull(userComedId)){
+           this.getMemberListInPage({
+               userId:parseInt(userComedId),
+               state:0,
+               page: 1,
+               limit: 10
+           });
+           localStorage.removeItem("userComedId")
+       }else if (!this.isNull(userComId)){
+           this.getMemberListInPage({
+               userId:parseInt(userComId),
+               state:0,
+               page: 1,
+               limit: 10
+           });
+           localStorage.removeItem("userComId")
+
+       }else {
+           this.getMemberListInPage({
+               state: 2,
+               page: 1,
+               limit: 10
+           })
+       }
+
     }
 
     async getMemberListInPage(data) {
@@ -143,7 +167,7 @@ class Index extends React.Component {
         const res = await _updatePersonal(data);
       //  console.log("list返回数据：", res);
         this.getMemberListInPage({
-            state: 2,
+            state: 1,
             page: this.state.page,
             limit: 10
         });
@@ -157,25 +181,7 @@ class Index extends React.Component {
         const res = await _getUserAllByUserId(data);
         if (0 == res.receiptPlacelist) {
             this.setState({
-                /* userDetail:{
-                     username: res.username,
-                     headImag: res.headImag,
-                     phoneNum: res.phoneNum,
-                     sex: res.sex,
-                     email: res.email,
-                     realName: res.realName,
-                     idCard: res.idCard,
-                     stuCardFront: res.stuCardFront,
-                     stuCardBack: res.stuCardBack,
-                     registerDate: res.registerDate,
-                     userCreatedTime: res.userCreatedTime,
-                     userUpdatedTime: res.userUpdatedTime,
-                     userState: res.userState,
-                     creditNum: res.creditNum,
-                     loveValue: res.loveValue,
-                     sumGrade: res.sumGrade,
-                     schoolName: res.schoolName,
-                 }*/
+                detailLoading:false,
                 receiptPlacelist: [{
                     addressName: "",
                     receiptId: 0
@@ -184,29 +190,10 @@ class Index extends React.Component {
             });
         } else {
             this.setState({
-                /* userDetail:{
-                     username: res.username,
-                     headImag: res.headImag,
-                     phoneNum: res.phoneNum,
-                     sex: res.sex,
-                     email: res.email,
-                     realName: res.realName,
-                     idCard: res.idCard,
-                     stuCardFront: res.stuCardFront,
-                     stuCardBack: res.stuCardBack,
-                     registerDate: res.registerDate,
-                     userCreatedTime: res.userCreatedTime,
-                     userUpdatedTime: res.userUpdatedTime,
-                     userState: res.userState,
-                     creditNum: res.creditNum,
-                     loveValue: res.loveValue,
-                     sumGrade: res.sumGrade,
-                     schoolName: res.schoolName,
-                 }*/
+                detailLoading:false,
                 userDetail: res,
                 receiptPlacelist: res.receiptPlacelist
             });
-
         }
 
       //  console.log("user:", this.state.userDetail)
@@ -242,49 +229,12 @@ class Index extends React.Component {
             message.warning('该用户还没有发布过或者收到过评论哦');
         } else {
             this.setState({
+                //commentLoading:true,
                 userDetailVisible: false,
                 userCommentVisible: true
             });
         }
     };
-
-    /*   async updateUser(data) {
-           console.log('res表单数据: ', data);
-           const res = await _updateUser(data);
-           console.log(res);
-           this.setState({
-               updateUserVisible: false
-           });
-           Modal.success({
-               title: '成功',
-               content: '管理员修改成功!',
-           });
-           this.getMemberListInPage({
-               params: {
-                   page: this.state.page,
-                   limit: 10
-               }
-           });
-       }
-
-       async deleteUserByIds(data) {
-           const res = await _deleteUserByIds(data);
-           console.log(res);
-           const tData = this.state.tData;
-           //console.log("aaaa", this.state.selectedRowKeys);
-           for (var i = 0; i < this.state.selectedRowKeys.length; i++) {
-               tData.splice(this.state.selectedRowKeys[i], 1);//获取索引，后面的 1 是删除几行
-           }
-           this.setState({tData: tData});
-           this.setState({
-               selectedRowKeys: [],
-               loading: false
-           });
-           Modal.success({
-               title: '删除成功',
-               content: '管理员批量删除成功！',
-           });
-       }*/
 
     //判读是否为空,通用
     isNull = (charts) => {
@@ -347,6 +297,9 @@ class Index extends React.Component {
     };
 
     getUserByName = (page, limit) => {
+        this.setState({
+            userLoading:true
+        });
         if (!this.isNull(this.state.tData)) {
           //  console.log('page：', page);
            // console.log('limit：', limit);
@@ -473,6 +426,7 @@ class Index extends React.Component {
                 }
             };
             this.setState({
+                detailLoading:true,
                 userDetailVisible: true
             });
             //console.log('qqq' + data);
@@ -659,9 +613,11 @@ class Index extends React.Component {
             align: 'center',
             render(userState) {
                 if (userState == 2) {
-                    return <Tag color="green">审核正常</Tag>
+                    return <Tag color="green">已认证</Tag>
                 } else if (userState == 3) {
                     return <Tag color="red">已停用</Tag>
+                } else if (userState == 1) {
+                    return <Tag color="red">未认证</Tag>
                 }
             }
         }, {
@@ -786,7 +742,7 @@ class Index extends React.Component {
                             </div>
                         </Form>
                     </div>
-                    <UserDetail title="用户详情" visible={_this.state.userDetailVisible} loading={loading}
+                    <UserDetail title="用户详情" visible={_this.state.userDetailVisible} loading={_this.state.detailLoading}
                                 onCancel={_this.handleCancel} onOk={_this.handleCancel}
                                 wrappedComponentRef={(form) => this.formRef = form}
                                 userDetail={_this.state.userDetail}
@@ -796,12 +752,14 @@ class Index extends React.Component {
                                 handleToSellOrder={_this.handleToSellOrder}
                                 handleToComment={_this.handleToComment}
                     />
+
                     <UserComment visible={_this.state.userCommentVisible} onCancel={_this.handleCancel}
                                  onOk={_this.handleCancel}
                                  wrappedComponentRef={(form) => this.formRef1 = form}
                                  userDetail={_this.state.userDetail}
                                  toOrderOne={_this.toOrderOne}
                                  toOrderMine={_this.toOrderMine}
+                                 isNull={_this.isNull}
                     />
                     <Table
                         className="ant-table-thead ant-table-tbody" rowSelection={rowSelection}
