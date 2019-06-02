@@ -205,7 +205,7 @@ const OrderDetail = Form.create()(
                                         <Skeleton loading={false} active >
                                             <List.Item.Meta
                                                 title={<Tag color="#2db7f5">{item.goodsName}</Tag>}
-                                                description={"该条订单买家"+this.props.orderDetail.orders.username+"在"+this.props.orderDetail.orders.sellname+"的店里，买了"+item.goodsCounts+"件"+item.goodsName}
+                                                description={"该条订单买家"+(this.props.orderDetail.orders.username==null?this.props.orderDetail.orders.studentId:this.props.orderDetail.orders.username)+"在"+(this.props.orderDetail.orders.sellname==null?this.props.orderDetail.orders.sellStuId:this.props.orderDetail.orders.sellname)+"的店里，买了"+item.goodsCounts+"件"+item.goodsName}
                                             />
                                             商品描述：{item.goodsDescription}
                                         </Skeleton>
@@ -229,8 +229,8 @@ const OrderDetail = Form.create()(
                                         >
                                             <Skeleton loading={false} active avatar>
                                                 <List.Item.Meta
-                                                    avatar={<Avatar src={this.props.orderDetail.orders.headImag}/>}
-                                                    title={<Tag color="#2db7f5">{this.props.orderDetail.orders.username}</Tag>}
+                                                    avatar={<Avatar src={this.props.orderDetail.orders.headImag==null?"http://47.107.228.169:8099/11/7/502fccae8cf748ab8389f62b7436f523.png":this.props.orderDetail.orders.headImag}/>}
+                                                    title={<Tag color="#2db7f5">{this.props.orderDetail.orders.username==null?this.props.orderDetail.orders.studentId:this.props.orderDetail.orders.username}</Tag>}
                                                     description={"评论时间："+this.timeFormat(item.commentCreatedTime)+" | 订单号："+this.props.orderDetail.orders.orderNum}
                                                 />
                                                 {item.comment}

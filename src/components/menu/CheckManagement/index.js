@@ -350,6 +350,11 @@ class Index extends React.Component {
             }
             console.log("传的data参数:", data)
             this.getMemberListInPage(data);
+            setTimeout(() => {
+                this.setState({
+                    checkLoading:false
+                });
+            }, 2000);
         } else {
             Modal.error({
                 title: '查询User失败',
@@ -483,7 +488,7 @@ class Index extends React.Component {
             wrapperCol: {span:12}
         };
         const formItemLayout1 = {
-            labelCol: {span: 7},
+            labelCol: {span: 6},
             wrapperCol: {span: 16}
         };
         const formItemLayout2 = {
@@ -547,7 +552,7 @@ class Index extends React.Component {
             title: '操作',
             dataIndex: 'operate',
             key: 'action',
-            width: 269,
+            width: 240,
             fixed: 'right',
             align: 'center',
             render: (text, record, index) => {
@@ -593,23 +598,24 @@ class Index extends React.Component {
                     <div style={{margin: "-11px 0px -13px 0px", width: "auto"}}>
                         <Form>
                             <Row>
-                                <Col span={10} style={{textAlign: 'left'}}>
+                                <Col span={6} style={{textAlign: 'left'}}>
                                     <FormItem label="用户名称："
-                                              {...formItemLayout}
+                                              {...formItemLayout1}
                                     >
                                         {getFieldDecorator('username')(
                                             <Input placeholder="请输入..."/>
                                         )}
                                     </FormItem>
                                     <FormItem label="身份证号："
-                                              {...formItemLayout}
+                                              {...formItemLayout1}
                                     >
                                         {getFieldDecorator('idCard')(
                                             <Input placeholder="请输入..."/>
                                         )}
                                     </FormItem>
+
                                 </Col>
-                                <Col span={7} style={{textAlign: 'left'}}>
+                                <Col span={6} style={{textAlign: 'left'}}>
                                     <FormItem label="手机号："
                                               {...formItemLayout1}
                                     >
@@ -617,16 +623,13 @@ class Index extends React.Component {
                                             <Input placeholder="请输入..."/>
                                         )}
                                     </FormItem>
-                                    <FormItem label="邮箱："
-                                              {...formItemLayout1}
-                                    >
-                                        {getFieldDecorator('email')(
-                                            <Input placeholder="请输入..."/>
-                                        )}
+                                    <FormItem>
+                                        <Button type="primary" className="btn" onClick={this.getUserByName}>
+                                            <Icon type="search"/>查询
+                                        </Button>
                                     </FormItem>
-
                                 </Col>
-                                <Col span={7} style={{textAlign: 'left'}}>
+                                <Col span={6} style={{textAlign: 'left'}}>
                                     <FormItem label="学号："
                                               {...formItemLayout2}
                                     >
@@ -635,26 +638,19 @@ class Index extends React.Component {
                                         )}
 
                                     </FormItem>
-                                    <FormItem>
-                                        <Button type="primary" className="btn" onClick={this.getUserByName}>
-                                            <Icon type="search"/>查询
-                                        </Button>
-                                    </FormItem>
+
 
                                 </Col>
+                                <Col span={6} style={{textAlign: 'left'}}>
+                                    <FormItem label="邮箱："
+                                              {...formItemLayout1}
+                                    >
+                                        {getFieldDecorator('email')(
+                                            <Input placeholder="请输入..."/>
+                                        )}
+                                    </FormItem>
+                                </Col>
                             </Row>
-                            <div style={{float: "left", margin: "-59px 0"}}>
-                                <Button
-                                    icon="usergroup-delete" type="danger"
-                                    onClick={this.startDelete}
-                                    disabled={!hasSelected}
-                                    loading={loading}
-                                >
-                                   审核通过
-                                </Button>
-                                <span
-                                    style={{marginLeft: 8}}> {hasSelected ? `已选 ${selectedRowKeys.length} 项` : ''} </span>
-                            </div>
                         </Form>
                     </div>
                     <CheckDetail title="用户详情" visible={_this.state.userDetailVisible} loading={_this.state.detailLoading}
@@ -673,7 +669,7 @@ class Index extends React.Component {
                                  toOrderOne={_this.toOrderOne}
                     />
                      <Table
-                        className="ant-table-thead ant-table-tbody" rowSelection={rowSelection}
+                        className="ant-table-thead ant-table-tbody"
                         dataSource={this.state.tData} bordered
                         scroll={{x: true}}
                         onRow={(record, rowkey) => ({onMouseOver: this.handleRecord.bind(this, record, rowkey)})}

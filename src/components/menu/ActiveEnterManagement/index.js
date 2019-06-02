@@ -9,7 +9,7 @@ class DataAnalysisComponent extends Component{
             <div>
                 <CustomBreadcrumb arr={["活动报名"]}/>
                 <div style={{ padding: 24, background: '#fff', minHeight: 360 }}>
-                    <div>活动报名组件</div>
+                    <div>活动报名待开发...</div>
                 </div>
             </div>
 

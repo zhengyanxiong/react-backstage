@@ -175,6 +175,11 @@ class Index extends React.Component {
 
             // console.log("传的data参数:", data)
             this.getUserComplaintListInPage(data);
+            setTimeout(() => {
+                this.setState({
+                    userCompLoading:false
+                });
+            }, 3000);
         } else {
             Modal.error({
                 title: '查询失败',

@@ -68,6 +68,7 @@ class Index extends Component {
 
     async updateClassChildsByClassId(data) {
         await _updateClassChildsByClassId(data);
+        this.getAllGoodsClassInfo();
     }
    async updateClassByClassId(data) {
        await _updateClassByClassId(data);
@@ -82,7 +83,7 @@ class Index extends Component {
     }
    async insertClassChildsByClassId(data) {
         await _insertClassChildsByClassId(data);
-
+       this.getAllGoodsClassInfo();
     }
    async getAllGoodsClassInfo(data) {
         const res = await _getAllGoodsClassInfo(data);
@@ -162,7 +163,7 @@ class Index extends Component {
                     className:className
                 };
                 this.updateClassByClassId(data);
-
+                this.getAllGoodsClassInfo();
             }
             form.resetFields();
         });

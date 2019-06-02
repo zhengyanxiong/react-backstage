@@ -90,16 +90,16 @@ const CheckDetail = Form.create()(
                     }}
                          src={this.props.userDetail.userInfo.headImag}/>                )
             }else {
-                itemsHeadImg=( <div style={{
-                    float: "left",
-                    background: "pink",
-                    borderRadius: "50%",
-                    width: "50px",
-                    height: "50px",
-                    margin: "-10px 7px 0 28px",
-                    textAlign: "center"
-                }}
-                />)
+                itemsHeadImg=(
+                    <img style={{
+                        float: "left",
+                        borderRadius: "50%",
+                        width: "50px",
+                        height: "50px",
+                        margin: "-10px 7px 0 28px",
+                        textAlign: "center"
+                    }} src="http://47.107.228.169:8099/11/7/502fccae8cf748ab8389f62b7436f523.png"
+                    />)
             }
 
 

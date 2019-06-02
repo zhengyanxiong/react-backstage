@@ -9,12 +9,13 @@ import {_updatePersonal} from "../../../api/user";
 import {_getUserAllByUserId} from "../../../api/user";
 
 import {
-    Form, Input, Modal, Icon, Cascader, Button, Table, Tag, message, Row, Col,Select,Spin
+    Form, Input, Modal, Icon, Cascader, Button, Table, Tag, message, Row, Col, Select, Spin
 } from 'antd';
 
 const FormItem = Form.Item;
 const confirm = Modal.confirm;
 const {Option} = Select;
+
 class Index extends React.Component {
     constructor(props) {
         super(props);
@@ -24,10 +25,11 @@ class Index extends React.Component {
             page: 1,
             limit: 10,
             record: [{
-                userId: 0
+                userId: 0,
+                pubCount:0
             }],
-            detailLoading:false,
-            commentLoading:false,
+            detailLoading: false,
+            commentLoading: false,
             rowkey: 0,
             selectedRowKeys: [],
             loading: false,
@@ -45,6 +47,7 @@ class Index extends React.Component {
                         commentExpand1: "",
                         comment: "",
                         username: "",
+                        studentId:"",
                         orderNum: "",
                         headImge: "",
                         creatTime: "",
@@ -62,6 +65,7 @@ class Index extends React.Component {
                         commentExpand1: "",
                         comment: "",
                         username: "",
+                        studentId:"",
                         orderNum: "",
                         headImge: "",
                         creatTime: "",
@@ -113,41 +117,42 @@ class Index extends React.Component {
             submitUserVisible: false,
             updateUserVisible: false,
             userLoading: true,
-            username:'',
-            studentId:'',
-            phoneNum:'',
-            idCard:'',
-            email:'',
+            username: '',
+            studentId: '',
+            phoneNum: '',
+            idCard: '',
+            email: '',
         }
     }
 
     componentDidMount() {
-       var userComId= localStorage.getItem("userComId");
-       var userComedId= localStorage.getItem("userComedId");
-       if (!this.isNull(userComedId)){
-           this.getMemberListInPage({
-               userId:parseInt(userComedId),
-               state:0,
-               page: 1,
-               limit: 10
-           });
-           localStorage.removeItem("userComedId")
-       }else if (!this.isNull(userComId)){
-           this.getMemberListInPage({
-               userId:parseInt(userComId),
-               state:0,
-               page: 1,
-               limit: 10
-           });
-           localStorage.removeItem("userComId")
+        var userComId = localStorage.getItem("userComId");
+        var userComedId = localStorage.getItem("userComedId");
+        if (!this.isNull(userComedId)) {
+            this.getMemberListInPage({
+                userId: parseInt(userComedId),
+                state: 0,
+                page: 1,
+                limit: 10
+            });
+            localStorage.removeItem("userComedId")
+        } else if (!this.isNull(userComId)) {
+            this.getMemberListInPage({
+                userId: parseInt(userComId),
+                state: 0,
+                page: 1,
+                limit: 10
+            });
+            localStorage.removeItem("userComId")
 
-       }else {
-           this.getMemberListInPage({
-               state: 2,
-               page: 1,
-               limit: 10
-           })
-       }
+        } else {
+            this.getMemberListInPage({
+                state: 2,
+                page: 1,
+                limit: 10
+            })
+        }
+
 
     }
 
@@ -160,12 +165,12 @@ class Index extends React.Component {
             page: res.page,
             limit: res.limit,
             userLoading: false
-        })
+        });
     }
 
     async updatePersonal(data) {
         const res = await _updatePersonal(data);
-      //  console.log("list返回数据：", res);
+        //  console.log("list返回数据：", res);
         this.getMemberListInPage({
             state: 1,
             page: this.state.page,
@@ -181,7 +186,7 @@ class Index extends React.Component {
         const res = await _getUserAllByUserId(data);
         if (0 == res.receiptPlacelist) {
             this.setState({
-                detailLoading:false,
+                detailLoading: false,
                 receiptPlacelist: [{
                     addressName: "",
                     receiptId: 0
@@ -190,13 +195,13 @@ class Index extends React.Component {
             });
         } else {
             this.setState({
-                detailLoading:false,
+                detailLoading: false,
                 userDetail: res,
                 receiptPlacelist: res.receiptPlacelist
             });
         }
 
-      //  console.log("user:", this.state.userDetail)
+        //  console.log("user:", this.state.userDetail)
     }
 
     handleToOrder = () => {
@@ -280,7 +285,7 @@ class Index extends React.Component {
     };
     //获取table行的记录以及行主键
     handleRecord = (record, rowkey) => {
-       // console.log("userId：" + record.userId)
+        // console.log("userId：" + record.userId)
         this.setState({
             record: record,
             rowkey: rowkey,
@@ -292,17 +297,17 @@ class Index extends React.Component {
     onSelectChanges = (selectedRowKeys) => {
         //console.log('selectedRowKeys changed: ', selectedRowKeys);
         this.setState({selectedRowKeys: selectedRowKeys});
-      //  console.log('stateSelectedRowKeys: ', this.state.selectedRowKeys)
+        //  console.log('stateSelectedRowKeys: ', this.state.selectedRowKeys)
         //return selectedRowKeys
     };
 
     getUserByName = (page, limit) => {
         this.setState({
-            userLoading:true
+            userLoading: true
         });
         if (!this.isNull(this.state.tData)) {
-          //  console.log('page：', page);
-           // console.log('limit：', limit);
+            //  console.log('page：', page);
+            // console.log('limit：', limit);
             var data = {
                 state: 2,
                 page: page,
@@ -320,10 +325,10 @@ class Index extends React.Component {
                     data = {
                         state: 2,
                         username: username,
-                        studentId:studentId,
-                        phoneNum:phoneNum,
-                        idCard:idCard,
-                        email:email,
+                        studentId: studentId,
+                        phoneNum: phoneNum,
+                        idCard: idCard,
+                        email: email,
                         page: this.state.page,
                         limit: this.state.limit
 
@@ -331,10 +336,10 @@ class Index extends React.Component {
                 } else {
                     data = {
                         state: 2,
-                        studentId:studentId,
-                        phoneNum:phoneNum,
-                        idCard:idCard,
-                        email:email,
+                        studentId: studentId,
+                        phoneNum: phoneNum,
+                        idCard: idCard,
+                        email: email,
                         page: this.state.page,
                         limit: this.state.limit
                     }
@@ -344,17 +349,22 @@ class Index extends React.Component {
                     data = {
                         state: 2,
                         username: username,
-                        studentId:studentId,
-                        phoneNum:phoneNum,
-                        idCard:idCard,
-                        email:email,
+                        studentId: studentId,
+                        phoneNum: phoneNum,
+                        idCard: idCard,
+                        email: email,
                         page: page,
                         limit: limit
                     }
                 }
             }
-           // console.log("传的data参数:", data)
+            // console.log("传的data参数:", data)
             this.getMemberListInPage(data);
+            setTimeout(() => {
+                this.setState({
+                    userLoading: false
+                });
+            }, 3000);
         } else {
             Modal.error({
                 title: '查询User失败',
@@ -374,8 +384,8 @@ class Index extends React.Component {
             cancelText: '取消',
             //删除行
             onOk() {
-            //    console.log("recordId:" + _this.state.record.userId);
-             //   console.log("rowkey:" + _this.state.rowkey);
+                //    console.log("recordId:" + _this.state.record.userId);
+                //   console.log("rowkey:" + _this.state.rowkey);
                 if (!_this.isNull(_this.state.record.userId)) {
                     var data = {
                         userId: _this.state.record.userId,
@@ -399,8 +409,8 @@ class Index extends React.Component {
             cancelText: '取消',
             //删除行
             onOk() {
-             //   console.log("recordId:" + _this.state.record.userId);
-              //  console.log("rowkey:" + _this.state.rowkey);
+                //   console.log("recordId:" + _this.state.record.userId);
+                //  console.log("rowkey:" + _this.state.rowkey);
                 if (!_this.isNull(_this.state.record.userId)) {
                     var data = {
                         userId: _this.state.record.userId,
@@ -426,7 +436,7 @@ class Index extends React.Component {
                 }
             };
             this.setState({
-                detailLoading:true,
+                detailLoading: true,
                 userDetailVisible: true
             });
             //console.log('qqq' + data);
@@ -434,9 +444,14 @@ class Index extends React.Component {
         }
     };
     handleUserGoods = () => {
-        localStorage.setItem("userId", this.state.record.userId);
-        const {from} = this.props.location.state || {from: {pathname: '/index/goodsManagement'}};
-        this.props.history.push(from)
+        if (this.state.record.pubCount!=0){
+            localStorage.setItem("userId", this.state.record.userId);
+            const {from} = this.props.location.state || {from: {pathname: '/index/goodsManagement'}};
+            this.props.history.push(from)
+        }else {
+            message.warning("该用户暂无发布")
+        }
+
     };
 
     //修改或添加提交表单modal
@@ -453,8 +468,8 @@ class Index extends React.Component {
         }
     };
     showUpdateConfirm = () => {
-   //     console.log(this.state.record.userId);
-    //    console.log("点击修改按钮事件");
+        //     console.log(this.state.record.userId);
+        //    console.log("点击修改按钮事件");
         this.getUserById({
             params: {
                 userId: this.state.record.userId
@@ -485,9 +500,9 @@ class Index extends React.Component {
                 this.setState({
                     submitUserVisible: false
                 });
-               // console.log("formSubUserRef", this.formSubUserRef);
+                // console.log("formSubUserRef", this.formSubUserRef);
                 var userInfo = this.childSub.getSubItemsValue();
-             //   console.log(this.childSub.getSubItemsValue());
+                //   console.log(this.childSub.getSubItemsValue());
                 var data = {
                     username: userInfo.username,
                 };
@@ -511,7 +526,7 @@ class Index extends React.Component {
                 });
                 //console.log("formEndUpRef:", this.formUpUserRef);
                 var userInfo = this.childUp.getUpItemsValue();
-               // console.log(this.childUp.getUpItemsValue());
+                // console.log(this.childUp.getUpItemsValue());
                 var data = {
                     userId: this.state.record.userId,
                     username: userInfo.username,
@@ -528,11 +543,11 @@ class Index extends React.Component {
         var _this = this;
         //console.log("ffffffff", _this.state.selectedRowKeys);
         var idList = [];
-       // console.log('selectedRowKeys:', _this.state.selectedRowKeys);
+        // console.log('selectedRowKeys:', _this.state.selectedRowKeys);
         const selectedRowKeys = _this.state.selectedRowKeys;
         for (var i = 0; i < selectedRowKeys.length; i++) {
             var selectedRowKey = selectedRowKeys[i];
-          //  console.log('selectedRowKeys[i]:', selectedRowKeys[i]);
+            //  console.log('selectedRowKeys[i]:', selectedRowKeys[i]);
             idList.push(_this.state.tData[selectedRowKey].userId);
         }
         /*var data = {
@@ -555,8 +570,8 @@ class Index extends React.Component {
             wrapperCol: {span: 12}
         };
         const formItemLayout1 = {
-            labelCol: {span: 7},
-            wrapperCol: {span: 16}
+            labelCol: {span: 6},
+            wrapperCol: {span: 17}
         };
         const formItemLayout2 = {
             labelCol: {span: 4},
@@ -656,7 +671,7 @@ class Index extends React.Component {
             total: _this.state.count,
             showSizeChanger: true,
             onShowSizeChange(current, pageSize) {
-           //     console.log('Current: ', current, '; PageSize: ', pageSize)
+                //     console.log('Current: ', current, '; PageSize: ', pageSize)
                 _this.getUserByName(current, pageSize);
                 _this.setState({
                     selectedRowKeys: []
@@ -678,47 +693,29 @@ class Index extends React.Component {
                     <div style={{margin: "-11px 0px -13px 0px", width: "auto"}}>
                         <Form>
                             <Row>
-                                <Col span={10} style={{textAlign: 'left'}}>
+                                <Col span={6} style={{textAlign: 'left'}}>
                                     <FormItem label="用户名称："
-                                              {...formItemLayout}
+                                              {...formItemLayout1}
                                     >
                                         {getFieldDecorator('username')(
                                             <Input placeholder="请输入..."/>
                                         )}
-                                      </FormItem>
+                                    </FormItem>
                                     <FormItem label="身份证号："
-                                              {...formItemLayout}
+                                              {...formItemLayout1}
                                     >
                                         {getFieldDecorator('idCard')(
                                             <Input placeholder="请输入..."/>
                                         )}
-                                      </FormItem>
+                                    </FormItem>
                                 </Col>
-                                <Col span={7} style={{textAlign: 'left'}}>
+                                <Col span={6} style={{textAlign: 'left'}}>
                                     <FormItem label="手机号："
                                               {...formItemLayout1}
                                     >
                                         {getFieldDecorator('phoneNum')(
                                             <Input placeholder="请输入..."/>
                                         )}
-                                      </FormItem>
-                                    <FormItem label="邮箱："
-                                              {...formItemLayout1}
-                                    >
-                                        {getFieldDecorator('email')(
-                                            <Input placeholder="请输入..."/>
-                                        )}
-                                      </FormItem>
-
-                                </Col>
-                                <Col span={7} style={{textAlign: 'left'}}>
-                                    <FormItem label="学号："
-                                              {...formItemLayout2}
-                                    >
-                                        {getFieldDecorator('studentId')(
-                                            <Input placeholder="学号"/>
-                                        )}
-
                                     </FormItem>
                                     <FormItem>
                                         <Button type="primary" className="btn" onClick={this.getUserByName}>
@@ -727,19 +724,28 @@ class Index extends React.Component {
                                     </FormItem>
 
                                 </Col>
-                            </Row>
-                            <div style={{float: "left", margin: "-59px 0"}}>
-                                <Button
-                                    icon="usergroup-delete" type="danger"
-                                    onClick={this.startDelete}
-                                    disabled={!hasSelected}
-                                    loading={loading}
+                                <Col span={6} style={{textAlign: 'left'}}>
+                                    <FormItem label="学号："
+                                              {...formItemLayout1}
+                                    >
+                                        {getFieldDecorator('studentId')(
+                                            <Input placeholder="学号"/>
+                                        )}
+
+                                    </FormItem>
+
+                                </Col>
+                                <Col span={6} style={{textAlign: 'left'}}>
+                                <FormItem label="邮箱："
+                                          {...formItemLayout1}
                                 >
-                                    停用
-                                </Button>
-                                <span
-                                    style={{marginLeft: 8}}> {hasSelected ? `已选 ${selectedRowKeys.length} 项` : ''} </span>
-                            </div>
+                                    {getFieldDecorator('email')(
+                                        <Input placeholder="请输入..."/>
+                                    )}
+                                </FormItem>
+                                </Col>
+
+                            </Row>
                         </Form>
                     </div>
                     <UserDetail title="用户详情" visible={_this.state.userDetailVisible} loading={_this.state.detailLoading}
@@ -762,7 +768,7 @@ class Index extends React.Component {
                                  isNull={_this.isNull}
                     />
                     <Table
-                        className="ant-table-thead ant-table-tbody" rowSelection={rowSelection}
+                        className="ant-table-thead ant-table-tbody"
                         dataSource={this.state.tData} bordered
                         scroll={{x: true}}
                         onRow={(record, rowkey) => ({onMouseOver: this.handleRecord.bind(this, record, rowkey)})}

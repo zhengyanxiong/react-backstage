@@ -40,6 +40,7 @@ class Index extends Component {
                     orderTime: "",
                     sellname: "",
                     username: "",
+                    sellStuId: "",
                     studentId: "",
                     addressName: "",
                     comment: "",
@@ -391,6 +392,11 @@ class Index extends Component {
             }
             console.log("传的data参数:", data);
             this.getOrderListInPage(data);
+            setTimeout(() => {
+                this.setState({
+                    orderLoading:false
+                });
+            }, 3000);
         } else {
             Modal.error({
                 title: '查询order失败',

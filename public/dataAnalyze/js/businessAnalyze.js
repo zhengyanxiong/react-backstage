@@ -80,7 +80,7 @@ $(function () {
             data: lagend
         },
         series: [{
-            name: '业务占比',
+            name: '资源占比',
 
             data: phoneData
 
@@ -270,7 +270,7 @@ function autoPlay(flag, i) {
     }
 }
 
-//获得重点业务实时数据
+//获得实时数据
 function getImportBusinessInfo() {
     var imurl = "/app?service=page/app.bigShow&listener=getImportBusinessInfo&ajax_random=" + Math.floor(Math.random() * 10000 + 1);
     /*$.ajax({
@@ -318,7 +318,7 @@ error: function (data) {
 });*/
 }
 
-//定时刷新业务办理情况数据
+//定时刷新页面1情况数据
 function refreshHandleBusiness(obj) {
 
 }
@@ -443,7 +443,7 @@ function show_num1(index, n) {
 }
 
 
-//业务效率分析
+//效率分析
 var firstLine = [];
 var sencondLine = [];
 
@@ -673,7 +673,6 @@ setInterval(function () {
 
 /******************************************************************************************/
 
-//手机终端业务办理情况占比
 
 var businessHandleRatioChart = echarts.init(document.getElementById('businessHandleRatio'), 'dark');
 businessHandleRatioChart.setOption({

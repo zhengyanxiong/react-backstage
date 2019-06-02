@@ -68,7 +68,7 @@ class HeaderBar extends React.Component {
         this.context.router.history.push("/");
     };
     toSpringAdmin=()=>{
-       window.location.href='http://127.0.0.1:8769/login'
+        window.open('about:blank').location.href='http://localhost:8769/login'
     };
     //modal取消事件通用
     handleCancel = () => {
@@ -140,9 +140,7 @@ class HeaderBar extends React.Component {
                         <li><label>如果你是技术管理员，请点击<Tag style={{marginLeft: "4px"}} color="volcano" onClick={this.toSpringAdmin}>这里</Tag></label></li>
                         <li><Icon type={icon} onClick={this.screenfullToggle}/></li>
                         <li onClick={() => this.setState({count: 0})}>
-                            <Badge count={99} overflowCount={99} style={{marginRight: -17}}>
                                 <Icon type="notification"/>
-                            </Badge>
                         </li>
                         <li>
                             {login}

@@ -296,6 +296,11 @@ class Index extends React.Component {
             }
             //console.log("传的data参数:", data)
             this.getActiveListInPage(data);
+            setTimeout(() => {
+                this.setState({
+                    activeLoading:false
+                });
+            }, 3000);
         } else {
             Modal.error({
                 title: '查询active失败',
@@ -574,7 +579,7 @@ handleClick=()=>{
         const _this = this;
         const showDeleteConfirm = this.showDeleteConfirm;
         const formItemLayout = {
-            labelCol: {span: 5},
+            labelCol: {span: 2},
             wrapperCol: {span: 5}
         };
         const {getFieldDecorator} = _this.props.form;
@@ -694,18 +699,7 @@ handleClick=()=>{
                                         onClick={this.showPublishConfirm}
                                         style={{margin: "4px 120px", position: "absolute"}}>发布活动</Button>
                             </FormItem>
-                            <div style={{float: "left", margin: "-59px 0"}}>
-                                <Button
-                                    icon="usergroup-delete" type="danger"
-                                    onClick={this.startDelete}
-                                    disabled={!hasSelected}
-                                    loading={loading}
-                                >
-                                    删除
-                                </Button>
-                                <span
-                                    style={{marginLeft: 8}}> {hasSelected ? `已选 ${selectedRowKeys.length} 项` : ''} </span>
-                            </div>
+
                         </Form>
                     </div>
                     <PublishActive title="发布活动" visible={_this.state.publishActiveVisible}
@@ -733,7 +727,7 @@ handleClick=()=>{
                         uploadPic
                     }*/}
                     <Table
-                        className="ant-table-thead ant-table-tbody" rowSelection={rowSelection}
+                        className="ant-table-thead ant-table-tbody"
                         dataSource={this.state.tData} bordered
                         scroll={{x: true}}
                         onRow={(record, rowkey) => ({onMouseOver: this.handleRecord.bind(this, record, rowkey)})}

@@ -12,7 +12,7 @@ const formItemLayout = {
     },
     wrapperCol: {
         xs: {span: 10},
-        sm: {span: 12},
+        sm: {span: 16},
     },
 };
 const formItemLayout1 = {
@@ -143,7 +143,7 @@ const GoodsDetail = Form.create()(
                             <Col span={8} style={{textAlign: 'left'}}>
                                 <Form.Item label="宝贝名称："
                                            hasFeedback
-                                           {...formItemLayout}>
+                                           {...formItemLayout} >
                                     <label >{this.props.goodsDetail.goods.goodsName}</label>
                                 </Form.Item>
 

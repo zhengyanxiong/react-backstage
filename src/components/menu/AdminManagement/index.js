@@ -241,6 +241,11 @@ class Index extends React.Component {
             }
            // console.log("传的data参数:", data)
             this.getAdminListInPage(data);
+            setTimeout(() => {
+                this.setState({
+                    adminLoading:false
+                });
+            }, 3000);
         } else {
             Modal.error({
                 title: '查询admin失败',
@@ -403,8 +408,8 @@ class Index extends React.Component {
         const _this = this;
         const showDeleteConfirm = this.showDeleteConfirm;
         const formItemLayout = {
-            labelCol: {span: 8},
-            wrapperCol: {span: 7}
+            labelCol: {span: 5},
+            wrapperCol: {span: 5}
         };
         const {getFieldDecorator} = _this.props.form;
         //选择框
@@ -479,12 +484,12 @@ class Index extends React.Component {
                     <div style={{margin: "-11px 0px -13px 0px", width: "auto"}}>
                         <Form>
                             <FormItem label="管理员名称："
-                                      {...formItemLayout} style={{width: "710px"}}
+                                      {...formItemLayout}
                             >
                                 {getFieldDecorator('adminName')(
                                     <Input placeholder="请输入..."/>
                                 )}
-                                <Button type="primary" className="btn" onClick={this.getAdminByName}>
+                                <Button type="primary" className="btn" style={{margin: "-36px 0 0 250px"}} onClick={this.getAdminByName}>
                                     <Icon type="search"/>查询
                                 </Button>
                                 <Button type="primary" htmlType="submit" icon="user-add"

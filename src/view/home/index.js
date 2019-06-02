@@ -110,6 +110,12 @@ class Index extends Component {
                                 <span>订单管理</span>
                             </Link>
                         </Menu.Item>
+                       <Menu.Item key="27">
+                            <Link to="/index/PayManagement">
+                                <Icon type="pay-circle"/>
+                                <span>支付管理</span>
+                            </Link>
+                        </Menu.Item>
                         <Menu.Item key="18">
                             <Link to="/index/complaintManagement">
                                 <Icon type="issues-close"/>

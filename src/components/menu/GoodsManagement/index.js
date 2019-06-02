@@ -5,7 +5,7 @@ import {_updateGoods} from "../../../api/goods";
 import {_getAllInfoById} from "../../../api/goods";
 import GoodsDetail from "../../menu/GoodsManagement/modal/goodsDetail";
 import {
-    Form, Input, Modal, Icon, Cascader, Button, Table, Tag, Select, Row, Col
+    Form, Input, Modal, Icon, Cascader, Button, Table, Tag, Select, Row, Col,message
 } from 'antd';
 
 const FormItem = Form.Item;
@@ -323,6 +323,11 @@ class Index extends Component {
             }
            // console.log("传的data参数:", data);
             this.getGoodsListInPage(data);
+            setTimeout(() => {
+                this.setState({
+                    goodsLoading:false
+                });
+            }, 3000);
         } else {
             Modal.error({
                 title: '查询goods失败',
@@ -373,12 +378,17 @@ class Index extends Component {
         this.getAllInfoById(data)
     };
     handleToSelledOrder = () => {
-        localStorage.setItem("goodsId", this.state.record.goodsId);
-        const {from} = this.props.location.state || {from: {pathname: '/index/orderManagement'}};
-        this.props.history.push(from);
-        this.setState({
-            goodsDetailVisible: false
-        });
+        if (this.state.record.oneSellNum>0){
+            localStorage.setItem("goodsId", this.state.record.goodsId);
+            const {from} = this.props.location.state || {from: {pathname: '/index/orderManagement'}};
+            this.props.history.push(from);
+            this.setState({
+                goodsDetailVisible: false
+            });
+        }else {
+            message.warning('该商品暂无卖出记录..');
+        }
+
     };
     handleCancel = () => {
         this.setState({
@@ -390,12 +400,12 @@ class Index extends Component {
         const _this = this;
         const showDeleteConfirm = this.showDeleteConfirm;
         const formItemLayout = {
-            labelCol: {span: 12},
-            wrapperCol: {span: 10}
+            labelCol: {span: 7},
+            wrapperCol: {span: 16}
         };
         const formItemLayout1 = {
-            labelCol: {span: 6},
-            wrapperCol: {span: 16}
+            labelCol: {span: 7},
+            wrapperCol: {span: 17}
         };
         const formItemLayout2 = {
             labelCol: {span: 6},
@@ -420,6 +430,13 @@ class Index extends Component {
         }, {
             title: '店家',
             dataIndex: 'username',
+            render(username) {
+                if (username == null) {
+                    return <Tag>未设置昵称</Tag>;
+                } else {
+                    return username;
+                }
+            }
         }, {
             title: '商品名',
             dataIndex: 'goodsName',
@@ -503,49 +520,31 @@ class Index extends Component {
                     <div style={{margin: "-11px 0px -13px 0px", width: "auto"}}>
                         <Form>
                             <Row>
-                                <Col span={9} style={{textAlign: 'left'}}>
+                                <Col span={5} style={{textAlign: 'left'}}>
 
                                     <FormItem label="商品名称："
-                                              {...formItemLayout}
+                                              {...formItemLayout1}
                                     >
                                         {getFieldDecorator('goodsName')(
                                             <Input placeholder="请输入..."/>
                                         )}
 
                                     </FormItem>
-                                    <FormItem label="商品类别："{...formItemLayout} style={{
-                                }}>
-                                    {getFieldDecorator('goodClassNum')(
-                                        <Select placeholder="全部">
-                                            <Option value="">全部</Option>
-                                            {this.state.classList.map(it => (
-                                                <Option key={it.goodClassNum} value={it.goodClassNum}>
-                                                    {it.goodClassName}
-                                                </Option>
-                                            ))}
-                                        </Select>
-                                    )}
-                                </FormItem>
+
                                 </Col>
 
                                 <Col span={6} style={{textAlign: 'left'}}>
                                     <FormItem label="商品编号："
-                                              {...formItemLayout1}
+                                              {...formItemLayout}
                                     >
                                         {getFieldDecorator('goodsNum')(
                                             <Input placeholder="请输入..."/>
                                         )}
 
                                     </FormItem>
-                                    <FormItem {...formItemLayout2} style={{
-                                        float: "left"
-                                    }}>
-                                        <Button type="primary" className="btn" onClick={this.getGoodsByName}>
-                                            <Icon type="search"/>查询
-                                        </Button>
-                                    </FormItem>
+
                                 </Col>
-                                <Col span={6} style={{textAlign: 'left'}}>
+                                <Col span={5} style={{textAlign: 'left'}}>
                                     <FormItem label="商品状态："{...formItemLayout1} style={{
                                     }}>
                                         {getFieldDecorator('goodsState')(
@@ -559,19 +558,31 @@ class Index extends Component {
                                         )}
                                     </FormItem>
                                 </Col>
+                                <Col span={6} style={{textAlign: 'left'}}>
+                                    <FormItem label="商品类别："{...formItemLayout} style={{
+                                    }}>
+                                        {getFieldDecorator('goodClassNum')(
+                                            <Select placeholder="全部">
+                                                <Option value="">全部</Option>
+                                                {this.state.classList.map(it => (
+                                                    <Option key={it.goodClassNum} value={it.goodClassNum}>
+                                                        {it.goodClassName}
+                                                    </Option>
+                                                ))}
+                                            </Select>
+                                        )}
+                                    </FormItem>
+                                </Col>
+                                <Col span={2} style={{textAlign: 'left'}}>
+                                <FormItem {...formItemLayout2} style={{
+                                    float: "left"
+                                }}>
+                                    <Button type="primary" className="btn" onClick={this.getGoodsByName}>
+                                        <Icon type="search"/>查询
+                                    </Button>
+                                </FormItem>
+                                </Col>
                             </Row>
-                            <div style={{float: "left", margin: "-59px 0"}}>
-                                <Button
-                                    icon="usergroup-delete" type="danger"
-                                    onClick={this.startDelete}
-                                    disabled={!hasSelected}
-                                    loading={loading}
-                                >
-                                    批量下架
-                                </Button>
-                                <span
-                                    style={{marginLeft: 8}}> {hasSelected ? `已选 ${selectedRowKeys.length} 项` : ''} </span>
-                            </div>
                         </Form>
                     </div>
                     <GoodsDetail title="商品详情" visible={_this.state.goodsDetailVisible} loading={this.state.detailLoading}
@@ -588,7 +599,7 @@ class Index extends Component {
                                  wrappedComponentRef={(form) => this.formUpGoodsRef = form}
                                  formUpGoodsRef={_this.formUpGoodsRef}/>  */}
                     <Table
-                        className="ant-table-thead ant-table-tbody" rowSelection={rowSelection}
+                        className="ant-table-thead ant-table-tbody"
                         dataSource={this.state.tData} bordered
                         scroll={{x: true}}
                         onRow={(record, rowkey) => ({onMouseOver: this.handleRecord.bind(this, record, rowkey)})}

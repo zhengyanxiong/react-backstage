@@ -106,9 +106,9 @@ const UserComment = Form.create()(
                                         >
                                             <Skeleton loading={this.state.loading} active avatar>
                                                 <List.Item.Meta
-                                                    avatar={<Avatar src={item.headImge}/>}
-                                                    title={<Tag color="#2db7f5">{item.username}</Tag>}
-                                                    description={"买家" + item.username + "在" + item.creatTime + "这个时间，针对订单号为" + item.orderNum + "的评论描述如下："}
+                                                    avatar={<Avatar src={item.headImge==null?"http://47.107.228.169:8099/11/7/502fccae8cf748ab8389f62b7436f523.png":item.headImge}/>}
+                                                    title={<Tag color="#2db7f5">{(item.username==null?item.studentId:item.username)}</Tag>}
+                                                    description={"买家" + (item.username==null?item.studentId:item.username) + "在" + item.creatTime + "这个时间，针对订单号为" + item.orderNum + "的评论描述如下："}
                                                 />
                                                 {item.comment}
                                             </Skeleton>
@@ -127,8 +127,9 @@ const UserComment = Form.create()(
                                     renderItem={item => (
                                         <List.Item
                                             key={item.username}
-                                            actions={!this.state.loading && [<Tag color="cyan"><IconText type="like-o"
-                                                                                                         text={"服务质量：" + item.serviceNum + ".0"}/></Tag>,
+                                            actions={!this.state.loading && [
+                                                <Tag color="cyan"><IconText type="like-o"
+                                                                                text={"服务质量：" + item.serviceNum + ".0"}/></Tag>,
                                                 <Tag color="volcano"><IconText type="like-o"
                                                                                text={"描述相符：" + item.descriptionNum + ".0"}/></Tag>,
                                                 <Tag color="purple"><IconText type="like-o"
@@ -139,9 +140,9 @@ const UserComment = Form.create()(
                                         >
                                             <Skeleton loading={this.state.loading} active avatar>
                                                 <List.Item.Meta
-                                                    avatar={<Avatar src={item.headImge}/>}
-                                                    title={<Tag color="#2db7f5">{item.username}</Tag>}
-                                                    description={item.username + "在" + item.creatTime + "这个时间，针对已买订单订单号为" + item.orderNum + "的评论描述如下："}
+                                                    avatar={<Avatar src={item.headImge==null?"http://47.107.228.169:8099/11/7/502fccae8cf748ab8389f62b7436f523.png":item.headImge}/>}
+                                                    title={<Tag color="#2db7f5">{(item.username==null?item.studentId:item.username)}</Tag>}
+                                                    description={(item.username==null?item.studentId:item.username) + "在" + item.creatTime + "这个时间，针对已买订单订单号为" + item.orderNum + "的评论描述如下："}
                                                 />
                                                 {item.comment}
                                             </Skeleton>
