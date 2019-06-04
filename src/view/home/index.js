@@ -137,6 +137,16 @@ class Index extends Component {
                                 <span>关于</span>
                             </Link>
                         </Menu.Item>
+                        <Menu.Item key="31" style={{visibility:"hidden"}}>
+                            <Link to="/index/notFoundManagement">
+                                <span>404</span>
+                            </Link>
+                        </Menu.Item>
+                       <Menu.Item key="32" style={{visibility:"hidden"}}>
+                            <Link to="/index/eorrorManagement">
+                                <span>出错啦</span>
+                            </Link>
+                        </Menu.Item>
                     </Menu>
                 </Sider>
                 <Layout >

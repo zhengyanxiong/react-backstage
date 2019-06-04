@@ -6,6 +6,7 @@ import {PromptMsg_Loading} from '../components/PromptMessage'
 import RES_CODE_SUCCESS from '../util/globalCode';
 
 import {createHashHistory} from 'history';
+import { Link } from 'react-router-dom'
 //import commonInfo from '../common/CommonInfo';
 
 const instance = axios.create({
@@ -39,7 +40,17 @@ instance.interceptors.response.use(function (response) {
         /*if(commonInfo.hasLoading){
             //Toast.hide();
         }*/
+        /*const {from} = {from: {pathname: '/index/eorrorManagement'}};
+        this.props.history.push(from)*/
         message.error(response.data.msg);
+    }
+    if (response.data.code === 404) {
+        /*if(commonInfo.hasLoading){
+            //Toast.hide();
+        }*/
+        window.location.href='http://localhost:8000/notFound'
+        /*const {from} = this.props.location.state || {from: {pathname: '/index/notFoundManagement'}};
+        this.props.history.push(from)*/
     }
     // 2.session过期
     /*if (!response.data.success && response.data.messageCode === globalCode.timeout) {
@@ -74,6 +85,7 @@ instance.interceptors.response.use(function (response) {
     //Toast.hide();
     // 4.系统错误，比如500、404等
     //Toast.info('系统异常，请稍后重试！', 1);
+    window.location.href='http://localhost:3010/#/index/eorrorManagement'
     return Promise.reject({
         messageCode: 'sysError'
     });

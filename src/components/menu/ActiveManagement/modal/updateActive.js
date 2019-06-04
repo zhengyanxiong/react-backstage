@@ -206,7 +206,7 @@ const UpdateActive = Form.create()(
                                     //initialValue:this.props.fileList,
                                     rules: [{required: true, message: '必填!'}],
                                 })(
-                                    <Upload
+                                    /*<Upload
                                     action="/nginxservice/file/fileUpload"
                                     listType="picture-card"
                                     fileList={fileList}
@@ -214,7 +214,8 @@ const UpdateActive = Form.create()(
                                     onChange={this.handleChangeA}
                                 >
                                     {fileList.length >= 1 ? null : uploadButton}
-                                </Upload>
+                                </Upload>*/
+                                    <Zmage src={this.props.activePictrueUrl} style={{width:"150px"}}/>
 
                                    /* <div>
                                         {fileList.length >= 1 ? upload : uploadProp}

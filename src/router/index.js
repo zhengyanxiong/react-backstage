@@ -13,6 +13,8 @@ import OrderManagement from '@/components/menu/OrderManagement/index.js'
 import AboutManagement from '@/components/menu/AboutManagement/index.js'
 import ComplaintManagement from '@/components/menu/ComplaintManagement/index.js'
 import PayManagement from '@/components/menu/PayManagement/index.js'
+import NotFoundManagement from '@/components/menu/NotFoundManagement/index.js'
+import EorrorManagement from '@/components/menu/EorrorManagement/index.js'
 
 //路由表
 export const main = [
@@ -33,6 +35,8 @@ export const main = [
             {path: '/index/payManagement', name:'支付管理', component: PayManagement},
             {path: '/index/complaintManagement', name:'举报投诉', component: ComplaintManagement},
             {path: '/index/aboutManagement', name:'关于', component: AboutManagement},
+            {path: '/index/notFoundManagement', name:'404', component: NotFoundManagement},
+            {path: '/index/eorrorManagement', name:'出错啦', component: EorrorManagement},
         ]
     },
     {path: '/login', name: '登录', component: Login}
