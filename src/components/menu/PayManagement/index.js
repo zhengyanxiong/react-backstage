@@ -138,6 +138,12 @@ class Index extends React.Component {
             });
         }
     };
+    isNull = (charts) => {
+        if (charts == null || charts == "" || charts == "undefined" || charts === undefined) {
+            return true
+        } else
+            return false
+    };
 
     render() {
         const _this = this;
@@ -162,6 +168,14 @@ class Index extends React.Component {
         }, {
             title: '用户名',
             dataIndex: 'username',
+            width:90,
+            render(text, record, index) {
+            if (_this.isNull(_this.state.tData[index].username)){
+                    return <Tag color="red">{_this.state.tData[index].userId}</Tag>
+                }else {
+                return _this.state.tData[index].username
+            }
+            }
         }, {
             title: '订单号',
             dataIndex: 'payExpand4',
@@ -171,6 +185,7 @@ class Index extends React.Component {
         }, {
             title: '支付金额',
             dataIndex: 'payMoney',
+            width:100,
             render(payMoney) {
                 return <Tag color="red">￥{payMoney}</Tag>
             }

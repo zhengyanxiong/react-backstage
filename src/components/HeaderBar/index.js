@@ -68,7 +68,7 @@ class HeaderBar extends React.Component {
         this.context.router.history.push("/");
     };
     toSpringAdmin=()=>{
-        window.open('about:blank').location.href='http://localhost:8769/login'
+        window.open('about:blank').location.href='http://192.168.43.72:8769/login'
     };
     //modal取消事件通用
     handleCancel = () => {

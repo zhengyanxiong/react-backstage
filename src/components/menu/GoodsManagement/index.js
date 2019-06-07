@@ -5,7 +5,7 @@ import {_updateGoods} from "../../../api/goods";
 import {_getAllInfoById} from "../../../api/goods";
 import GoodsDetail from "../../menu/GoodsManagement/modal/goodsDetail";
 import {
-    Form, Input, Modal, Icon, Cascader, Button, Table, Tag, Select, Row, Col,message
+    Form, Input, Modal, Icon, Cascader, Button, Table, Tag, Select, Row, Col, message
 } from 'antd';
 
 const FormItem = Form.Item;
@@ -16,9 +16,9 @@ class Index extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            detailLoading:false,
+            detailLoading: false,
             tData: [],
-            classList:[],
+            classList: [],
             count: 0,
             page: 1,
             limit: 10,
@@ -85,14 +85,14 @@ class Index extends Component {
 
     async getGoodsListInPage(data) {
         const res = await _getGoodsListInPage(data);
-      //  console.log("list返回数据：", res);
+        //  console.log("list返回数据：", res);
         this.setState({
             tData: res.list,
             count: res.count,
             page: res.page,
             limit: res.limit,
             goodsLoading: false,
-            classList:res.classList
+            classList: res.classList
         })
     }
 
@@ -118,15 +118,15 @@ class Index extends Component {
 
         if (!this.isNull(res.goods.goodImge)) {
             let str = res.goods.goodImge.split(",");
-           // console.log("str:", str);
+            // console.log("str:", str);
             this.setState({
-                detailLoading:false,
+                detailLoading: false,
                 goodsDetail: res,
                 goodImge: str
             });
         } else {
             this.setState({
-                detailLoading:false,
+                detailLoading: false,
                 goodsDetail: res,
                 goodImge: []
             });
@@ -134,11 +134,11 @@ class Index extends Component {
 
     }
 
-    unique=(arr)=>{
-        var hash=[];
+    unique = (arr) => {
+        var hash = [];
         for (var i = 0; i < arr.length; i++) {
-            for (var j = i+1; j < arr.length; j++) {
-                if(arr[i]===arr[j]){
+            for (var j = i + 1; j < arr.length; j++) {
+                if (arr[i] === arr[j]) {
                     ++i;
                 }
             }
@@ -164,11 +164,11 @@ class Index extends Component {
     };
     getGoodsByName = (page, limit) => {
         this.setState({
-            goodsLoading:true
+            goodsLoading: true
         })
         if (!this.isNull(this.state.tData)) {
-           // console.log('page：', page);
-           // console.log('limit：', limit);
+            // console.log('page：', page);
+            // console.log('limit：', limit);
             var data = {
                 params: {
                     page: page,
@@ -321,11 +321,11 @@ class Index extends Component {
                     }
                 }
             }
-           // console.log("传的data参数:", data);
+            // console.log("传的data参数:", data);
             this.getGoodsListInPage(data);
             setTimeout(() => {
                 this.setState({
-                    goodsLoading:false
+                    goodsLoading: false
                 });
             }, 3000);
         } else {
@@ -368,7 +368,7 @@ class Index extends Component {
         this.setState({
             goodsId: this.state.record.goodsId,
             goodsDetailVisible: true,
-            detailLoading:true
+            detailLoading: true
         });
         var data = {
             params: {
@@ -378,14 +378,14 @@ class Index extends Component {
         this.getAllInfoById(data)
     };
     handleToSelledOrder = () => {
-        if (this.state.record.oneSellNum>0){
+        if (this.state.record.oneSellNum > 0) {
             localStorage.setItem("goodsId", this.state.record.goodsId);
             const {from} = this.props.location.state || {from: {pathname: '/index/orderManagement'}};
             this.props.history.push(from);
             this.setState({
                 goodsDetailVisible: false
             });
-        }else {
+        } else {
             message.warning('该商品暂无卖出记录..');
         }
 
@@ -418,6 +418,7 @@ class Index extends Component {
             selectedRowKeys,
             onChange: this.onSelectChanges
         };
+
         const hasSelected = selectedRowKeys.length > 0;
         const columns = [{
             title: '序号',
@@ -483,15 +484,22 @@ class Index extends Component {
             width: 190,
             fixed: 'right',
             align: 'center',
-            render: (text, record, index) => (
-                <Button.Group>
-                    < Button type="primary" size="small" htmlType={'button'} style={{margin: "6px"}}
-                             onClick={_this.handleGoodsDetail}>详情</Button>
-                    <Button type="danger" size="small" htmlType={'button'} style={{margin: "6px"}}
-                            onClick={_this.showDoGoodsUp}> 强制下架 </Button>
-                </Button.Group>
-            ),
-        }];
+            render: (text, record, index) => {
+                if (_this.state.tData[index].goodsState == 3) {
+                    return < Button type="primary" size="small" htmlType={'button'} style={{margin: "6px",marginLeft: "-77px"}}
+                                 onClick={_this.handleGoodsDetail}>详情</Button>
+
+                }else {
+                    return <Button.Group>
+                        < Button type="primary" size="small" htmlType={'button'} style={{margin: "6px"}}
+                                 onClick={_this.handleGoodsDetail}>详情</Button>
+                        <Button type="danger" size="small" htmlType={'button'} style={{margin: "6px"}}
+                                onClick={_this.showDoGoodsUp}> 强制下架 </Button>
+                    </Button.Group>
+                }
+            }
+        },
+        ];
 
         //分页
 
@@ -513,7 +521,7 @@ class Index extends Component {
                 })
             }
         };
-           return (
+        return (
             <div>
                 <CustomBreadcrumb arr={["闲置管理"]}/>
                 <div style={{padding: 24, background: '#fff', minHeight: 360}}>
@@ -545,8 +553,7 @@ class Index extends Component {
 
                                 </Col>
                                 <Col span={5} style={{textAlign: 'left'}}>
-                                    <FormItem label="商品状态："{...formItemLayout1} style={{
-                                    }}>
+                                    <FormItem label="商品状态："{...formItemLayout1} style={{}}>
                                         {getFieldDecorator('goodsState')(
                                             <Select placeholder="全部">
                                                 <Option value="">全部</Option>
@@ -559,8 +566,7 @@ class Index extends Component {
                                     </FormItem>
                                 </Col>
                                 <Col span={6} style={{textAlign: 'left'}}>
-                                    <FormItem label="商品类别："{...formItemLayout} style={{
-                                    }}>
+                                    <FormItem label="商品类别："{...formItemLayout} style={{}}>
                                         {getFieldDecorator('goodClassNum')(
                                             <Select placeholder="全部">
                                                 <Option value="">全部</Option>
@@ -574,18 +580,19 @@ class Index extends Component {
                                     </FormItem>
                                 </Col>
                                 <Col span={2} style={{textAlign: 'left'}}>
-                                <FormItem {...formItemLayout2} style={{
-                                    float: "left"
-                                }}>
-                                    <Button type="primary" className="btn" onClick={this.getGoodsByName}>
-                                        <Icon type="search"/>查询
-                                    </Button>
-                                </FormItem>
+                                    <FormItem {...formItemLayout2} style={{
+                                        float: "left"
+                                    }}>
+                                        <Button type="primary" className="btn" onClick={this.getGoodsByName}>
+                                            <Icon type="search"/>查询
+                                        </Button>
+                                    </FormItem>
                                 </Col>
                             </Row>
                         </Form>
                     </div>
-                    <GoodsDetail title="商品详情" visible={_this.state.goodsDetailVisible} loading={this.state.detailLoading}
+                    <GoodsDetail title="商品详情" visible={_this.state.goodsDetailVisible}
+                                 loading={this.state.detailLoading}
                                  onCancel={_this.handleCancel} onOk={_this.handleCancel}
                                  wrappedComponentRef={(form) => this.formRef = form}
                                  goodsDetail={_this.state.goodsDetail}
